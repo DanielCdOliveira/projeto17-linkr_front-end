@@ -7,6 +7,13 @@ import { ThreeDots } from "react-loader-spinner";
 export default function LogIn() {
   const { logIn } = useContext(AuthContext);
   const [disabled, setDisabled] = useState(false);
+  const navigate = useNavigate()
+  
+  useEffect(()=>{
+    const token = JSON.parse(localStorage.getItem("token"))
+    if(token)navigate("/timeline");
+  },[])
+
 
   const [data, setData] = useState({
     email: "",
