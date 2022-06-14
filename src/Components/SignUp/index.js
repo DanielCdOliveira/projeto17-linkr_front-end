@@ -14,15 +14,15 @@ function Register() {
     image: "",
   });
   const { URL } = useContext(AuthContext);
-  const [disabled, setDisbled] = useState(false);
+  const [disabled, setDisabled] = useState(false);
   const navigate = useNavigate();
 
   function newRegister(e) {
-    setDisbled(true);
+    setDisabled(true);
     e.preventDefault();
     if(data.email === "" ||data.password === "" ||data.name === "" ||data.image === ""){
       alert("Favor preencher todos os campos!")
-      setDisbled(false);
+      setDisabled(false);
       return;
     }
     const promise = axios.post(URL + "/signup", data);
@@ -30,7 +30,7 @@ function Register() {
       navigate("/");
     });
     promise.catch((e) => {
-      setDisbled(false);
+      setDisabled(false);
       if (e.response.status === 409) {
         alert("Email já cadastrado!");
       }

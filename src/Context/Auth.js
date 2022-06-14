@@ -6,25 +6,30 @@ import axios from "axios";
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState({ token: "" });
-  const [type, setType] = useState();
+  const [token, setToken] = useState({});
   const URL = "http://localhost:5000";
 
   const navigate = useNavigate();
   function logIn(data, setDisabled) {
-
+    if(data.email === "" || data.password === ""){
+      alert("Por favor, preencha todos os campos")
+      setDisabled(false);
+      return
+    }
     const promise = axios.post(URL+"/signin", data);
     promise.then((response) => {
       setDisabled(false);
-      setUser({
-        ...response.data,
+      setToken({
+        ...response.data.token,
       });
-      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.setItem("token", JSON.stringify(response.data.token));
       navigate("/timeline");
     });
     promise.catch((e) => {
       setDisabled(false);
-      alert("Não foi possível concluir a ação!");
+      if(e.response.status === 401){
+        alert("Email e senha incompatíveis!")
+      }
       console.log(e);
     });
   }
@@ -32,7 +37,7 @@ function AuthProvider({ children }) {
   return (
     <AuthContext.Provider
       value={{
-        user,
+        token,
         logIn,
         URL
       }}
