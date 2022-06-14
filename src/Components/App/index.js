@@ -4,6 +4,7 @@ import GlobalStyle from "../../Assets/globalStyle.js";
 import AuthProvider from "../../Context/Auth.js";
 
 import LogIn from "../LogIn/index.js";
+import Register from "../SignUp/index.js";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <GlobalStyle />
         <Routes>
         <Route path="/" element={<LogIn />}></Route>
+        <Route path="/sign-up" element={<Register />}></Route>
         </Routes>
       </AuthProvider>
     </BrowserRouter>

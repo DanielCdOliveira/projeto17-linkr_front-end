@@ -46,7 +46,7 @@ export default function LogIn() {
             "Log In"
           )}
         </button>
-        <Link to={"/signup"}>
+        <Link to={"/sign-up"}>
           <p>First time? Create an account!</p>
         </Link>
       </form>
@@ -64,6 +64,8 @@ const Main = styled.main`
     width: 62vw;
     height: 100vh;
     padding-left: 144px;
+    box-shadow: 4px 0px 4px rgba(0, 0, 0, 0.25);
+    z-index: 2;
     h1 {
       font-family: "Passion One", cursive;
       font-size: 106px;
@@ -85,9 +87,9 @@ const Main = styled.main`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    box-shadow: 4px 0px 4px rgba(255, 0, 0, 0.8);
+
     input {
-        width: 80%;
+      width: 80%;
       max-width: 450px;
       height: 65px;
       margin-bottom: 13px;
@@ -100,7 +102,7 @@ const Main = styled.main`
       font-weight: 700;
     }
     button {
-        width: 80%;
+      width: 80%;
       max-width: 450px;
       height: 65px;
       background-color: #1877f2;
@@ -109,20 +111,20 @@ const Main = styled.main`
       outline-style: none;
       font-family: "Oswald", sans-serif;
       font-weight: 700;
-      color: #FFFFFF;
+      color: #ffffff;
       font-size: 27px;
       margin-bottom: 22px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
-    p{
-        font-family: 'Lato', sans-serif;
-        font-weight: 400;
-        font-size: 20px;
-        line-height: 24px;
-        color: #FFFFFF;
-        text-decoration: underline;
+    p {
+      font-family: "Lato", sans-serif;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 24px;
+      color: #ffffff;
+      text-decoration: underline;
     }
   }
 `;

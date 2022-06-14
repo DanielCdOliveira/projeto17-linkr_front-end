@@ -20,7 +20,7 @@ function AuthProvider({ children }) {
         ...response.data,
       });
       localStorage.setItem("user", JSON.stringify(response.data));
-      navigate("/home");
+      navigate("/timeline");
     });
     promise.catch((e) => {
       setDisabled(false);
