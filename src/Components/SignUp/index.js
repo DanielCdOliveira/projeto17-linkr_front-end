@@ -20,14 +20,20 @@ function Register() {
   function newRegister(e) {
     setDisbled(true);
     e.preventDefault();
-
+    if(data.email === "" ||data.password === "" ||data.name === "" ||data.image === ""){
+      alert("Favor preencher todos os campos!")
+      setDisbled(false);
+      return;
+    }
     const promise = axios.post(URL + "/signup", data);
     promise.then((e) => {
       navigate("/");
     });
     promise.catch((e) => {
       setDisbled(false);
-      alert("Não foi possível concluir a ação!");
+      if (e.response.status === 409) {
+        alert("Email já cadastrado!");
+      }
       console.log(e);
     });
   }
@@ -47,7 +53,7 @@ function Register() {
             id="email-signup"
             placeholder="e-mail"
             onChange={(e) => setData({ ...data, email: e.target.value })}
-            required
+            
           />
           <input
             disabled={disabled}
@@ -56,7 +62,7 @@ function Register() {
             id="password-signup"
             placeholder="password"
             onChange={(e) => setData({ ...data, password: e.target.value })}
-            required
+            
           />
         <input
           disabled={disabled}
@@ -65,7 +71,7 @@ function Register() {
           id="name-signup"
           placeholder="username"
           onChange={(e) => setData({ ...data, name: e.target.value })}
-          required
+          
         />
         <input
           disabled={disabled}
@@ -74,7 +80,7 @@ function Register() {
           id="image"
           placeholder="picture url"
           onChange={(e) => setData({ ...data, image: e.target.value })}
-          required
+          
         />
         <button disabled={disabled} type="submit">
           {disabled ? (
