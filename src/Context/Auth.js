@@ -22,7 +22,7 @@ function AuthProvider({ children }) {
       setToken({
         ...response.data.token,
       });
-      localStorage.setItem("token", JSON.stringify(response.data.token));
+      localStorage.setItem("user", JSON.stringify(response.data));
       navigate("/timeline");
     });
     promise.catch((e) => {
