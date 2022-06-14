@@ -17,7 +17,6 @@ export default function LogIn() {
     e.preventDefault();
     logIn(data, setDisabled);
   }
-
   return (
     <Main>
       <section>
@@ -42,7 +41,7 @@ export default function LogIn() {
         />
         <button disabled={disabled} type="submit">
           {disabled ? (
-            <ThreeDots color="#FFF" height={13} width={50} />
+            <ThreeDots color="#FFF" height={30} width={100} />
           ) : (
             "Log In"
           )}
@@ -113,6 +112,9 @@ const Main = styled.main`
       color: #FFFFFF;
       font-size: 27px;
       margin-bottom: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     p{
         font-family: 'Lato', sans-serif;

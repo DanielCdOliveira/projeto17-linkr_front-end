@@ -8,13 +8,12 @@ export const AuthContext = createContext({});
 function AuthProvider({ children }) {
   const [user, setUser] = useState({ token: "" });
   const [type, setType] = useState();
+  const URL = "http://localhost:4000";
 
   const navigate = useNavigate();
-
   function logIn(data, setDisabled) {
-    const URL = "http://localhost:4000";
 
-    const promise = axios.post(URL, data);
+    const promise = axios.post(URL+"/signin", data);
     promise.then((response) => {
       setDisabled(false);
       setUser({
@@ -35,6 +34,7 @@ function AuthProvider({ children }) {
       value={{
         user,
         logIn,
+        URL
       }}
     >
       {children}
