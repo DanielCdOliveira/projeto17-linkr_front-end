@@ -34,7 +34,9 @@ function Register() {
       if (e.response.status === 409) {
         alert("Email já cadastrado!");
       }
-      console.log(e);
+      if(e.response.status === 422){
+        alert("Por favor, insira um e-mail válido!")
+      }
     });
   }
 

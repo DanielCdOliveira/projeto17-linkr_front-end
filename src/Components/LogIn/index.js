@@ -10,8 +10,8 @@ export default function LogIn() {
   const navigate = useNavigate()
   
   useEffect(()=>{
-    const token = JSON.parse(localStorage.getItem("token"))
-    if(token)navigate("/timeline");
+    const user = JSON.parse(localStorage.getItem("user"))
+    if(user)navigate("/timeline");
   },[])
 
 
