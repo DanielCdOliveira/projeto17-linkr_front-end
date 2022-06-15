@@ -30,7 +30,9 @@ function AuthProvider({ children }) {
       if(e.response.status === 401){
         alert("Email e senha incompatíveis!")
       }
-      console.log(e);
+      if(e.response.status === 422){
+        alert("Por favor, insira um e-mail válido!")
+      }
     });
   }
 
