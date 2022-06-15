@@ -7,10 +7,22 @@ export default function Post(props){
     console.log(info)
     const [edit, setEdit] = useState(false);
     const [message, setMessage] = useState(info.message)
-    const nameRef = useRef();
+    const [oldMessage, setOldMessage] = useState()
+    const nameRef = useRef(null);
 
-    const focus = () => {
+    function focus() {
+      setOldMessage(message)
       nameRef.current.focus();
+      setMessage(message)
+    }
+
+    function submit(e){
+      if (e.keyCode === 13) {
+        e.preventDefault();  
+      } else if (e.keyCode === 27){
+        setMessage(oldMessage)
+        setEdit(false);
+      }
     }
 
     return (
@@ -25,7 +37,19 @@ export default function Post(props){
 
         <UserContainer>
           <p>Juvenal Juvêncio</p>
-          { edit ? <input name="message" type="text" value={message} ></input> : <p className='message' value={message} >JOVEM</p>}
+          { 
+          edit ?
+          <input 
+          name="message" 
+          ref={nameRef}
+          type="text" 
+          value={message} 
+          onKeyDown={submit}
+          onChange={e => setMessage(e.target.value)}
+          /> 
+          :
+          <p>{message}</p>
+          }
         </UserContainer>
         
         <LinkContainer href={info.url} target="_blank">
@@ -39,8 +63,8 @@ export default function Post(props){
 
         <EditDeleteContainer>
           <TiPencil color='white' fontSize="20px" onClick={() => {
-            focus(); 
             setEdit(!edit);
+            setTimeout(focus, 100); 
           }}/>
           <TiTrash color='white' fontSize="20px" />
         </EditDeleteContainer>

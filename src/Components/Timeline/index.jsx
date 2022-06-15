@@ -2,14 +2,17 @@ import { useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import Post from "./post.jsx"
+import { AuthContext } from "../../Context/Auth";
+
 export default function Timeline(){
         const [allPosts, setAllPosts] = useState([]);
+        const { URL } = useContext(AuthContext);
 
         useEffect(() => {
-                const URL = 'http://localhost:4000/get/posts';
-                const promise = axios.get(URL);
+                const promise = axios.get(`${URL}/get/posts`);
 
                 promise.then((response) => {
+                        console.log(response)
                         setAllPosts(response.data)
                 });
                 promise.catch(error => {
