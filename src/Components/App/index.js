@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import GlobalStyle from "../../Assets/globalStyle.js";
 import AuthProvider from "../../Context/Auth.js";
+import Feed from "../Feed/index.jsx";
 
 import LogIn from "../LogIn/index.js";
 import Register from "../SignUp/index.js";
@@ -14,6 +15,7 @@ function App() {
         <Routes>
         <Route path="/" element={<LogIn />}></Route>
         <Route path="/sign-up" element={<Register />}></Route>
+        <Route path="/feed" element={<Feed />} /> 
         </Routes>
       </AuthProvider>
     </BrowserRouter>
