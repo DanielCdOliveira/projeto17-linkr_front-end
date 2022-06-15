@@ -2,7 +2,7 @@ import { useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import Post from "./post.jsx"
-export default function Feed(){
+export default function Timeline(){
         const [allPosts, setAllPosts] = useState([]);
 
         useEffect(() => {
