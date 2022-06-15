@@ -6,7 +6,7 @@ import axios from "axios";
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
-  const [token, setToken] = useState({});
+  const [user, setUser] = useState({});
   const URL = "http://localhost:5000";
 
   const navigate = useNavigate();
@@ -19,10 +19,10 @@ function AuthProvider({ children }) {
     const promise = axios.post(URL+"/signin", data);
     promise.then((response) => {
       setDisabled(false);
-      setToken({
-        ...response.data.token,
+      setUser({
+        ...response.data,
       });
-      localStorage.setItem("token", JSON.stringify(response.data.token));
+      localStorage.setItem("user", JSON.stringify(response.data));
       navigate("/timeline");
     });
     promise.catch((e) => {
@@ -37,7 +37,7 @@ function AuthProvider({ children }) {
   return (
     <AuthContext.Provider
       value={{
-        token,
+        user,
         logIn,
         URL
       }}
