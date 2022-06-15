@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { TiPencil, TiHeartOutline, TiTrash } from "react-icons/ti";
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 export default function Post(props){
     const { info } = props;
-    console.log(info)
+
     const [edit, setEdit] = useState(false);
     const [message, setMessage] = useState(info.message)
     const [oldMessage, setOldMessage] = useState()
@@ -24,6 +24,10 @@ export default function Post(props){
         setEdit(false);
       }
     }
+    useEffect(()=>{
+      const user = JSON.parse(localStorage.getItem("user"))
+      setUser(user)
+    },[])
 
     return (
       <PostContainer>

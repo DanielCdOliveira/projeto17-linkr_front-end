@@ -3,6 +3,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import Post from "./post.jsx"
 import { AuthContext } from "../../Context/Auth";
+import Header from '../PublicComponents/Header.js'
 
 export default function Timeline(){
         const [allPosts, setAllPosts] = useState([]);
@@ -23,12 +24,15 @@ export default function Timeline(){
 
 
         return (
-                <PageContainer>
-                        <FeedContainer> 
-                                <h2>Timeline</h2>
-                                {allPosts.map(post => <Post  info={post} key={post.id}/>)}
-                        </FeedContainer>
-                </PageContainer>
+                <>
+                        <Header />
+                        <PageContainer>
+                                <FeedContainer> 
+                                        <h2>Timeline</h2>
+                                        {allPosts.map(post => <Post  info={post} key={post.id}/>)}
+                                </FeedContainer>
+                        </PageContainer>
+                </>
         )
 }
 
