@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { TiPencil, TiHeartOutline, TiTrash } from "react-icons/ti";
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 export default function Post(props){
     const { info } = props;
@@ -30,7 +30,7 @@ export default function Post(props){
 
         <UserContainer>
           <p>Juvenal Juvêncio</p>
-          { edit ? <input name="message" type="text" value={message} ></input> : <p className='message' value={message} >JOVEM</p>}
+          {/* { edit ? <input name="message" type="text" value={message} ></input> : <p className='message' value={message} >JOVEM</p>} */}
         </UserContainer>
         
         <LinkContainer href={info.url} target="_blank">
