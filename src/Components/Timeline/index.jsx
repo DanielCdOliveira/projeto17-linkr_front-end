@@ -27,10 +27,15 @@ export default function Timeline(){
                 <>
                         <Header />
                         <PageContainer>
-                                <FeedContainer> 
-                                        <h2>Timeline</h2>
-                                        {allPosts.map(post => <Post  info={post} key={post.id}/>)}
-                                </FeedContainer>
+                                <Center>
+                                        <FeedContainer> 
+                                                <h2>Timeline</h2>
+                                                {allPosts.map(post => <Post  info={post} key={post.id}/>)}
+                                        </FeedContainer>
+                                        <SideBar>
+                                                oe
+                                        </SideBar>
+                                </Center>
                         </PageContainer>
                 </>
         )
@@ -40,12 +45,18 @@ const PageContainer = styled.div`
         width: 100vw;
         height: 100vh;
         background-color: #333333;
-
         display: flex;
         justify-content:center;
-
-        
 `; 
+
+const Center = styled.div`
+        width: 50%;
+        height: auto;
+        display: flex;
+        background-color: blue;
+        justify-content: space-between;
+
+`
 const FeedContainer = styled.div`
         width: 615px;
         margin-top: 100px;
@@ -59,4 +70,10 @@ const FeedContainer = styled.div`
                 color: #FFFFFF;
         }
 
+`
+const SideBar = styled.div`
+        width: 20%;
+        height: 300px;
+        margin-top: 180px;
+        background-color: orange;
 `
