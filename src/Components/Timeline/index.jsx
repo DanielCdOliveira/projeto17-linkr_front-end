@@ -43,7 +43,7 @@ export default function Timeline(){
 
 const PageContainer = styled.div`
         width: 100vw;
-        height: 100vh;
+        height: 100%;
         background-color: #333333;
         display: flex;
         justify-content:center;
@@ -53,7 +53,6 @@ const Center = styled.div`
         width: 50%;
         height: auto;
         display: flex;
-        background-color: blue;
         justify-content: space-between;
 
 `

@@ -42,6 +42,7 @@ const MainHeader = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 0 17px 0 28px;
+  box-sizing: border-box;
   h1 {
     font-family: "Passion One", cursive;
     font-weight: 700;
