@@ -24,10 +24,7 @@ export default function Post(props){
         setEdit(false);
       }
     }
-    useEffect(()=>{
-      const user = JSON.parse(localStorage.getItem("user"))
-      setUser(user)
-    },[])
+
 
     return (
       <PostContainer>
