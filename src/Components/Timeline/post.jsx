@@ -53,7 +53,7 @@ export default function Post(props){
 
 const PostContainer = styled.div`
   background-color: #171717;
-  margin-top: 15px;
+  margin-top: 22px;
   border-radius: 15px;
   width: 611px;
   height: 276px;
@@ -62,8 +62,6 @@ const PostContainer = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-
-  
 `;
 
 const PerfilLikeContainer = styled.div`

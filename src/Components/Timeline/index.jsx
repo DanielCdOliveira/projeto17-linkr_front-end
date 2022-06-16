@@ -7,7 +7,7 @@ import PostForm from './PostForm.jsx';
 
 export default function Timeline(){
         const [allPosts, setAllPosts] = useState([]);
-        const [user, setUser] = useState(null)
+        const [user, setUser] = useState([])
         useEffect(() => {
 
                 const user = JSON.parse(localStorage.getItem("user"))
@@ -24,25 +24,28 @@ export default function Timeline(){
                         alert("Deu algum erro...");
                 });
         }, []);
-        
+        const userStorage = JSON.parse(localStorage.getItem("user"))
+        const token = userStorage.token
         return (
-                <>
-                        <Header />
-                        <PageContainer>
-                                {/* {user ? } */}
-                                <FeedContainer> 
-                                        <h2>Timeline</h2>
-                                        <PostForm image={user ? user.image : ""}/>
-                                        {allPosts.map(post => <Post  info={post} key={post.id}/>)}
-                                </FeedContainer>
-                        </PageContainer>
-                </>
-        )
+          <>
+            <Header />
+            <PageContainer>
+              {/* {user ? } */}
+              <FeedContainer>
+                <h2>Timeline</h2>
+                <PostForm user={user} token={token} setAllPosts={setAllPosts} />
+                {allPosts.map((post) => (
+                  <Post info={post} key={post.postid} />
+                ))}
+              </FeedContainer>
+            </PageContainer>
+          </>
+        );
 }
 
 const PageContainer = styled.div`
         width: 100vw;
-        height: 100vh;
+        height: 100%;
         background-color: #333333;
 
         display: flex;
