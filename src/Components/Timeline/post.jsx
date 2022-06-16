@@ -32,44 +32,52 @@ export default function Post(props){
         <PerfilLikeContainer>
           <img src="https://img.freepik.com/vetores-gratis/fundo-de-modelo-simples-de-moldura-redonda_1159-26474.jpg"></img>
           <div>
-            <TiHeartOutline fontSize="30px"/>
+            <TiHeartOutline color="white" fontSize="30px"/>
           </div>
         </PerfilLikeContainer>
+      
+        <Right>
 
-        <UserContainer>
-          <p>Juvenal Juvêncio</p>
-          { 
-          edit ?
-          <input 
-          name="message" 
-          ref={nameRef}
-          type="text" 
-          value={message} 
-          onKeyDown={submit}
-          onChange={e => setMessage(e.target.value)}
-          /> 
-          :
-          <p>{message}</p>
-          }
-        </UserContainer>
-        
-        <LinkContainer href={info.url} target="_blank">
-            <div href={info.url} target="_blank">
-              <p>{info.title}</p>
-              <p>{info.description}</p>
-              <p>{info.url}</p>
-            </div>
-            <img src={info.image}></img>
-        </LinkContainer>
+          <UserContainer>
 
-        <EditDeleteContainer>
-          <TiPencil color='white' fontSize="20px" onClick={() => {
-            setEdit(!edit);
-            setTimeout(focus, 100); 
-          }}/>
-          <TiTrash color='white' fontSize="20px" />
-        </EditDeleteContainer>
-        
+            <MessageUser>
+              <p>Juvenal Juvêncio</p>
+              { 
+              edit ?
+              <input 
+              name="message" 
+              ref={nameRef}
+              type="text" 
+              value={message} 
+              onKeyDown={submit}
+              onChange={e => setMessage(e.target.value)}
+              /> 
+              :
+              <p>{message}</p>
+              }
+            </MessageUser>
+
+            <EditDeleteContainer>
+              <TiPencil color='white' fontSize="25px" onClick={() => {
+                setEdit(!edit);
+                setTimeout(focus, 100); 
+              }}/>
+              <TiTrash color='white' fontSize="25px" />
+            </EditDeleteContainer>
+
+          </UserContainer>
+          
+          <LinkContainer href={info.url} target="_blank">
+              <div href={info.url} target="_blank">
+                <p>{info.title}</p>
+                <p>{info.description}</p>
+                <p>{info.url}</p>
+              </div>
+              <img src={info.image}></img>
+          </LinkContainer>
+
+        </Right>
+
       </PostContainer>
     );
 }
@@ -78,44 +86,48 @@ const PostContainer = styled.div`
   background-color: #171717;
   margin-top: 15px;
   border-radius: 15px;
-  width: 611px;
+  width: 100%;
   height: 276px;
-
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-
-  
+  box-sizing: border-box;
 `;
 
+const Right = styled.div`
+  width: 85%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+
 const PerfilLikeContainer = styled.div`
-    position: absolute;
-    top: 18px;
-    left: 18px;
-
-
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 
     img{
       width: 50px;
       height: 50px;
       border-radius: 50%;
+      margin-bottom: 10px;
     }
 `;
 
 const LinkContainer = styled.a`
-      width: 503px;
-      height: 155px;
-      position: absolute;
-      right: 20px;
+      height: auto;
       bottom: 20px;
+      margin-bottom: 20px;
       border: 1px solid #4D4D4D;
       border-radius: 11px;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
       text-decoration: none;
+
     div {
       display: flex;
-      width: 345px;
+      width: 80%;
+      margin: 10px;
       height: 155px;
       flex-direction: column;
       justify-content: space-around;
@@ -132,26 +144,33 @@ const LinkContainer = styled.a`
     }
 
     img{
-
-      width: 153.44px;
-      height: 155px;
+      border-radius: 0px 11px 11px 0px; 
+      width: 35%;
+      height: 175px;
     }
 `;
 
 const EditDeleteContainer = styled.div`
-  position: absolute;
-  top: 22px;
-  right: 22px;
-  
-  width: 50px;
+  padding-top: 10px;
   display: flex;
-  justify-content: space-around;
-  
+  width: 11%;
+  justify-content: space-between;
 `;
 
 const UserContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
   color: white;
-  .message{
-    color: white;
-  }
+
+    .message{
+      color: white;
+    }
+
+`
+
+const MessageUser = styled.div`
+  width: 80%;
+  height: auto;
+  padding: 10px 0px 10px 0px;
+  line-height: 25px;
 `

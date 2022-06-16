@@ -28,6 +28,7 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 	margin:0;
+	font-family: 'Lato', sans-serif;
 }
 ol, ul {
 	list-style: none;
