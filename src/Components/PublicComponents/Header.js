@@ -6,20 +6,18 @@ import { useNavigate } from "react-router-dom";
 export default function Header() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [showLogout, setShowLogout] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    function logout(){
-        localStorage.removeItem("user")
-        navigate("/")
-    }
-
-
+  function logout() {
+    localStorage.removeItem("user");
+    navigate("/");
+  }
 
   return (
-    <MainHeader showLogout={showLogout}>
+    <MainHeader showLogout={showLogout} image={user.image}>
       <h1>linkr</h1>
-      <nav className="profile">
-        <IoIosArrowDown onClick={() => setShowLogout(!showLogout)} />
+      <nav className="profile" onClick={() => setShowLogout(!showLogout)}>
+        <IoIosArrowDown />
         <img src={user.image} alt="profile picture" />
       </nav>
       <div className="logout" onClick={logout}>
@@ -42,6 +40,8 @@ const MainHeader = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 0 17px 0 28px;
+  box-sizing: border-box;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
   h1 {
     font-family: "Passion One", cursive;
     font-weight: 700;
@@ -51,6 +51,7 @@ const MainHeader = styled.header`
   .profile {
     display: flex;
     align-items: center;
+    cursor: pointer;
   }
   svg {
     font-size: 40px;
@@ -77,11 +78,13 @@ const MainHeader = styled.header`
     display: flex;
     justify-content: center;
     align-items: center;
-    p{
-        font-family: 'Lato', sans-serif;
-        font-weight: 700;
-        font-size: 17px;
-        color: #ffffff;
+    cursor: pointer;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    p {
+      font-family: "Lato", sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      color: #ffffff;
     }
   }
 `;
