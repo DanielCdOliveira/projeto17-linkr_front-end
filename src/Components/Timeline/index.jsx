@@ -30,7 +30,7 @@ export default function Timeline(){
                                 <Center>
                                         <FeedContainer> 
                                                 <h2>Timeline</h2>
-                                                {allPosts.map(post => <Post  info={post} key={post.id}/>)}
+                                                {allPosts.map(post => <Post  info={post} key={post.id} setAllPosts={setAllPosts}/>)}
                                         </FeedContainer>
                                         <SideBar>
                                                 oe
