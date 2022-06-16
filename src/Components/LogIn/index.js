@@ -7,13 +7,12 @@ import { ThreeDots } from "react-loader-spinner";
 export default function LogIn() {
   const { logIn } = useContext(AuthContext);
   const [disabled, setDisabled] = useState(false);
-  const navigate = useNavigate()
-  
-  useEffect(()=>{
-    const user = JSON.parse(localStorage.getItem("user"))
-    if(user)navigate("/timeline");
-  },[])
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) navigate("/timeline");
+  }, []);
 
   const [data, setData] = useState({
     email: "",
@@ -85,8 +84,6 @@ const Main = styled.main`
     }
   }
   form {
-    right: 0;
-    top: 0;
     width: 38vw;
     height: 100vh;
     background-color: #333333;
@@ -94,7 +91,7 @@ const Main = styled.main`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
+    text-align: center;
     input {
       width: 80%;
       max-width: 450px;
@@ -102,7 +99,6 @@ const Main = styled.main`
       margin-bottom: 13px;
       border-radius: 6px;
       border: none;
-      outline-style: none;
       padding: 12px 17px;
       font-size: 27px;
       font-family: "Oswald", sans-serif;
@@ -124,6 +120,7 @@ const Main = styled.main`
       display: flex;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
     }
     p {
       font-family: "Lato", sans-serif;
@@ -132,6 +129,39 @@ const Main = styled.main`
       line-height: 24px;
       color: #ffffff;
       text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+  @media (max-width: 600px) {
+    flex-direction: column;
+    section {
+      width: 100vw;
+      padding-left: 0px;
+      height: 175px;
+      align-items: center;
+      text-align: center;
+      padding: 0 69px;
+      box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+      h1 {
+        font-size: 4.8em;
+      }
+      h2 {
+        font-size: 1.4em;
+      }
+    }
+    form {
+      width: 100vw;
+      height: calc(100vh - 175px);
+      justify-content: flex-start;
+      padding-top: 40px;
+      input {
+        height: 55px;
+        font-size: 22px;
+      }
+      button {
+        height: 55px;
+        font-size: 22px;
+      }
     }
   }
 `;

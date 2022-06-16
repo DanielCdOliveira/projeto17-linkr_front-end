@@ -20,8 +20,13 @@ function Register() {
   function newRegister(e) {
     setDisabled(true);
     e.preventDefault();
-    if(data.email === "" ||data.password === "" ||data.name === "" ||data.image === ""){
-      alert("Favor preencher todos os campos!")
+    if (
+      data.email === "" ||
+      data.password === "" ||
+      data.name === "" ||
+      data.image === ""
+    ) {
+      alert("Favor preencher todos os campos!");
       setDisabled(false);
       return;
     }
@@ -34,8 +39,12 @@ function Register() {
       if (e.response.status === 409) {
         alert("Email já cadastrado!");
       }
-      if(e.response.status === 422){
-        alert("Por favor, insira um e-mail válido!")
+      if (e.response.status === 422) {
+        if (e.response.data.length >= 2)
+          return alert("E-mail e imagem inválidos");
+        if (e.response.data[0].slice(1, 6) === "image")
+          return alert("Link de imagem inválidos");
+        alert("Por favor, insira um e-mail válido!");
       }
     });
   }
@@ -48,24 +57,22 @@ function Register() {
       </section>
 
       <form onSubmit={newRegister}>
-          <input
-            disabled={disabled}
-            type="email"
-            name=""
-            id="email-signup"
-            placeholder="e-mail"
-            onChange={(e) => setData({ ...data, email: e.target.value })}
-            
-          />
-          <input
-            disabled={disabled}
-            type="password"
-            name=""
-            id="password-signup"
-            placeholder="password"
-            onChange={(e) => setData({ ...data, password: e.target.value })}
-            
-          />
+        <input
+          disabled={disabled}
+          type="email"
+          name=""
+          id="email-signup"
+          placeholder="e-mail"
+          onChange={(e) => setData({ ...data, email: e.target.value })}
+        />
+        <input
+          disabled={disabled}
+          type="password"
+          name=""
+          id="password-signup"
+          placeholder="password"
+          onChange={(e) => setData({ ...data, password: e.target.value })}
+        />
         <input
           disabled={disabled}
           type="text"
@@ -73,16 +80,14 @@ function Register() {
           id="name-signup"
           placeholder="username"
           onChange={(e) => setData({ ...data, name: e.target.value })}
-          
         />
         <input
           disabled={disabled}
           type="url"
           name=""
           id="image"
-          placeholder="picture url"
+          placeholder="picture (http or https)"
           onChange={(e) => setData({ ...data, image: e.target.value })}
-          
         />
         <button disabled={disabled} type="submit">
           {disabled ? (
@@ -138,7 +143,6 @@ const Main = styled.main`
       margin-bottom: 13px;
       border-radius: 6px;
       border: none;
-      outline-style: none;
       padding: 12px 17px;
       font-size: 27px;
       font-family: "Oswald", sans-serif;
@@ -160,6 +164,7 @@ const Main = styled.main`
       display: flex;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
     }
     p {
       font-family: "Lato", sans-serif;
@@ -168,6 +173,39 @@ const Main = styled.main`
       line-height: 24px;
       color: #ffffff;
       text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+  @media (max-width: 600px) {
+    flex-direction: column;
+    section {
+      width: 100vw;
+      padding-left: 0px;
+      height: 175px;
+      align-items: center;
+      text-align: center;
+      padding: 0 69px;
+      box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+      h1 {
+        font-size: 4.8em;
+      }
+      h2 {
+        font-size: 1.4em;
+      }
+    }
+    form {
+      width: 100vw;
+      height: calc(100vh - 175px);
+      justify-content: flex-start;
+      padding-top: 40px;
+      input {
+        height: 55px;
+        font-size: 22px;
+      }
+      button {
+        height: 55px;
+        font-size: 22px;
+      }
     }
   }
 `;
