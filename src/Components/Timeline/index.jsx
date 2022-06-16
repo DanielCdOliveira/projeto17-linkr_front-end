@@ -4,13 +4,15 @@ import styled from 'styled-components';
 import Post from "./post.jsx"
 import { AuthContext } from "../../Context/Auth";
 import Header from '../PublicComponents/Header.js'
-
+import PostForm from './PostForm.jsx';
 export default function Timeline(){
         const [allPosts, setAllPosts] = useState([]);
+        const [user, setUser] = useState([])
         const { URL } = useContext(AuthContext);
         useEffect(() => {
+                const user = JSON.parse(localStorage.getItem("user"))
+                setUser(user)
                 const promise = axios.get(`${URL}/get/posts`);
-
                 promise.then((response) => {
                         console.log(response)
                         setAllPosts(response.data)
@@ -20,8 +22,8 @@ export default function Timeline(){
                         alert("Deu algum erro...");
                 });
         }, []);
-
-
+        const userStorage = JSON.parse(localStorage.getItem("user"))
+        const token = userStorage.token
         return (
                 <>
                         <Header />
@@ -29,6 +31,8 @@ export default function Timeline(){
                                 <Center>
                                         <FeedContainer> 
                                                 <h2>Timeline</h2>
+                                                <PostForm user={user} token={token} setAllPosts={setAllPosts} />
+
                                                 {allPosts.map(post => <Post  info={post} key={post.id} setAllPosts={setAllPosts}/>)}
                                         </FeedContainer>
                                         <SideBar>
