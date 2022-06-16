@@ -1,13 +1,25 @@
 import styled from 'styled-components';
+import axios from 'axios';
+import Modal from "react-modal";
 import { TiPencil, TiHeartOutline, TiTrash } from "react-icons/ti";
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AuthContext } from "../../Context/Auth";
+
+Modal.setAppElement(".root");
 
 export default function Post(props){
-    const { info } = props;
+    const { info, setAllPosts } = props;
+    const { URL, user } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const { id } = useParams();
+
+    const tokenStorage = JSON.parse(localStorage.getItem('token'));
 
     const [edit, setEdit] = useState(false);
     const [message, setMessage] = useState(info.message)
     const [oldMessage, setOldMessage] = useState()
+    const [isOpen, setIsOpen] = useState(false);
     const nameRef = useRef(null);
 
     function focus() {
@@ -18,13 +30,95 @@ export default function Post(props){
 
     function submit(e){
       if (e.keyCode === 13) {
-        e.preventDefault();  
+        updateMessage();   
       } else if (e.keyCode === 27){
         setMessage(oldMessage)
         setEdit(false);
       }
     }
 
+    function updateMessage(){
+      const config = {
+        headers: {
+            Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const obj = { postId: info.postid, message: message}
+      const promise = axios.post(`${URL}/edit/post`, obj , config);
+  
+      promise.then((response) => {
+        setMessage(response.data);
+        setEdit(false);
+      });
+      promise.catch(error => {
+          console.log(error);
+          alert("Deu algum erro, não foi possivel salvar as alterações...");
+          setEdit(true);
+      });
+      }
+
+    function deletePost(){ 
+      const id = info.postid
+
+      const config = {
+        headers: {
+            Authorization: `Bearer ${user.token}`,
+        }
+      };
+
+
+      const promise = axios.delete(`${URL}/delete/post/${id}`, config);
+  
+      promise.then((response) => {
+        toggleModal();
+        const promise2 = axios.get(`${URL}/get/posts`);
+        promise2.then((response) => {
+          setAllPosts(response.data)
+        })
+        promise2.catch(error => {
+          console.log(error);
+          alert("Deu algum erro, não foi possivel deletar o post...");
+        })
+      });
+      promise.catch(error => {
+          console.log(error);
+          alert("Deu algum erro, não foi possivel deletar o post...");
+          toggleModal(); 
+      });
+    }
+   
+    function toggleModal() {
+      setIsOpen(!isOpen);
+    }
+
+    const customStyles = {
+      overlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(255, 255, 255, 0.75)'
+      },
+      content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        width: '597px',
+        height: '262px',
+        background: '#333333',
+        borderRadius: '50px',
+        color: 'white',
+        outline: 'none',
+        fontSize: '34px',
+        paddingLeft: '130px',
+        paddingRight: '130px',
+      }
+    };
 
     return (
       <PostContainer>
@@ -58,11 +152,16 @@ export default function Post(props){
             </MessageUser>
 
             <EditDeleteContainer>
-              <TiPencil color='white' fontSize="25px" onClick={() => {
-                setEdit(!edit);
-                setTimeout(focus, 100); 
-              }}/>
-              <TiTrash color='white' fontSize="25px" />
+              <TiPencil color='white' fontSize="25px" onClick={() => { 
+            if(edit === false){
+            setEdit(!edit);
+            setTimeout(focus, 100);
+          } else {
+            setEdit(false);
+            setMessage(oldMessage)
+          }
+          }}/>
+              <TiTrash color='white' fontSize="25px" onClick={toggleModal}/>
             </EditDeleteContainer>
 
           </UserContainer>
@@ -77,6 +176,15 @@ export default function Post(props){
           </LinkContainer>
 
         </Right>
+
+        <Modal
+        isOpen={isOpen}
+        onRequestClose={toggleModal}
+        style={customStyles}>
+        <div>Are you sure you want to delete this post?</div>
+        <button onClick={toggleModal}>No, go back</button>
+        <button onClick={deletePost}>Yes, delete it</button>
+        </Modal>
 
       </PostContainer>
     );
