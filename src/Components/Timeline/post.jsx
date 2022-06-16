@@ -92,6 +92,7 @@ export default function Post(props){
       setIsOpen(!isOpen);
     }
 
+
     const customStyles = {
       overlay: {
         position: 'fixed',
@@ -129,7 +130,7 @@ export default function Post(props){
             <TiHeartOutline color="white" fontSize="30px"/>
           </div>
         </PerfilLikeContainer>
-      
+
         <Right>
 
           <UserContainer>
@@ -192,7 +193,7 @@ export default function Post(props){
 
 const PostContainer = styled.div`
   background-color: #171717;
-  margin-top: 15px;
+  margin-top: 22px;
   border-radius: 15px;
   width: 100%;
   height: 276px;
@@ -204,6 +205,7 @@ const Right = styled.div`
   width: 85%;
   display: flex;
   flex-direction: column;
+
   justify-content: space-between;
 `
 
