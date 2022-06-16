@@ -3,11 +3,17 @@ import axios from 'axios';
 import styled from 'styled-components';
 import Post from "./post.jsx"
 import Header from '../PublicComponents/Header.js'
+import PostForm from './PostForm.jsx';
+
 export default function Timeline(){
         const [allPosts, setAllPosts] = useState([]);
-
+        const [user, setUser] = useState(null)
         useEffect(() => {
-                const URL = 'http://localhost:4000/get/posts';
+
+                const user = JSON.parse(localStorage.getItem("user"))
+                setUser(user)
+
+                const URL = 'http://localhost:5000/get/posts';
                 const promise = axios.get(URL);
 
                 promise.then((response) => {
@@ -18,14 +24,15 @@ export default function Timeline(){
                         alert("Deu algum erro...");
                 });
         }, []);
-
-
+        
         return (
                 <>
                         <Header />
                         <PageContainer>
+                                {/* {user ? } */}
                                 <FeedContainer> 
                                         <h2>Timeline</h2>
+                                        <PostForm image={user ? user.image : ""}/>
                                         {allPosts.map(post => <Post  info={post} key={post.id}/>)}
                                 </FeedContainer>
                         </PageContainer>
@@ -39,7 +46,8 @@ const PageContainer = styled.div`
         background-color: #333333;
 
         display: flex;
-        justify-content:center;
+        flex-direction: column;
+        align-items:center;
 
         
 `; 

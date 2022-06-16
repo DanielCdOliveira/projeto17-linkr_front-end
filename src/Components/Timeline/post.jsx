@@ -13,10 +13,7 @@ export default function Post(props){
     const focus = () => {
       nameRef.current.focus();
     }
-    useEffect(()=>{
-      const user = JSON.parse(localStorage.getItem("user"))
-      setUser(user)
-    },[])
+    
 
     return (
       <PostContainer>
@@ -27,7 +24,7 @@ export default function Post(props){
             <TiHeartOutline fontSize="30px"/>
           </div>
         </PerfilLikeContainer>
-
+        
         <UserContainer>
           <p>Juvenal Juvêncio</p>
           {/* { edit ? <input name="message" type="text" value={message} ></input> : <p className='message' value={message} >JOVEM</p>} */}
