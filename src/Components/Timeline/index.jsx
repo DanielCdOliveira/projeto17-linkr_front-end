@@ -8,7 +8,6 @@ import Header from '../PublicComponents/Header.js'
 export default function Timeline(){
         const [allPosts, setAllPosts] = useState([]);
         const { URL } = useContext(AuthContext);
-
         useEffect(() => {
                 const promise = axios.get(`${URL}/get/posts`);
 
