@@ -7,7 +7,7 @@ export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState({});
-  const URL = "http://localhost:4000";
+  const URL = "http://localhost:5000";
 
   const navigate = useNavigate();
   function logIn(data, setDisabled) {
