@@ -89,7 +89,6 @@ const PostContainer = styled.div`
   width: 100%;
   height: 276px;
   display: flex;
-  box-sizing: border-box;
 `;
 
 const Right = styled.div`
@@ -145,7 +144,7 @@ const LinkContainer = styled.a`
 
     img{
       border-radius: 0px 11px 11px 0px; 
-      width: 35%;
+      width: 30%;
       height: 175px;
     }
 `;
@@ -153,7 +152,7 @@ const LinkContainer = styled.a`
 const EditDeleteContainer = styled.div`
   padding-top: 10px;
   display: flex;
-  width: 11%;
+  width: 8%;
   justify-content: space-between;
 `;
 

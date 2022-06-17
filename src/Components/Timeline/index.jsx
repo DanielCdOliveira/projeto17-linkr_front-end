@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import Post from "./post.jsx"
 import { AuthContext } from "../../Context/Auth";
 import Header from '../PublicComponents/Header.js'
+import HashtagsTrending from './sideBar.jsx';
 
 export default function Timeline(){
         const [allPosts, setAllPosts] = useState([]);
-        const { URL } = useContext(AuthContext);
+        const { URL, getTrending, hashtags } = useContext(AuthContext);
 
         useEffect(() => {
                 const promise = axios.get(`${URL}/get/posts`);
@@ -20,8 +21,10 @@ export default function Timeline(){
                         console.log(error);
                         alert("Deu algum erro...");
                 });
+                getTrending()
         }, []);
 
+        console.log(hashtags)
 
         return (
                 <>
@@ -32,10 +35,8 @@ export default function Timeline(){
                                                 <h2>Timeline</h2>
                                                 {allPosts.map(post => <Post  info={post} key={post.id}/>)}
                                         </FeedContainer>
-                                        <SideBar>
-                                                oe
-                                        </SideBar>
                                 </Center>
+                                <HashtagsTrending hashtags = {hashtags}/>
                         </PageContainer>
                 </>
         )
@@ -50,15 +51,16 @@ const PageContainer = styled.div`
 `; 
 
 const Center = styled.div`
-        width: 50%;
+        width: 60%;
         height: auto;
         display: flex;
         justify-content: space-between;
 
 `
 const FeedContainer = styled.div`
-        width: 615px;
+        width: 70%;
         margin-top: 100px;
+
         h2{
 
                 font-family: 'Oswald';
@@ -69,10 +71,4 @@ const FeedContainer = styled.div`
                 color: #FFFFFF;
         }
 
-`
-const SideBar = styled.div`
-        width: 20%;
-        height: 300px;
-        margin-top: 180px;
-        background-color: orange;
 `
