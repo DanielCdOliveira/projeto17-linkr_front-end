@@ -1,26 +1,42 @@
 import styled from 'styled-components';
 import axios from 'axios';
+import ReactTooltip from "react-tooltip";
 import Modal from "react-modal";
-import { TiPencil, TiHeartOutline, TiTrash } from "react-icons/ti";
-import { useRef, useState, useEffect, useContext } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { TiPencil, TiHeartFullOutline, TiTrash } from "react-icons/ti";
+import { useRef, useState, useContext, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { AuthContext } from "../../Context/Auth";
+import Loading  from "../PublicComponents/Loading"
 
 Modal.setAppElement(".root");
 
 export default function Post(props){
-    const { info, setAllPosts } = props;
-    const { URL, user } = useContext(AuthContext);
-    const navigate = useNavigate();
+    const { info, setAllPosts, like, selected, likesNames } = props;
+    const { URL } = useContext(AuthContext);
     const { id } = useParams();
 
-    const tokenStorage = JSON.parse(localStorage.getItem('token'));
+    const user = JSON.parse(localStorage.getItem('user'));
+    const tokenStorage = user.token;
 
     const [edit, setEdit] = useState(false);
     const [message, setMessage] = useState(info.message)
     const [oldMessage, setOldMessage] = useState()
+    const [promiseReturned, setPromiseReturned] = useState(false);
+    const [likes, setLikes] = useState(false);
+    const [countLikes, setCountLikes] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [result, setResult] = useState('');
+
+
     const nameRef = useRef(null);
+
+    useEffect(() => {
+      if(like){
+        setLikes(true);
+      }else{
+        setLikes(false);
+      }
+    }, [like])
 
     function focus() {
       setOldMessage(message)
@@ -40,16 +56,18 @@ export default function Post(props){
     function updateMessage(){
       const config = {
         headers: {
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${tokenStorage}`,
         },
       };
 
       const obj = { postId: info.postid, message: message}
       const promise = axios.post(`${URL}/edit/post`, obj , config);
+      setPromiseReturned(true)
   
       promise.then((response) => {
         setMessage(response.data);
         setEdit(false);
+        setPromiseReturned(false);
       });
       promise.catch(error => {
           console.log(error);
@@ -58,16 +76,67 @@ export default function Post(props){
       });
       }
 
-    function deletePost(){ 
-      const id = info.postid
-
+    function postLike(){
+      const id = info.postid;
       const config = {
         headers: {
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${tokenStorage}`,
+        },
+      };
+      const promise = axios.post(`${URL}/like/post/${id}`, id, config);
+  
+      promise.then((response) => {
+        setLikes(true)
+      });
+      promise.catch(error => {
+          console.log(error);
+          alert("Deu algum erro, não foi possivel salvar o like...");
+      });
+    }
+
+    function deleteLike(){
+      const id = info.postid;
+      const config = {
+        headers: {
+            Authorization: `Bearer ${tokenStorage}`,
+        },
+      };
+      const promise = axios.delete(`${URL}/deslike/post/${id}`, config);
+  
+      promise.then((response) => {
+        setLikes(false)
+      });
+      promise.catch(error => {
+          console.log(error);
+          alert("Deu algum erro, não foi possivel deletar o like...");
+      });
+    }
+
+    useEffect(() => {
+      const id = info.postid;
+      const promise = axios.get(`${URL}/coutlikes/post/${id}`);
+      promise.then((response) => {
+        setCountLikes(response.data);
+      });
+      promise.catch((error) => {
+        console.log(error);
+        alert("Deu algum erro...");
+      });
+    }, [likes])
+
+    function toggleModal() {
+      setIsOpen(!isOpen);
+    }
+
+    function deletePost(){ 
+      const id = info.postid
+  
+      const config = {
+        headers: {
+            Authorization: `Bearer ${tokenStorage}`,
         }
       };
-
-
+  
       const promise = axios.delete(`${URL}/delete/post/${id}`, config);
   
       promise.then((response) => {
@@ -87,47 +156,93 @@ export default function Post(props){
           toggleModal(); 
       });
     }
-   
-    function toggleModal() {
-      setIsOpen(!isOpen);
-    }
+  
+      const customStyles = {
+          overlay: {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(255, 255, 255, 0.9)'
+          },
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            width: '597px',
+            height: '262px',
+            background: '#333333',
+            borderRadius: '50px',
+            textAlign: 'center',
+            color: 'white',
+            paddingLeft: '100px',
+            paddingRight: '100px',
+            fontSize: '34px',
+          }
+        };
 
-    const customStyles = {
-      overlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(255, 255, 255, 0.75)'
-      },
-      content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-        width: '597px',
-        height: '262px',
-        background: '#333333',
-        borderRadius: '50px',
-        color: 'white',
-        outline: 'none',
-        fontSize: '34px',
-        paddingLeft: '130px',
-        paddingRight: '130px',
-      }
-    };
+   const names = useEffect(() => {
+        let newLikesNames = []
+        for(let i=0; i<likesNames.length; i++){
+          if(likesNames[i].name != user.name){
+            newLikesNames.push(likesNames[i].name);
+          }
+        }
+        let res = '';
+  
+        if(likesNames.length == 0){
+          res = null;
+          setResult(res)
+        } else if(likesNames.length == 1 && likes){
+          res = "Você curtiu";
+          setResult(res)
+        } else if(likesNames.length == 1 && !likes){
+          res = `Curtido por ${newLikesNames[0]}`
+          setResult(res)
+        } else if (likesNames.length == 2 && likes){
+          res = `Voce e ${newLikesNames[0]} curtiram`
+          setResult(res)
+        } else if (likesNames.length == 2 && !likes){
+          res = `${newLikesNames[0]} e ${newLikesNames[1]} curtiram`
+          setResult(res)
+        } else if (likesNames.length >= 3 && likes){
+          res = `Você, ${newLikesNames[0]} e mais ${countLikes - 2} curtiram`
+          setResult(res)
+        } else if(likesNames.length >= 3 && !likes){
+          res = `${newLikesNames[0]}, ${newLikesNames[1]} e mais ${countLikes - 2} curtiram`
+          setResult(res)
+        }
+
+    }, [countLikes])
 
     return (
+      promiseReturned === false?
       <PostContainer>
 
         <PerfilLikeContainer>
           <img src="https://img.freepik.com/vetores-gratis/fundo-de-modelo-simples-de-moldura-redonda_1159-26474.jpg"></img>
+          
           <div>
-            <TiHeartOutline color="white" fontSize="30px"/>
+            <TiHeartFullOutline style={{color: likes ? "red" : "white"}} fontSize="30px" onClick={() => {
+              if(likes === false){
+                postLike();
+              } else if( likes === true){
+                deleteLike();
+              }
+            }}/>
           </div>
+          <ContainerCountLikes data-tip data-for="countLikes">
+            <a data-tip=
+            {
+              `${result}`
+            }>{countLikes} Likes</a>
+            <ReactTooltip place="bottom" type="light" effect="solid"/>
+          </ContainerCountLikes>
+
         </PerfilLikeContainer>
       
         <Right>
@@ -145,6 +260,7 @@ export default function Post(props){
               value={message} 
               onKeyDown={submit}
               onChange={e => setMessage(e.target.value)}
+              disabled={promiseReturned? true:false}
               /> 
               :
               <p>{message}</p>
@@ -176,17 +292,47 @@ export default function Post(props){
           </LinkContainer>
 
         </Right>
-
+        
         <Modal
-        isOpen={isOpen}
-        onRequestClose={toggleModal}
-        style={customStyles}>
-        <div>Are you sure you want to delete this post?</div>
-        <button onClick={toggleModal}>No, go back</button>
-        <button onClick={deletePost}>Yes, delete it</button>
-        </Modal>
+          isOpen={isOpen}
+          onRequestClose={toggleModal}
+          style={customStyles}>
+          <div style={{marginTop: "40px"}}>Are you sure you want to delete this post?</div>
+          <button 
+          onClick={toggleModal} 
+          style={{
+          width: "134px", 
+          height: "37px", 
+          marginTop: "40px", 
+          marginRight: "25px", 
+          borderRadius: "5px", 
+          background: '#ffffff', 
+          color: '#1877F2', 
+          textDecoration: 'none',
+          fontFamily: 'Lato',
+          fontSize: '18px',
+          fontWeight: '700'
+          }}>No, go back</button>
+
+          <button 
+          onClick={deletePost} 
+          style={{
+          width: "134px", 
+          height: "37px", 
+          marginTop: "40px", 
+          borderRadius: "5px", 
+          background: '#1877F2', 
+          color: '#ffffff',  
+          textDecoration: 'none',
+          fontFamily: 'Lato',
+          fontSize: '18px',
+          fontWeight: '700'
+          }}>Yes, delete it</button>
+          </Modal>
 
       </PostContainer>
+      :
+      <Loading />
     );
 }
 
@@ -246,7 +392,6 @@ const LinkContainer = styled.a`
       font-weight: 400;
       font-size: 16px;
       line-height: 19px;
-
       color: #CECECE;
       overflow-x: hidden;
     }
@@ -281,4 +426,14 @@ const MessageUser = styled.div`
   height: auto;
   padding: 10px 0px 10px 0px;
   line-height: 25px;
-`
+`;
+
+const ContainerCountLikes = styled.div `
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  color: white;
+`;
