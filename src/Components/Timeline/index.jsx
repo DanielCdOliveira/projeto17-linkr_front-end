@@ -25,23 +25,31 @@ export default function Timeline(){
         const userStorage = JSON.parse(localStorage.getItem("user"))
         const token = userStorage.token
         return (
-                <>
-                        <Header />
-                        <PageContainer>
-                                <Center>
-                                        <FeedContainer> 
-                                                <h2>Timeline</h2>
-                                                <PostForm user={user} token={token} setAllPosts={setAllPosts} />
+          <>
+            <Header />
+            <PageContainer>
+              <Center>
+                <FeedContainer>
+                  <h2>Timeline</h2>
+                  <PostForm
+                    user={user}
+                    token={token}
+                    setAllPosts={setAllPosts}
+                  />
 
-                                                {allPosts.map(post => <Post  info={post} key={post.id} setAllPosts={setAllPosts}/>)}
-                                        </FeedContainer>
-                                        <SideBar>
-                                                oe
-                                        </SideBar>
-                                </Center>
-                        </PageContainer>
-                </>
-        )
+                  {allPosts.map((post) => (
+                    <Post
+                      info={post}
+                      key={post.postid}
+                      setAllPosts={setAllPosts}
+                    />
+                  ))}
+                </FeedContainer>
+                <SideBar>oe</SideBar>
+              </Center>
+            </PageContainer>
+          </>
+        );
 }
 
 const PageContainer = styled.div`

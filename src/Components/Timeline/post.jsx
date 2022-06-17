@@ -10,11 +10,12 @@ Modal.setAppElement(".root");
 
 export default function Post(props){
     const { info, setAllPosts } = props;
-    const { URL, user } = useContext(AuthContext);
+    const { URL } = useContext(AuthContext);
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const tokenStorage = JSON.parse(localStorage.getItem('token'));
+    const user = JSON.parse(localStorage.getItem('user'));
+    const tokenStorage = user.token
 
     const [edit, setEdit] = useState(false);
     const [message, setMessage] = useState(info.message)
