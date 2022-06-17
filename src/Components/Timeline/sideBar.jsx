@@ -1,23 +1,42 @@
-import styled from 'styled-components';
+import { useEffect, useContext } from 'react'
+import styled from 'styled-components'
+import { AuthContext } from "../../Context/Auth"
 
-export default function HashtagsTrending(props) {
-    const { hashtags } = props
-    return (
+export default function HashtagsTrending() {
+        const { getTrending, hashtags } = useContext(AuthContext)
+
+        useEffect(() => {
+                getTrending()
+        },[])
+
+        if(hashtags){
+        return (
         <SideBar>
                 <Right>
                         <Trending>
                                 <h1>trending</h1>
                                 <List>
-                                    {hashtags.map((hashtag) => {
+                                        {hashtags.map((hashtag) => {
                                         return (
-                                            <p># {hashtag.name}</p>
+                                                <p># {hashtag.name}</p>
                                         )
-                                    })}
+                                        })}
                                 </List>
                         </Trending>
                 </Right>
         </SideBar>
-    )
+        )} else {
+                return (
+                        <SideBar>
+                                <Right>
+                                        <Trending>
+                                                <h1>trending</h1>
+                                                <List></List>
+                                        </Trending>
+                                </Right>
+                        </SideBar>
+                )
+        }
 }
 
 const SideBar = styled.div`

@@ -8,7 +8,7 @@ import HashtagsTrending from './sideBar.jsx';
 
 export default function Timeline(){
         const [allPosts, setAllPosts] = useState([]);
-        const { URL, getTrending, hashtags } = useContext(AuthContext);
+        const { URL } = useContext(AuthContext);
 
         useEffect(() => {
                 const promise = axios.get(`${URL}/get/posts`);
@@ -21,10 +21,7 @@ export default function Timeline(){
                         console.log(error);
                         alert("Deu algum erro...");
                 });
-                getTrending()
         }, []);
-
-        console.log(hashtags)
 
         return (
                 <>
@@ -36,7 +33,7 @@ export default function Timeline(){
                                                 {allPosts.map(post => <Post  info={post} key={post.id}/>)}
                                         </FeedContainer>
                                 </Center>
-                                <HashtagsTrending hashtags = {hashtags}/>
+                                <HashtagsTrending />
                         </PageContainer>
                 </>
         )
