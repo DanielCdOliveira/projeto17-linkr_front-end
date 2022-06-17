@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Post from "./post.jsx";
 import { AuthContext } from "../../Context/Auth";
 import Header from "../PublicComponents/Header.js";
+import PostForm from './PostForm.jsx';
 
 export default function Timeline() {
   const [selected, setSelected] = useState([]);
@@ -37,6 +38,8 @@ export default function Timeline() {
     });
   }, []);
 
+  const token = user.token
+
   return (
     <>
       <Header />
@@ -44,6 +47,7 @@ export default function Timeline() {
         <Center>
           <FeedContainer>
             <h2>Timeline</h2>
+            <PostForm user={user} token={token} setAllPosts={setAllPosts} />
             {allPosts.map((post) => {
               let likesFiltered = selected.find(
                 //PRECISARIA DO ID PRA VALIDAR CASOS DE NOMES REPETIDOS
