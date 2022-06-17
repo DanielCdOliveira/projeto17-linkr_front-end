@@ -225,7 +225,7 @@ export default function Post(props){
       <PostContainer>
 
         <PerfilLikeContainer>
-          <img src={info.image} alt='perfil'></img>
+          <img src={user.image} alt='perfil'></img>
           
           <div>
             <TiHeartFullOutline style={{color: likes ? "red" : "white"}} fontSize="30px" onClick={() => {
