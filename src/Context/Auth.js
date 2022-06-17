@@ -35,13 +35,18 @@ function AuthProvider({ children }) {
       }
     });
   }
+  function invalidToken(){
+    localStorage.removeItem("user")
+    if(window.confirm("Sessão expirada. Deseja ir para a tela de login?"))navigate("/")
+  }
 
   return (
     <AuthContext.Provider
       value={{
         user,
         logIn,
-        URL
+        URL,
+        invalidToken
       }}
     >
       {children}
