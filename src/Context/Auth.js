@@ -6,10 +6,14 @@ import axios from "axios";
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState({});
   const URL = "http://localhost:5000";
 
+  const [user, setUser] = useState({});
+  const [hashtags, setHashtags] = useState()
+
+
   const navigate = useNavigate();
+
   function logIn(data, setDisabled) {
     if(data.email === "" || data.password === ""){
       alert("Por favor, preencha todos os campos")
@@ -40,12 +44,20 @@ function AuthProvider({ children }) {
     if(window.confirm("Sessão expirada. Deseja ir para a tela de login?"))navigate("/")
   }
 
+  const getTrending = () => {
+    axios.get(URL + "/hashtag")
+    .then((answer) => {setHashtags(answer.data)})
+    .catch((e) => window.confirm(e.response.data));
+  }
+
   return (
     <AuthContext.Provider
       value={{
         user,
         logIn,
         URL,
+        hashtags,
+        getTrending
         invalidToken
       }}
     >

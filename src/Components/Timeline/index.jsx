@@ -3,6 +3,7 @@ import axios from "axios";
 import styled from "styled-components";
 import Post from "./post.jsx";
 import { AuthContext } from "../../Context/Auth";
+import HashtagsTrending from './sideBar.jsx';
 import Header from "../PublicComponents/Header.js";
 import PostForm from "./PostForm.jsx";
 import Loading from "../PublicComponents/Loading.js";
@@ -75,7 +76,7 @@ export default function Timeline() {
               )}
             </PostsContainer>
           </FeedContainer>
-          <SideBar>oe</SideBar>
+          <HashtagsTrending />
         </Center>
       </PageContainer>
     </>
