@@ -58,9 +58,6 @@ export default function Timeline() {
                   (element) =>
                     element.postId === post.postid && element.name === user.name
                 );
-                let likesNames = selected.filter(
-                  (element) => element.postId === post.postid
-                );
 
                 return (
                   <Post

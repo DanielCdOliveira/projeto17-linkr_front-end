@@ -11,23 +11,21 @@ import Loading  from "../PublicComponents/Loading"
 Modal.setAppElement(".root");
 
 export default function Post(props){
-
-    const { info, setAllPosts, like, selected, likesNames } = props;
+    const { info, setAllPosts, like} = props;
     const { URL } = useContext(AuthContext);
     const { id } = useParams();
 
     const user = JSON.parse(localStorage.getItem('user'));
     const tokenStorage = user.token;
-
+    const [countLikes, setCountLikes] = useState([]);
     const [edit, setEdit] = useState(false);
     const [message, setMessage] = useState(info.message)
     const [oldMessage, setOldMessage] = useState()
     const [promiseReturned, setPromiseReturned] = useState(false);
     const [likes, setLikes] = useState(false);
-    const [countLikes, setCountLikes] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [result, setResult] = useState('');
-
+    const [namesRefresh, setNamesRefresh] = useState([]);
 
     const nameRef = useRef(null);
 
@@ -186,39 +184,53 @@ export default function Post(props){
           }
         };
 
-   const names = useEffect(() => {
+      useEffect(() => {
+        const id = info.postid
+        const promiseLikes = axios.get(`${URL}/get/likes/${id}`);
+      
+        promiseLikes.then((response) => {
+          console.log(response);
+          setNamesRefresh(response.data);
+        });
+        promiseLikes.catch((error) => {
+          console.log(error);
+          alert("Deu algum erro...");
+        });
+      }, [countLikes]);
+
+      useEffect(() => {
         let newLikesNames = []
-        for(let i=0; i<likesNames.length; i++){
-          if(likesNames[i].name !== user.name){
-            newLikesNames.push(likesNames[i].name);
+        for(let i=0; i<namesRefresh.length; i++){
+          if(namesRefresh[i].name != user.name){
+            newLikesNames.push(namesRefresh[i].name);
           }
         }
+
         let res = '';
   
-        if(likesNames.length === 0){
+        if(namesRefresh.length === 0){
           res = null;
           setResult(res)
-        } else if(likesNames.length === 1 && likes){
+        } else if(namesRefresh.length === 1 && likes){
           res = "Você curtiu";
           setResult(res)
-        } else if(likesNames.length === 1 && !likes){
+        } else if(newLikesNames.length === 1 && !likes){
           res = `Curtido por ${newLikesNames[0]}`
           setResult(res)
-        } else if (likesNames.length === 2 && likes){
+        } else if (namesRefresh.length === 2 && likes){
           res = `Voce e ${newLikesNames[0]} curtiram`
           setResult(res)
-        } else if (likesNames.length === 2 && !likes){
+        } else if (newLikesNames.length === 2 && !likes){
           res = `${newLikesNames[0]} e ${newLikesNames[1]} curtiram`
           setResult(res)
-        } else if (likesNames.length >= 3 && likes){
+        } else if (namesRefresh.length >= 3 && likes){
           res = `Você, ${newLikesNames[0]} e mais ${countLikes - 2} curtiram`
           setResult(res)
-        } else if(likesNames.length >= 3 && !likes){
+        } else if(newLikesNames.length >= 3 && !likes){
           res = `${newLikesNames[0]}, ${newLikesNames[1]} e mais ${countLikes - 2} curtiram`
           setResult(res)
         }
-
-    }, [countLikes])
+    }, [namesRefresh])
 
     return (
       promiseReturned === false?
@@ -237,7 +249,7 @@ export default function Post(props){
             }}/>
           </div>
           <ContainerCountLikes data-tip data-for="countLikes">
-            <a data-tip={`${result}`}>{countLikes} Likes</a>
+            <a data-tip={countLikes? `${result}`: null}>{countLikes} Likes</a>
             <ReactTooltip place="bottom" type="light" effect="solid"/>
           </ContainerCountLikes>
 
