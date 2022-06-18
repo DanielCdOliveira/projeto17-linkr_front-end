@@ -4,26 +4,30 @@ import styled from "styled-components";
 import Post from "./post.jsx";
 import { AuthContext } from "../../Context/Auth";
 import Header from "../PublicComponents/Header.js";
-import PostForm from './PostForm.jsx';
+import PostForm from "./PostForm.jsx";
+import Loading from "../PublicComponents/Loading.js";
 
 export default function Timeline() {
   const [selected, setSelected] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
-  const [user, setUser] = useState([])
+  const [user, setUser] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { URL } = useContext(AuthContext);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"))
-    setUser(user)
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
     const promise = axios.get(`${URL}/get/posts`);
 
     promise.then((response) => {
-      console.log(response);
       setAllPosts(response.data);
+      setLoading(false)
     });
     promise.catch((error) => {
-      console.log(error);
-      alert("Deu algum erro...");
+      setLoading(false)
+      alert(
+        "An error occured while trying to fetch the posts, please refresh the page"
+        );
     });
 
     const promiseLikes = axios.get(`${URL}/get/likes`);
@@ -38,7 +42,7 @@ export default function Timeline() {
     });
   }, []);
 
-  const token = user.token
+  const token = user.token;
 
   return (
     <>
@@ -48,26 +52,30 @@ export default function Timeline() {
           <FeedContainer>
             <h2>Timeline</h2>
             <PostForm user={user} token={token} setAllPosts={setAllPosts} />
-            {allPosts.map((post) => {
-              let likesFiltered = selected.find(
-                //PRECISARIA DO ID PRA VALIDAR CASOS DE NOMES REPETIDOS
-                (element) => element.postId == post.postid && element.name == user.name
-              );
-              let likesNames = selected.filter(
-                (element) => element.postId == post.postid
-              );
+            {loading? <Loading /> : allPosts.length !== 0 ? (
+              allPosts.map((post) => {
+                let likesFiltered = selected.find(
+                  (element) =>
+                    element.postId === post.postid && element.name === user.name
+                );
+                let likesNames = selected.filter(
+                  (element) => element.postId === post.postid
+                );
 
-              return (
-                <Post
-                  info={post}
-                  key={post.postid}
-                  likesNames={likesNames}
-                  setAllPosts={setAllPosts}
-                  selected={selected}
-                  like={likesFiltered ? true : false}
-                />
-              );
-            })}
+                return (
+                  <Post
+                    info={post}
+                    key={post.postid}
+                    likesNames={likesNames}
+                    setAllPosts={setAllPosts}
+                    selected={selected}
+                    like={likesFiltered ? true : false}
+                  />
+                );
+              })
+            ) : (
+              <span className="noPosts">there are no posts yet</span>
+            )}
           </FeedContainer>
           <SideBar>oe</SideBar>
         </Center>
@@ -78,10 +86,11 @@ export default function Timeline() {
 
 const PageContainer = styled.div`
   width: 100vw;
-  height: 100%;
+  height: 100vh;
   background-color: #333333;
   display: flex;
   justify-content: center;
+  overflow-x: hidden;
 `;
 
 const Center = styled.div`
@@ -93,6 +102,16 @@ const Center = styled.div`
 const FeedContainer = styled.div`
   width: 615px;
   margin-top: 100px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .noPosts {
+    margin-top: 100px;
+    font-family: "Oswald";
+    font-size: 32px;
+    color: #ffffff;
+  }
   h2 {
     font-family: "Oswald";
     font-style: normal;
@@ -100,6 +119,8 @@ const FeedContainer = styled.div`
     font-size: 43px;
     line-height: 64px;
     color: #ffffff;
+    position: absolute;
+    left: 0;
   }
 `;
 const SideBar = styled.div`

@@ -5,7 +5,7 @@ import {AuthContext } from "../../Context/Auth.js"
 
 export default function PostForm(props) {
   const {user,token, setAllPosts} = props;
-  const [link, setLink] = useState("http://");
+  const [link, setLink] = useState("");
   const [message, setMessage] = useState([]);
   const { URL } = useContext(AuthContext);
   const [loading, setLoading ] = useState(false)
@@ -31,7 +31,7 @@ export default function PostForm(props) {
       .then(response => {
         setAllPosts(response.data)
         setLoading(false);
-        setLink("http://");
+        setLink("");
         setMessage("")
       })
       .catch(error => {
@@ -58,6 +58,7 @@ export default function PostForm(props) {
           value={link}
           onChange={(e) => setLink(e.target.value)}
           disabled={loading ? true : false}
+          maxLength="100"
         />
         <input
           className="article"
@@ -66,8 +67,13 @@ export default function PostForm(props) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           disabled={loading ? true : false}
+          maxLength="100"
         />
-        {loading?<button disabled>Publishing</button>: <button>Publish</button>}
+        {loading ? (
+          <button disabled>Publishing</button>
+        ) : (
+          <button>Publish</button>
+        )}
       </Form>
     </PostFormContainer>
   );
@@ -82,7 +88,7 @@ const PostFormContainer = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
   position: relative;
-  margin-top: 40px;
+  margin-top: 80px;
   img {
     position: absolute;
     width: 50px;
