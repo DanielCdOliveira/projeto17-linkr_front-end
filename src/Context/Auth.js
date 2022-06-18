@@ -39,6 +39,10 @@ function AuthProvider({ children }) {
       }
     });
   }
+  function invalidToken(){
+    localStorage.removeItem("user")
+    if(window.confirm("Sessão expirada. Deseja ir para a tela de login?"))navigate("/")
+  }
 
   const getTrending = () => {
     axios.get(URL + "/hashtag")
@@ -54,6 +58,7 @@ function AuthProvider({ children }) {
         URL,
         hashtags,
         getTrending
+        invalidToken
       }}
     >
       {children}
