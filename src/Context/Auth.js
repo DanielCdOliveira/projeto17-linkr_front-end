@@ -7,7 +7,7 @@ export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState({});
-  const URL = "http://localhost:4000";
+  const URL = "http://localhost:5000";
 
   const navigate = useNavigate();
   function logIn(data, setDisabled) {
@@ -35,13 +35,18 @@ function AuthProvider({ children }) {
       }
     });
   }
+  function invalidToken(){
+    localStorage.removeItem("user")
+    if(window.confirm("Sessão expirada. Deseja ir para a tela de login?"))navigate("/")
+  }
 
   return (
     <AuthContext.Provider
       value={{
         user,
         logIn,
-        URL
+        URL,
+        invalidToken
       }}
     >
       {children}

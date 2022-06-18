@@ -208,19 +208,19 @@ export default function Post(props){
 
         let res = '';
   
-        if(namesRefresh.length == 0){
+        if(namesRefresh.length === 0){
           res = null;
           setResult(res)
-        } else if(namesRefresh.length == 1 && likes){
+        } else if(namesRefresh.length === 1 && likes){
           res = "Você curtiu";
           setResult(res)
-        } else if(newLikesNames.length == 1 && !likes){
+        } else if(newLikesNames.length === 1 && !likes){
           res = `Curtido por ${newLikesNames[0]}`
           setResult(res)
-        } else if (namesRefresh.length == 2 && likes){
+        } else if (namesRefresh.length === 2 && likes){
           res = `Voce e ${newLikesNames[0]} curtiram`
           setResult(res)
-        } else if (newLikesNames.length == 2 && !likes){
+        } else if (newLikesNames.length === 2 && !likes){
           res = `${newLikesNames[0]} e ${newLikesNames[1]} curtiram`
           setResult(res)
         } else if (namesRefresh.length >= 3 && likes){
@@ -230,7 +230,6 @@ export default function Post(props){
           res = `${newLikesNames[0]}, ${newLikesNames[1]} e mais ${countLikes - 2} curtiram`
           setResult(res)
         }
-
     }, [namesRefresh])
 
     return (
@@ -238,7 +237,7 @@ export default function Post(props){
       <PostContainer>
 
         <PerfilLikeContainer>
-          <img src="https://img.freepik.com/vetores-gratis/fundo-de-modelo-simples-de-moldura-redonda_1159-26474.jpg"></img>
+          <img src={user.image} alt='perfil'></img>
           
           <div>
             <TiHeartFullOutline style={{color: likes ? "red" : "white"}} fontSize="30px" onClick={() => {
@@ -250,10 +249,7 @@ export default function Post(props){
             }}/>
           </div>
           <ContainerCountLikes data-tip data-for="countLikes">
-            <a data-tip=
-            {
-              countLikes? `${result}`: null
-            }>{countLikes} Likes</a>
+            <a data-tip={countLikes? `${result}`: null}>{countLikes} Likes</a>
             <ReactTooltip place="bottom" type="light" effect="solid"/>
           </ContainerCountLikes>
 
@@ -302,7 +298,7 @@ export default function Post(props){
                 <p>{info.description}</p>
                 <p>{info.url}</p>
               </div>
-              <img src={info.image}></img>
+              <img src={info.image} alt="infoimage"></img>
           </LinkContainer>
 
         </Right>
