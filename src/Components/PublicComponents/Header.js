@@ -19,10 +19,16 @@ export default function Header() {
   async function search(input){
     const URL = "http://localhost:5000";
 
+    console.log(input)
+
+    if(!input){
+      setSearchResult(null);
+      return
+    }
+
     try{
       const result = await axios.get(URL+`/users/${input}`);
 
-      console.log(result.data);
       setSearchResult(result.data)
     }
     catch(err){
