@@ -50,20 +50,13 @@ export default function Timeline() {
             <PostForm user={user} token={token} setAllPosts={setAllPosts} />
             {allPosts.map((post) => {
               let likesFiltered = selected.find(
-                //PRECISARIA DO ID PRA VALIDAR CASOS DE NOMES REPETIDOS
                 (element) => element.postId == post.postid && element.name == user.name
               );
-              let likesNames = selected.filter(
-                (element) => element.postId == post.postid
-              );
-
               return (
                 <Post
                   info={post}
                   key={post.postid}
-                  likesNames={likesNames}
                   setAllPosts={setAllPosts}
-                  selected={selected}
                   like={likesFiltered ? true : false}
                 />
               );
