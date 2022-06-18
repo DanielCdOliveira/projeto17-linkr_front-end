@@ -2,10 +2,13 @@ import styled from "styled-components";
 import { IoIosArrowDown } from "react-icons/io";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {DebounceInput} from 'react-debounce-input';
+import axios from "axios"
 
 export default function Header() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [showLogout, setShowLogout] = useState(false);
+  const [searchResult, setSearchResult] = useState(null)
   const navigate = useNavigate();
 
   function logout() {
@@ -13,9 +16,23 @@ export default function Header() {
     navigate("/");
   }
 
+  async function search(input){
+    const URL = "http://localhost:5000";
+
+    try{
+      const result = await axios.get(URL+`/users/${input}`);
+
+      console.log(result.data);
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
   return (
     <MainHeader showLogout={showLogout} image={user.image}>
       <h1>linkr</h1>
+      <DebounceInput placeholder={"Search for people"} minLength={3} debounceTimeout={300} onChange={event => {search(event.target.value)}} />
       <nav className="profile" onClick={() => setShowLogout(!showLogout)}>
         <IoIosArrowDown />
         <img src={user.image} alt="profile picture" />
@@ -47,6 +64,11 @@ const MainHeader = styled.header`
     font-weight: 700;
     font-size: 49px;
     color: #ffffff;
+  }
+  input{
+    width: 40%;
+    height: 50%;
+    border-radius: 10px;
   }
   .profile {
     display: flex;
