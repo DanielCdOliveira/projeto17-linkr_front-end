@@ -23,6 +23,7 @@ export default function Header() {
       const result = await axios.get(URL+`/users/${input}`);
 
       console.log(result.data);
+      setSearchResult(result.data)
     }
     catch(err){
       console.log(err)
