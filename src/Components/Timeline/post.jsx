@@ -260,7 +260,7 @@ export default function Post(props){
           <UserContainer>
 
             <MessageUser>
-              <p>Juvenal Juvêncio</p>
+              <p>{user.name}</p>
               { 
               edit ?
               <input 

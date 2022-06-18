@@ -43,6 +43,7 @@ export default function Timeline() {
   }, []);
 
   const token = user.token;
+  console.log(user)
 
   return (
     <>
@@ -52,27 +53,27 @@ export default function Timeline() {
           <FeedContainer>
             <h2>Timeline</h2>
             <PostForm user={user} token={token} setAllPosts={setAllPosts} />
-            {loading? <Loading /> : allPosts.length !== 0 ? (
-              allPosts.map((post) => {
-                let likesFiltered = selected.find(
-                  (element) =>
-                    element.postId === post.postid && element.name === user.name
-                );
-
-                return (
-                  <Post
-                    info={post}
-                    key={post.postid}
-                    likesNames={likesNames}
-                    setAllPosts={setAllPosts}
-                    selected={selected}
-                    like={likesFiltered ? true : false}
-                  />
-                );
-              })
-            ) : (
-              <span className="noPosts">there are no posts yet</span>
-            )}
+            <PostsContainer>
+              {loading? <Loading /> : allPosts.length !== 0 ? (
+                allPosts.map((post) => {
+                  let likesFiltered = selected.find(
+                    (element) =>
+                      element.postId === post.postid && element.name === user.name
+                  );
+                  return (
+                    <Post
+                      info={post}
+                      key={post.postid}
+                      setAllPosts={setAllPosts}
+                      selected={selected}
+                      like={likesFiltered ? true : false}
+                    />
+                  );
+                })
+              ) : (
+                <span className="noPosts">there are no posts yet</span>
+              )}
+            </PostsContainer>
           </FeedContainer>
           <SideBar>oe</SideBar>
         </Center>
@@ -83,11 +84,16 @@ export default function Timeline() {
 
 const PageContainer = styled.div`
   width: 100vw;
-  height: 100vh;
   background-color: #333333;
   display: flex;
   justify-content: center;
   overflow-x: hidden;
+`;
+
+const PostsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
 `;
 
 const Center = styled.div`
@@ -99,6 +105,7 @@ const Center = styled.div`
 const FeedContainer = styled.div`
   width: 615px;
   margin-top: 100px;
+  margin-bottom: 150px;
   position: relative;
   display: flex;
   flex-direction: column;
