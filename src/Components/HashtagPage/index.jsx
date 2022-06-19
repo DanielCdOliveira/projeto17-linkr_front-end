@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-import Post from "./post.jsx";
 import { AuthContext } from "../../Context/Auth";
 import HashtagsTrending from "../SideBar/sideBar.jsx";
 import Header from "../PublicComponents/Header.js";
 import Loading from "../PublicComponents/Loading.js";
+import Post from "../Posts/post.jsx";
 
 export default function HashtagPage() {
   const [selected, setSelected] = useState([]);
