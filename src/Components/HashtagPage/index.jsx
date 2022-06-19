@@ -1,24 +1,26 @@
 import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import Post from "./post.jsx";
 import { AuthContext } from "../../Context/Auth";
 import HashtagsTrending from "../SideBar/sideBar.jsx";
 import Header from "../PublicComponents/Header.js";
-import PostForm from "./PostForm.jsx";
 import Loading from "../PublicComponents/Loading.js";
 
-export default function Timeline() {
+export default function HashtagPage() {
   const [selected, setSelected] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
   const { URL } = useContext(AuthContext);
 
+  const { hashtag } = useParams();
+
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-    const promise = axios.get(`${URL}/get/posts`);
+    const userInfos = JSON.parse(localStorage.getItem("user"));
+    setUser(userInfos);
+    const promise = axios.get(`${URL}/hashtag/${hashtag}`);
 
     promise.then((response) => {
       setAllPosts(response.data);
@@ -34,17 +36,15 @@ export default function Timeline() {
     const promiseLikes = axios.get(`${URL}/get/likes`);
 
     promiseLikes.then((response) => {
-      console.log(response);
       setSelected(response.data);
     });
     promiseLikes.catch((error) => {
       console.log(error);
       alert("Deu algum erro...");
     });
-  }, []);
+  }, [hashtag]);
 
-  const token = user.token;
-  console.log(user)
+  console.log(allPosts)
 
   return (
     <>
@@ -52,8 +52,7 @@ export default function Timeline() {
       <PageContainer>
         <Center>
           <FeedContainer>
-            <h2>Timeline</h2>
-            <PostForm user={user} token={token} setAllPosts={setAllPosts} />
+            <h2># {hashtag}</h2>
             <PostsContainer>
               {loading? <Loading /> : allPosts.length !== 0 ? (
                 allPosts.map((post) => {
@@ -64,7 +63,6 @@ export default function Timeline() {
                   return (
                     <Post
                       info={post}
-                      key={post.postid}
                       setAllPosts={setAllPosts}
                       selected={selected}
                       like={likesFiltered ? true : false}
@@ -94,6 +92,7 @@ const PageContainer = styled.div`
 const PostsContainer = styled.div`
         width: 70%;
         display: flex;
+        padding-top: 20px;
         flex-direction: column;
         margin-top: 50px;
         justify-content: flex-start;

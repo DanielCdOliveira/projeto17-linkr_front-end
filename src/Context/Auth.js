@@ -57,8 +57,8 @@ function AuthProvider({ children }) {
         logIn,
         URL,
         hashtags,
-        getTrending
-        invalidToken
+        getTrending,
+        invalidToken,
       }}
     >
       {children}
