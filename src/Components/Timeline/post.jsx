@@ -13,7 +13,7 @@ Modal.setAppElement(".root");
 
 export default function Post(props){
     const { info, setAllPosts, like} = props;
-    const { URL } = useContext(AuthContext);
+    const { URL, deleteHashtag } = useContext(AuthContext);
 
     const { id } = useParams();
 
@@ -158,6 +158,9 @@ export default function Post(props){
           alert("Deu algum erro, não foi possivel deletar o post...");
           toggleModal(); 
       });
+      
+      deleteHashtag(id, config)
+
     }
   
       const customStyles = {
@@ -167,7 +170,8 @@ export default function Post(props){
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'rgba(255, 255, 255, 0.9)'
+            background: 'rgba(255, 255, 255, 0.9)',
+            zIndex: 3
           },
           content: {
             top: '50%',
