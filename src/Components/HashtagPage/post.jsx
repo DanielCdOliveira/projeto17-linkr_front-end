@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import axios from 'axios';
 import ReactTooltip from "react-tooltip";
 import Modal from "react-modal";
+import { useNavigate } from 'react-router-dom';
 import { TiPencil, TiHeartFullOutline, TiTrash } from "react-icons/ti";
 import { useRef, useState, useContext, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from "../../Context/Auth";
 import Loading  from "../PublicComponents/Loading"
 import ReactHashtag from "@mdnm/react-hashtag";
@@ -12,12 +12,8 @@ import ReactHashtag from "@mdnm/react-hashtag";
 Modal.setAppElement(".root");
 
 export default function Post(props){
-    const { info, setAllPosts, like} = props;
+    const { info, setAllPosts, like } = props;
     const { URL } = useContext(AuthContext);
-
-    const { id } = useParams();
-
-    const navigate = useNavigate()
 
     const user = JSON.parse(localStorage.getItem('user'));
     const tokenStorage = user.token;
@@ -30,8 +26,9 @@ export default function Post(props){
     const [isOpen, setIsOpen] = useState(false);
     const [result, setResult] = useState('');
     const [namesRefresh, setNamesRefresh] = useState([]);
-
     const nameRef = useRef(null);
+
+    const navigate = useNavigate()
 
     useEffect(() => {
       if(like){
@@ -63,7 +60,7 @@ export default function Post(props){
         },
       };
 
-      const obj = { postId: info.postid, message: message}
+      const obj = { postId: info.id, message: message}
       const promise = axios.post(`${URL}/edit/post`, obj , config);
       setPromiseReturned(true)
   
@@ -80,7 +77,7 @@ export default function Post(props){
       }
 
     function postLike(){
-      const id = info.postid;
+      const id = info.id;
       const config = {
         headers: {
             Authorization: `Bearer ${tokenStorage}`,
@@ -98,7 +95,7 @@ export default function Post(props){
     }
 
     function deleteLike(){
-      const id = info.postid;
+      const id = info.id;
       const config = {
         headers: {
             Authorization: `Bearer ${tokenStorage}`,
@@ -116,7 +113,7 @@ export default function Post(props){
     }
 
     useEffect(() => {
-      const id = info.postid;
+      const id = info.id;
       const promise = axios.get(`${URL}/coutlikes/post/${id}`);
       promise.then((response) => {
         setCountLikes(response.data);
@@ -132,7 +129,7 @@ export default function Post(props){
     }
 
     function deletePost(){ 
-      const id = info.postid
+      const id = info.id
   
       const config = {
         headers: {
@@ -189,11 +186,10 @@ export default function Post(props){
         };
 
       useEffect(() => {
-        const id = info.postid
+        const id = info.id
         const promiseLikes = axios.get(`${URL}/get/likes/${id}`);
       
         promiseLikes.then((response) => {
-          console.log(response);
           setNamesRefresh(response.data);
         });
         promiseLikes.catch((error) => {
@@ -205,7 +201,7 @@ export default function Post(props){
       useEffect(() => {
         let newLikesNames = []
         for(let i=0; i<namesRefresh.length; i++){
-          if(namesRefresh[i].name != user.name){
+          if(namesRefresh[i].name !== user.name){
             newLikesNames.push(namesRefresh[i].name);
           }
         }

@@ -81,33 +81,28 @@ export default function PostForm(props) {
 
 const PostFormContainer = styled.div`
   display: flex;
-  width: 611px;
+  width: 70%;
   height: 209px;
-
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
-  position: relative;
   margin-top: 80px;
+
   img {
-    position: absolute;
     width: 50px;
     height: 50px;
+    margin: 10px;
     border-radius: 26.5px;
-    left: 15px;
-    top: 15px;
   }
-  
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  width: 85%;
   height: calc(100% - 20px);
+  margin: 10px 10px 10px 0px;
+  position: relative;
 
   span {
     font-family: "Lato";
@@ -115,38 +110,40 @@ const Form = styled.form`
     font-weight: 300;
     font-size: 20px;
     line-height: 24px;
-
     color: #707070;
+    margin-bottom: 8px;
   }
+
   input {
-    width: 500px;
+    width: 100%;
     background: #efefef;
     border: none;
     border-radius: 5px;
-
     font-family: "Lato";
     font-style: normal;
     font-weight: 300;
     font-size: 20px;
     line-height: 24px;
-
     color: #707070;
     margin-top: 5px;
     text-indent: 10px;
+    margin-bottom: 4px;
   }
+
   .article {
     height: 66px;
   }
+  
   button {
     position: absolute;
-    width: 112px;
+    right: 0;
+    bottom: 0;
+    width: 22%;
     height: 31px;
-    bottom: 15px;
-    right: 22px;
     background: #1877f2;
     border-radius: 5px;
     border: none;
-
+    margin-top: 15px;
     font-family: "Lato";
     font-style: normal;
     font-weight: 700;
