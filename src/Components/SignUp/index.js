@@ -26,7 +26,7 @@ function Register() {
       data.name === "" ||
       data.image === ""
     ) {
-      alert("Favor preencher todos os campos!");
+      alert("Please complete all fields");
       setDisabled(false);
       return;
     }
@@ -37,14 +37,14 @@ function Register() {
     promise.catch((e) => {
       setDisabled(false);
       if (e.response.status === 409) {
-        alert("Email já cadastrado!");
+        alert("E-mail already registered!");
       }
       if (e.response.status === 422) {
         if (e.response.data.length >= 2)
-          return alert("E-mail e imagem inválidos");
+          return alert("Invalid email and image");
         if (e.response.data[0].slice(1, 6) === "image")
-          return alert("Link de imagem inválidos");
-        alert("Por favor, insira um e-mail válido!");
+          return alert("Invalid image link");
+        alert("Please enter a valid email!");
       }
     });
   }

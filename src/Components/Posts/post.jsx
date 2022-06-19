@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import axios from 'axios';
 import ReactTooltip from "react-tooltip";
 import Modal from "react-modal";
-import { useNavigate } from 'react-router-dom';
 import { TiPencil, TiHeartFullOutline, TiTrash } from "react-icons/ti";
 import { useRef, useState, useContext, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from "../../Context/Auth";
 import Loading  from "../PublicComponents/Loading"
 import ReactHashtag from "@mdnm/react-hashtag";
@@ -12,8 +12,12 @@ import ReactHashtag from "@mdnm/react-hashtag";
 Modal.setAppElement(".root");
 
 export default function Post(props){
-    const { info, setAllPosts, like } = props;
-    const { URL } = useContext(AuthContext);
+    const { info, setAllPosts, like} = props;
+    const { URL, deleteHashtag } = useContext(AuthContext);
+
+    const { id } = useParams();
+
+    const navigate = useNavigate()
 
     const user = JSON.parse(localStorage.getItem('user'));
     const tokenStorage = user.token;
@@ -26,9 +30,8 @@ export default function Post(props){
     const [isOpen, setIsOpen] = useState(false);
     const [result, setResult] = useState('');
     const [namesRefresh, setNamesRefresh] = useState([]);
-    const nameRef = useRef(null);
 
-    const navigate = useNavigate()
+    const nameRef = useRef(null);
 
     useEffect(() => {
       if(like){
@@ -60,7 +63,7 @@ export default function Post(props){
         },
       };
 
-      const obj = { postId: info.id, message: message}
+      const obj = { postId: info.postid, message: message}
       const promise = axios.post(`${URL}/edit/post`, obj , config);
       setPromiseReturned(true)
   
@@ -77,7 +80,7 @@ export default function Post(props){
       }
 
     function postLike(){
-      const id = info.id;
+      const id = info.postid;
       const config = {
         headers: {
             Authorization: `Bearer ${tokenStorage}`,
@@ -95,7 +98,7 @@ export default function Post(props){
     }
 
     function deleteLike(){
-      const id = info.id;
+      const id = info.postid;
       const config = {
         headers: {
             Authorization: `Bearer ${tokenStorage}`,
@@ -113,7 +116,7 @@ export default function Post(props){
     }
 
     useEffect(() => {
-      const id = info.id;
+      const id = info.postid;
       const promise = axios.get(`${URL}/coutlikes/post/${id}`);
       promise.then((response) => {
         setCountLikes(response.data);
@@ -129,7 +132,7 @@ export default function Post(props){
     }
 
     function deletePost(){ 
-      const id = info.id
+      const id = info.postid
   
       const config = {
         headers: {
@@ -155,6 +158,9 @@ export default function Post(props){
           alert("Deu algum erro, não foi possivel deletar o post...");
           toggleModal(); 
       });
+      
+      deleteHashtag(id, config)
+
     }
   
       const customStyles = {
@@ -164,7 +170,8 @@ export default function Post(props){
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'rgba(255, 255, 255, 0.9)'
+            background: 'rgba(255, 255, 255, 0.9)',
+            zIndex: 3
           },
           content: {
             top: '50%',
@@ -186,10 +193,11 @@ export default function Post(props){
         };
 
       useEffect(() => {
-        const id = info.id
+        const id = info.postid
         const promiseLikes = axios.get(`${URL}/get/likes/${id}`);
       
         promiseLikes.then((response) => {
+          console.log(response);
           setNamesRefresh(response.data);
         });
         promiseLikes.catch((error) => {
@@ -201,7 +209,7 @@ export default function Post(props){
       useEffect(() => {
         let newLikesNames = []
         for(let i=0; i<namesRefresh.length; i++){
-          if(namesRefresh[i].name !== user.name){
+          if(namesRefresh[i].name != user.name){
             newLikesNames.push(namesRefresh[i].name);
           }
         }
@@ -237,7 +245,7 @@ export default function Post(props){
       <PostContainer>
 
         <PerfilLikeContainer>
-          <img src={user.image} alt='perfil'></img>
+          <img src={info.userImage} alt='perfil'></img>
           
           <div>
             <TiHeartFullOutline style={{color: likes ? "red" : "white"}} fontSize="30px" onClick={() => {
@@ -260,7 +268,7 @@ export default function Post(props){
           <UserContainer>
 
             <MessageUser>
-              <p>{user.name}</p>
+              <p>{info.userName}</p>
               { 
               edit ?
               <input 
@@ -289,18 +297,23 @@ export default function Post(props){
               }
             </MessageUser>
 
-            <EditDeleteContainer>
-              <TiPencil color='white' fontSize="25px" onClick={() => { 
-            if(edit === false){
-            setEdit(!edit);
-            setTimeout(focus, 100);
-          } else {
-            setEdit(false);
-            setMessage(oldMessage)
-          }
-          }}/>
+            {
+              user.userId === info.userId ?
+              <EditDeleteContainer>
+                <TiPencil color='white' fontSize="25px" onClick={() => { 
+                  if(edit === false){
+                    setEdit(!edit);
+                    setTimeout(focus, 100);
+                  } else {
+                    setEdit(false);
+                    setMessage(oldMessage)
+                  }
+                }}/>
               <TiTrash color='white' fontSize="25px" onClick={toggleModal}/>
             </EditDeleteContainer>
+            :
+            <></>
+            }
 
           </UserContainer>
           
@@ -381,6 +394,10 @@ const PerfilLikeContainer = styled.div`
     align-items: center;
     flex-direction: column;
 
+    div {
+      cursor: pointer;
+    }
+
     img{
       width: 50px;
       height: 50px;
@@ -418,6 +435,24 @@ const LinkContainer = styled.a`
       overflow-x: hidden;
     }
 
+    p:nth-child(2) {
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 13px;
+      color: #9B9595;
+    }
+
+    p:last-child {
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 13px;
+      color: #CECECE;
+    }
+
     img{
       border-radius: 0px 11px 11px 0px; 
       width: 30%;
@@ -430,6 +465,7 @@ const EditDeleteContainer = styled.div`
   display: flex;
   width: 8%;
   justify-content: space-between;
+  cursor: pointer;
 `;
 
 const UserContainer = styled.div`
@@ -448,6 +484,24 @@ const MessageUser = styled.div`
   height: auto;
   padding: 10px 0px 10px 0px;
   line-height: 25px;
+
+  p:first-child {
+    margin-bottom: 7px;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 23px;
+  }
+
+  p:last-child {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 20px;
+    color: #B7B7B7;
+  }
 `;
 
 const ContainerCountLikes = styled.div `

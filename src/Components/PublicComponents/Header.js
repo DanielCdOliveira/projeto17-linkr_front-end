@@ -12,10 +12,13 @@ export default function Header() {
     localStorage.removeItem("user");
     navigate("/");
   }
+  function goToTimeline(){
+    navigate("/timeline");
+  }
 
   return (
     <MainHeader showLogout={showLogout} image={user.image}>
-      <h1>linkr</h1>
+      <h1 onClick={()=>goToTimeline()}>linkr</h1>
       <nav className="profile" onClick={() => setShowLogout(!showLogout)}>
         <IoIosArrowDown />
         <img src={user.image} alt="profile picture" />
