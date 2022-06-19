@@ -7,11 +7,10 @@ export default function PostForm(props) {
   const {user,token, setAllPosts} = props;
   const [link, setLink] = useState("");
   const [message, setMessage] = useState([]);
-  const { URL } = useContext(AuthContext);
+  const { URL, trendingUpdate, setTrendingUpdate } = useContext(AuthContext);
   const [loading, setLoading ] = useState(false)
 
   const inputRef = useRef()
-
 
   function handleSubmit(e){
     e.preventDefault()
@@ -33,6 +32,7 @@ export default function PostForm(props) {
         setLoading(false);
         setLink("");
         setMessage("")
+        setTrendingUpdate(!trendingUpdate)
       })
       .catch(error => {
         setLoading(false);
@@ -44,7 +44,6 @@ export default function PostForm(props) {
       alert("Something went wrong with your post! Try again")
     })
   }
-
 
   return (
     <PostFormContainer>

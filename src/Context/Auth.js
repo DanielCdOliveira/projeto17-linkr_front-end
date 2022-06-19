@@ -10,7 +10,7 @@ function AuthProvider({ children }) {
 
   const [user, setUser] = useState({});
   const [hashtags, setHashtags] = useState()
-
+  const [ trendingUpdate, setTrendingUpdate] = useState(false)
 
   const navigate = useNavigate();
 
@@ -50,6 +50,12 @@ function AuthProvider({ children }) {
     .catch((e) => window.confirm(e.response.data));
   }
 
+  const deleteHashtag = (id, config) => {
+    axios.delete(URL + `/delete/hashtag/${id}`, config)
+    .then(() => {setTrendingUpdate(!trendingUpdate)})
+    .catch((e) => window.confirm(e.response.data));
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -59,6 +65,9 @@ function AuthProvider({ children }) {
         hashtags,
         getTrending,
         invalidToken,
+        deleteHashtag,
+        trendingUpdate,
+        setTrendingUpdate
       }}
     >
       {children}

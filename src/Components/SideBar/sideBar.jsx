@@ -4,13 +4,13 @@ import { AuthContext } from "../../Context/Auth"
 import { useNavigate } from "react-router-dom";
 
 export default function HashtagsTrending() {
-        const { getTrending, hashtags } = useContext(AuthContext)
+        const { getTrending, hashtags, trendingUpdate } = useContext(AuthContext)
 
         const navigate = useNavigate()
 
         useEffect(() => {
                 getTrending()
-        },[])
+        },[trendingUpdate])
 
         if(hashtags){
                 return (
