@@ -16,7 +16,7 @@ function AuthProvider({ children }) {
 
   function logIn(data, setDisabled) {
     if(data.email === "" || data.password === ""){
-      alert("Por favor, preencha todos os campos")
+      alert("Please complete all fields")
       setDisabled(false);
       return
     }
@@ -32,10 +32,10 @@ function AuthProvider({ children }) {
     promise.catch((e) => {
       setDisabled(false);
       if(e.response.status === 401){
-        alert("Email e senha incompatíveis!")
+        alert("Incompatible email and password!")
       }
       if(e.response.status === 422){
-        alert("Por favor, insira um e-mail válido!")
+        alert("Please enter a valid email!")
       }
     });
   }
