@@ -45,6 +45,7 @@ export default function Timeline() {
 
   const token = user.token;
   console.log(user)
+  console.log(selected)
 
   return (
     <>
@@ -59,7 +60,7 @@ export default function Timeline() {
                 allPosts.map((post) => {
                   let likesFiltered = selected.find(
                     (element) =>
-                      element.postId === post.postid && element.name === user.name
+                      element.postId === post.postid && element.userId === user.userId
                   );
                   return (
                     <Post

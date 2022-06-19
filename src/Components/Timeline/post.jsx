@@ -241,7 +241,7 @@ export default function Post(props){
       <PostContainer>
 
         <PerfilLikeContainer>
-          <img src={user.image} alt='perfil'></img>
+          <img src={info.userImage} alt='perfil'></img>
           
           <div>
             <TiHeartFullOutline style={{color: likes ? "red" : "white"}} fontSize="30px" onClick={() => {
@@ -264,7 +264,7 @@ export default function Post(props){
           <UserContainer>
 
             <MessageUser>
-              <p>{user.name}</p>
+              <p>{info.userName}</p>
               { 
               edit ?
               <input 
@@ -293,18 +293,23 @@ export default function Post(props){
               }
             </MessageUser>
 
-            <EditDeleteContainer>
-              <TiPencil color='white' fontSize="25px" onClick={() => { 
-            if(edit === false){
-            setEdit(!edit);
-            setTimeout(focus, 100);
-          } else {
-            setEdit(false);
-            setMessage(oldMessage)
-          }
-          }}/>
+            {
+              user.userId === info.userId ?
+              <EditDeleteContainer>
+                <TiPencil color='white' fontSize="25px" onClick={() => { 
+                  if(edit === false){
+                    setEdit(!edit);
+                    setTimeout(focus, 100);
+                  } else {
+                    setEdit(false);
+                    setMessage(oldMessage)
+                  }
+                }}/>
               <TiTrash color='white' fontSize="25px" onClick={toggleModal}/>
             </EditDeleteContainer>
+            :
+            <></>
+            }
 
           </UserContainer>
           
@@ -385,6 +390,10 @@ const PerfilLikeContainer = styled.div`
     align-items: center;
     flex-direction: column;
 
+    div {
+      cursor: pointer;
+    }
+
     img{
       width: 50px;
       height: 50px;
@@ -422,6 +431,24 @@ const LinkContainer = styled.a`
       overflow-x: hidden;
     }
 
+    p:nth-child(2) {
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 13px;
+      color: #9B9595;
+    }
+
+    p:last-child {
+      font-family: 'Lato';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 13px;
+      color: #CECECE;
+    }
+
     img{
       border-radius: 0px 11px 11px 0px; 
       width: 30%;
@@ -434,6 +461,7 @@ const EditDeleteContainer = styled.div`
   display: flex;
   width: 8%;
   justify-content: space-between;
+  cursor: pointer;
 `;
 
 const UserContainer = styled.div`
@@ -452,6 +480,24 @@ const MessageUser = styled.div`
   height: auto;
   padding: 10px 0px 10px 0px;
   line-height: 25px;
+
+  p:first-child {
+    margin-bottom: 7px;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 23px;
+  }
+
+  p:last-child {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 20px;
+    color: #B7B7B7;
+  }
 `;
 
 const ContainerCountLikes = styled.div `
