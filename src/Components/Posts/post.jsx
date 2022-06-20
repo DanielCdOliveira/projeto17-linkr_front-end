@@ -64,7 +64,6 @@ export default function Post(props){
       };
 
       const obj = { postId: info.postid, message: message}
-
       updateHashtags(obj, config)
 
       if(hashtagsUpdated){
@@ -82,6 +81,7 @@ export default function Post(props){
             setEdit(true);
         });
         setTrendingUpdate(!trendingUpdate)
+
       }
     }
 
@@ -98,8 +98,7 @@ export default function Post(props){
         setLikes(true)
       });
       promise.catch(error => {
-          console.log(error);
-          alert("Deu algum erro, não foi possivel salvar o like...");
+          alert("an error has ocurred, unable to like the post...");
       });
     }
 
@@ -116,8 +115,7 @@ export default function Post(props){
         setLikes(false)
       });
       promise.catch(error => {
-          console.log(error);
-          alert("Deu algum erro, não foi possivel deletar o like...");
+          alert("an error has ocurred, unable to dislike the post...");
       });
     }
 
@@ -128,8 +126,7 @@ export default function Post(props){
         setCountLikes(response.data);
       });
       promise.catch((error) => {
-        console.log(error);
-        alert("Deu algum erro...");
+        alert("an error has ocurred...");
       });
     }, [likes])
 
@@ -156,13 +153,11 @@ export default function Post(props){
           setAllPosts(response.data)
         })
         promise2.catch(error => {
-          console.log(error);
-          alert("Deu algum erro, não foi possivel deletar o post...");
+          alert("an error has ocurred, unable to delete the post...");
         })
       });
       promise.catch(error => {
-          console.log(error);
-          alert("Deu algum erro, não foi possivel deletar o post...");
+          alert("an error has ocurred, unable to delete the post...");
           toggleModal(); 
       });
       
@@ -178,7 +173,7 @@ export default function Post(props){
             right: 0,
             bottom: 0,
             background: 'rgba(255, 255, 255, 0.9)',
-            zIndex: 3
+            zIndex: 100
           },
           content: {
             top: '50%',
@@ -204,12 +199,10 @@ export default function Post(props){
         const promiseLikes = axios.get(`${URL}/get/likes/${id}`);
       
         promiseLikes.then((response) => {
-          console.log(response);
           setNamesRefresh(response.data);
         });
         promiseLikes.catch((error) => {
-          console.log(error);
-          alert("Deu algum erro...");
+          alert("an error has ocurred...");
         });
       }, [countLikes]);
 
@@ -227,22 +220,22 @@ export default function Post(props){
           res = null;
           setResult(res)
         } else if(namesRefresh.length === 1 && likes){
-          res = "Você curtiu";
+          res = "You liked";
           setResult(res)
         } else if(newLikesNames.length === 1 && !likes){
-          res = `Curtido por ${newLikesNames[0]}`
+          res = `Liked by ${newLikesNames[0]}`;
           setResult(res)
         } else if (namesRefresh.length === 2 && likes){
-          res = `Voce e ${newLikesNames[0]} curtiram`
+          res = `You and ${newLikesNames[0]} liked`;
           setResult(res)
         } else if (newLikesNames.length === 2 && !likes){
-          res = `${newLikesNames[0]} e ${newLikesNames[1]} curtiram`
+          res = `${newLikesNames[0]} e ${newLikesNames[1]} liked`;
           setResult(res)
         } else if (namesRefresh.length >= 3 && likes){
-          res = `Você, ${newLikesNames[0]} e mais ${countLikes - 2} curtiram`
+          res = `You, ${newLikesNames[0]} and other ${countLikes - 2} people liked`;
           setResult(res)
         } else if(newLikesNames.length >= 3 && !likes){
-          res = `${newLikesNames[0]}, ${newLikesNames[1]} e mais ${countLikes - 2} curtiram`
+          res = `${newLikesNames[0]}, ${newLikesNames[1]} and other ${countLikes - 2} people liked`;
           setResult(res)
         }
     }, [namesRefresh])
@@ -280,7 +273,7 @@ export default function Post(props){
               <p>{info.userName}</p>
               { 
               edit ?
-              <input 
+              <textarea 
               name="message" 
               ref={nameRef}
               type="text" 
@@ -387,6 +380,11 @@ const PostContainer = styled.div`
   width: 100%;
   height: 276px;
   display: flex;
+  @media (max-width: 900px) {
+    width: 100vw;
+    border-radius: 0;
+    height: 232px;
+  }
 `;
 
 const Right = styled.div`
@@ -489,10 +487,29 @@ const UserContainer = styled.div`
 `
 
 const MessageUser = styled.div`
-  width: 80%;
+  width: 90%;
   height: auto;
   padding: 10px 0px 10px 0px;
   line-height: 25px;
+
+  textarea {
+    width: 100%;
+    height: 44px;
+    padding-left: 10px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #4C4C4C;
+    border-radius: 7px;
+    resize: none;
+  }
 
   p:first-child {
     margin-bottom: 7px;

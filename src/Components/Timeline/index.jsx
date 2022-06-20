@@ -22,30 +22,26 @@ export default function Timeline() {
 
     promise.then((response) => {
       setAllPosts(response.data);
-      setLoading(false)
+      setLoading(false);
     });
     promise.catch((error) => {
-      setLoading(false)
+      setLoading(false);
       alert(
         "An error occured while trying to fetch the posts, please refresh the page"
-        );
+      );
     });
 
     const promiseLikes = axios.get(`${URL}/get/likes`);
 
     promiseLikes.then((response) => {
-      console.log(response);
       setSelected(response.data);
     });
     promiseLikes.catch((error) => {
-      console.log(error);
       alert("Deu algum erro...");
     });
   }, []);
 
   const token = user.token;
-  console.log(user)
-  console.log(selected)
 
   return (
     <>
@@ -53,14 +49,17 @@ export default function Timeline() {
       <PageContainer>
         <Center>
           <FeedContainer>
-            <h2>Timeline</h2>
+            <h2>timeline</h2>
             <PostForm user={user} token={token} setAllPosts={setAllPosts} />
             <PostsContainer>
-              {loading? <Loading /> : allPosts.length !== 0 ? (
+              {loading ? (
+                <Loading />
+              ) : allPosts.length !== 0 ? (
                 allPosts.map((post) => {
                   let likesFiltered = selected.find(
                     (element) =>
-                      element.postId === post.postid && element.userId === user.userId
+                      element.postId === post.postid &&
+                      element.userId === user.userId
                   );
                   return (
                     <Post
@@ -85,26 +84,44 @@ export default function Timeline() {
 }
 
 const PageContainer = styled.div`
-  width: 100vw;
+  min-width: 900px;
+  width: 100%;
   display: flex;
   justify-content: center;
   overflow-x: hidden;
   background-color: #333333;
+  position: relative;
+  min-height: 100vh;
+  @media (max-width: 900px) {
+    min-width: auto;
+  }
 `;
 
 const PostsContainer = styled.div`
-        width: 70%;
-        display: flex;
-        flex-direction: column;
-        margin-top: 50px;
-        justify-content: flex-start;
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  justify-content: flex-start;
+  position: relative;
+  @media (max-width: 900px) {
+    width: 100vw;
+    min-width: auto;
+  }
 `;
 
 const Center = styled.div`
-  width: 50%;
+  width: 63%;
+  min-width: 900px;
+  margin: auto;
   height: auto;
   display: flex;
   justify-content: space-between;
+  position: relative;
+  @media (max-width: 900px) {
+    width: 100vw;
+    min-width: auto;
+  }
 `;
 
 const FeedContainer = styled.div`
@@ -129,5 +146,8 @@ const FeedContainer = styled.div`
     line-height: 64px;
     color: #ffffff;
     position: absolute;
+    @media (max-width: 900px) {
+    padding-left: 17px;
+  } 
   }
 `;
