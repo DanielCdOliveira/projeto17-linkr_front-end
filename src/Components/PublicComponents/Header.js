@@ -23,12 +23,10 @@ export default function Header() {
   async function search(input){
     const URL = "http://localhost:5000";
 
-    console.log(input)
 
     if(!input){
       setSearchResult(null);
       setShowResults(false)
-      console.log(searchResult)
       return
     }
 
@@ -37,10 +35,8 @@ export default function Header() {
 
       setSearchResult(result.data)
       setShowResults(true)
-      console.log(searchResult)
     }
     catch(err){
-      console.log(err)
     }
   }
 

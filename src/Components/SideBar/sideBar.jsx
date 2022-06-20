@@ -23,7 +23,6 @@ export default function HashtagsTrending() {
                 <p
                   onClick={() => {
                     navigate(`/hashtag/${hashtag.name}`);
-                    console.log(hashtag.name);
                   }}
                 >
                   # {hashtag.name}

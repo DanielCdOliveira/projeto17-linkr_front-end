@@ -37,23 +37,19 @@ export default function UsersPage() {
     const promiseLikes = axios.get(`${URL}/get/likes`);
 
     promiseLikes.then((response) => {
-      console.log(response);
       setSelected(response.data);
     });
     promiseLikes.catch((error) => {
-      console.log(error);
       alert("Deu algum erro...");
     });
 
     const promiseUser = axios.get(`${URL}/users?id=${id}`)
 
     promiseUser.then((res) => {
-        console.log(res.data[0]);
         setUserPage(res.data[0]);
     });
 
     promiseUser.catch((err) => {
-        console.log(err);
         alert("Erro ao buscar dados do usuário selecionado");
     })
   }, []);

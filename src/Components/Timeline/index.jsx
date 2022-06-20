@@ -34,11 +34,9 @@ export default function Timeline() {
     const promiseLikes = axios.get(`${URL}/get/likes`);
 
     promiseLikes.then((response) => {
-      console.log(response);
       setSelected(response.data);
     });
     promiseLikes.catch((error) => {
-      console.log(error);
       alert("Deu algum erro...");
     });
   }, []);

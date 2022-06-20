@@ -73,7 +73,6 @@ export default function Post(props){
         setPromiseReturned(false);
       });
       promise.catch(error => {
-          console.log(error);
           alert("an error has ocurred, unable to save the changes...");
           setEdit(true);
       });
@@ -92,7 +91,6 @@ export default function Post(props){
         setLikes(true)
       });
       promise.catch(error => {
-          console.log(error);
           alert("an error has ocurred, unable to like the post...");
       });
     }
@@ -110,7 +108,6 @@ export default function Post(props){
         setLikes(false)
       });
       promise.catch(error => {
-          console.log(error);
           alert("an error has ocurred, unable to dislike the post...");
       });
     }
@@ -122,7 +119,6 @@ export default function Post(props){
         setCountLikes(response.data);
       });
       promise.catch((error) => {
-        console.log(error);
         alert("an error has ocurred...");
       });
     }, [likes])
@@ -149,12 +145,10 @@ export default function Post(props){
           setAllPosts(response.data)
         })
         promise2.catch(error => {
-          console.log(error);
           alert("an error has ocurred, unable to delete the post...");
         })
       });
       promise.catch(error => {
-          console.log(error);
           alert("an error has ocurred, unable to delete the post...");
           toggleModal(); 
       });
@@ -197,11 +191,9 @@ export default function Post(props){
         const promiseLikes = axios.get(`${URL}/get/likes/${id}`);
       
         promiseLikes.then((response) => {
-          console.log(response);
           setNamesRefresh(response.data);
         });
         promiseLikes.catch((error) => {
-          console.log(error);
           alert("an error has ocurred...");
         });
       }, [countLikes]);
