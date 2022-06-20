@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import Post from "../Timeline/post.jsx";
+import Post from "../Posts/post.jsx";
 import { AuthContext } from "../../Context/Auth";
 import HashtagsTrending from "../SideBar/sideBar.jsx";
 import Header from "../PublicComponents/Header.js";
