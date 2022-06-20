@@ -95,6 +95,7 @@ const PageContainer = styled.div`
   overflow-x: hidden;
   background-color: #333333;
   position: relative;
+  min-height: 100vh;
   @media (max-width: 900px) {
     min-width: auto;
   }
