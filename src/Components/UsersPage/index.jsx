@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import Post from "../Timeline/post.jsx";
+import Post from "../Posts/post.jsx";
 import { AuthContext } from "../../Context/Auth";
 import HashtagsTrending from "../SideBar/sideBar.jsx";
 import Header from "../PublicComponents/Header.js";
@@ -58,9 +58,6 @@ export default function UsersPage() {
     })
   }, []);
 
-  const token = user.token;
-  console.log(user)
-
   return (
     <>
       <Header />
@@ -76,7 +73,7 @@ export default function UsersPage() {
                 allPosts.map((post) => {
                   let likesFiltered = selected.find(
                     (element) =>
-                      element.postId === post.postid && element.name === user.name
+                      element.postId === post.postid && element.userId === user.userId
                   );
                   return (
                     <Post
