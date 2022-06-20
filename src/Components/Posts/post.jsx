@@ -378,10 +378,16 @@ const PostContainer = styled.div`
   width: 100%;
   height: 276px;
   display: flex;
+  @media (max-width: 900px) {
+    width: 100vw;
+    border-radius: 0;
+    height: 232px;
+  }
 `;
 
 const Right = styled.div`
   width: 85%;
+  min-width: ;
   display: flex;
   flex-direction: column;
 

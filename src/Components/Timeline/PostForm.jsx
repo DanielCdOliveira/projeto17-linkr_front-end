@@ -80,18 +80,27 @@ export default function PostForm(props) {
 
 const PostFormContainer = styled.div`
   display: flex;
-  width: 70%;
+  width: 75%;
   height: 209px;
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
   margin-top: 80px;
-
+  @media (max-width: 500px) {
+    justify-content: center;
+  }
   img {
     width: 50px;
     height: 50px;
     margin: 10px;
     border-radius: 26.5px;
+    @media (max-width: 500px) {
+    display: none;
+  }
+  }
+  @media (max-width: 900px) {
+    width: 100vw;
+    border-radius: 0;
   }
 `;
 
@@ -102,7 +111,9 @@ const Form = styled.form`
   height: calc(100% - 20px);
   margin: 10px 10px 10px 0px;
   position: relative;
-
+  @media (max-width: 500px) {
+   width: 92vw;
+  }
   span {
     font-family: "Lato";
     font-style: normal;
@@ -111,6 +122,10 @@ const Form = styled.form`
     line-height: 24px;
     color: #707070;
     margin-bottom: 8px;
+    @media (max-width: 500px) {
+    text-align: center;
+    font-size: 17px;
+  }
   }
 
   input {
@@ -127,6 +142,9 @@ const Form = styled.form`
     margin-top: 5px;
     text-indent: 10px;
     margin-bottom: 4px;
+    @media (max-width: 500px) {
+    
+  }
   }
 
   .article {
