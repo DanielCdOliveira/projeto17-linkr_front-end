@@ -5,13 +5,12 @@ import {AuthContext } from "../../Context/Auth.js"
 
 export default function PostForm(props) {
   const {user,token, setAllPosts} = props;
-  const [link, setLink] = useState("http://");
+  const [link, setLink] = useState("");
   const [message, setMessage] = useState([]);
-  const { URL } = useContext(AuthContext);
+  const { URL, trendingUpdate, setTrendingUpdate } = useContext(AuthContext);
   const [loading, setLoading ] = useState(false)
 
   const inputRef = useRef()
-
 
   function handleSubmit(e){
     e.preventDefault()
@@ -31,8 +30,9 @@ export default function PostForm(props) {
       .then(response => {
         setAllPosts(response.data)
         setLoading(false);
-        setLink("http://");
+        setLink("");
         setMessage("")
+        setTrendingUpdate(!trendingUpdate)
       })
       .catch(error => {
         setLoading(false);
@@ -44,7 +44,6 @@ export default function PostForm(props) {
       alert("Something went wrong with your post! Try again")
     })
   }
-
 
   return (
     <PostFormContainer>
@@ -58,6 +57,7 @@ export default function PostForm(props) {
           value={link}
           onChange={(e) => setLink(e.target.value)}
           disabled={loading ? true : false}
+          maxLength="100"
         />
         <input
           className="article"
@@ -66,8 +66,13 @@ export default function PostForm(props) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           disabled={loading ? true : false}
+          maxLength="100"
         />
-        {loading?<button disabled>Publishing</button>: <button>Publish</button>}
+        {loading ? (
+          <button disabled>Publishing</button>
+        ) : (
+          <button>Publish</button>
+        )}
       </Form>
     </PostFormContainer>
   );
@@ -75,72 +80,87 @@ export default function PostForm(props) {
 
 const PostFormContainer = styled.div`
   display: flex;
-  width: 611px;
+  width: 75%;
   height: 209px;
-
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
-  position: relative;
-  margin-top: 40px;
+  margin-top: 80px;
+  @media (max-width: 500px) {
+    justify-content: center;
+  }
   img {
-    position: absolute;
     width: 50px;
     height: 50px;
+    margin: 10px;
     border-radius: 26.5px;
-    left: 15px;
-    top: 15px;
+    @media (max-width: 500px) {
+    display: none;
   }
-  
+  }
+  @media (max-width: 900px) {
+    width: 100vw;
+    border-radius: 0;
+  }
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  width: 85%;
   height: calc(100% - 20px);
-
+  margin: 10px 10px 10px 0px;
+  position: relative;
+  @media (max-width: 500px) {
+   width: 92vw;
+  }
   span {
     font-family: "Lato";
     font-style: normal;
     font-weight: 300;
     font-size: 20px;
     line-height: 24px;
-
     color: #707070;
+    margin-bottom: 8px;
+    @media (max-width: 500px) {
+    text-align: center;
+    font-size: 17px;
   }
+  }
+
   input {
-    width: 500px;
+    width: 100%;
     background: #efefef;
     border: none;
     border-radius: 5px;
-
     font-family: "Lato";
     font-style: normal;
     font-weight: 300;
     font-size: 20px;
     line-height: 24px;
-
     color: #707070;
     margin-top: 5px;
     text-indent: 10px;
+    margin-bottom: 4px;
+    @media (max-width: 500px) {
+    
   }
+  }
+
   .article {
     height: 66px;
   }
+  
   button {
     position: absolute;
-    width: 112px;
+    right: 0;
+    bottom: 0;
+    width: 22%;
     height: 31px;
-    bottom: 15px;
-    right: 22px;
     background: #1877f2;
     border-radius: 5px;
     border: none;
-
+    margin-top: 15px;
     font-family: "Lato";
     font-style: normal;
     font-weight: 700;

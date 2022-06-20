@@ -6,13 +6,17 @@ import axios from "axios";
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState({});
   const URL = "http://localhost:5000";
 
+  const [user, setUser] = useState({});
+  const [hashtags, setHashtags] = useState()
+  const [ trendingUpdate, setTrendingUpdate] = useState(false)
+
   const navigate = useNavigate();
+
   function logIn(data, setDisabled) {
     if(data.email === "" || data.password === ""){
-      alert("Por favor, preencha todos os campos")
+      alert("Please complete all fields")
       setDisabled(false);
       return
     }
@@ -28,12 +32,28 @@ function AuthProvider({ children }) {
     promise.catch((e) => {
       setDisabled(false);
       if(e.response.status === 401){
-        alert("Email e senha incompatíveis!")
+        alert("Incompatible email and password!")
       }
       if(e.response.status === 422){
-        alert("Por favor, insira um e-mail válido!")
+        alert("Please enter a valid email!")
       }
     });
+  }
+  function invalidToken(){
+    localStorage.removeItem("user")
+    if(window.confirm("Sessão expirada. Deseja ir para a tela de login?"))navigate("/")
+  }
+
+  const getTrending = () => {
+    axios.get(URL + "/hashtag")
+    .then((answer) => {setHashtags(answer.data)})
+    .catch((e) => window.confirm(e.response.data));
+  }
+
+  const deleteHashtag = (id, config) => {
+    axios.delete(URL + `/delete/hashtag/${id}`, config)
+    .then(() => {setTrendingUpdate(!trendingUpdate)})
+    .catch((e) => window.confirm(e.response.data));
   }
 
   return (
@@ -41,7 +61,13 @@ function AuthProvider({ children }) {
       value={{
         user,
         logIn,
-        URL
+        URL,
+        hashtags,
+        getTrending,
+        invalidToken,
+        deleteHashtag,
+        trendingUpdate,
+        setTrendingUpdate
       }}
     >
       {children}

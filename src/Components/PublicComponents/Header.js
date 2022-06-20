@@ -16,6 +16,9 @@ export default function Header() {
     localStorage.removeItem("user");
     navigate("/");
   }
+  function goToTimeline(){
+    navigate("/timeline");
+  }
 
   async function search(input){
     const URL = "http://localhost:5000";
@@ -50,6 +53,7 @@ export default function Header() {
           {searchResult === null ? <div></div> : searchResult.map(element => {return <Result><img src={element.image}/> <p>{element.name}</p></Result>})}
         </div>
       </SearchInput>
+      <h1 onClick={()=>goToTimeline()}>linkr</h1>
       <nav className="profile" onClick={() => setShowLogout(!showLogout)}>
         <IoIosArrowDown />
         <img src={user.image} alt="profile picture" />
@@ -81,6 +85,7 @@ const MainHeader = styled.header`
     font-weight: 700;
     font-size: 49px;
     color: #ffffff;
+    cursor: pointer;
   }
   .profile {
     display: flex;

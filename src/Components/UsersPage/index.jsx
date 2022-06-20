@@ -5,30 +5,33 @@ import Post from "../Posts/post.jsx";
 import { AuthContext } from "../../Context/Auth";
 import HashtagsTrending from "../SideBar/sideBar.jsx";
 import Header from "../PublicComponents/Header.js";
-import PostForm from "./PostForm.jsx";
 import Loading from "../PublicComponents/Loading.js";
+import { useParams } from "react-router-dom";
 
-export default function Timeline() {
+
+export default function UsersPage() {
   const [selected, setSelected] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userPage, setUserPage] = useState({});
   const { URL } = useContext(AuthContext);
+  const {id} = useParams();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     setUser(user);
-    const promise = axios.get(`${URL}/get/posts`);
+    const promise = axios.get(`${URL}/get/posts/${id}`);
 
     promise.then((response) => {
       setAllPosts(response.data);
-      setLoading(false);
+      setLoading(false)
     });
     promise.catch((error) => {
-      setLoading(false);
+      setLoading(false)
       alert(
         "An error occured while trying to fetch the posts, please refresh the page"
-      );
+        );
     });
 
     const promiseLikes = axios.get(`${URL}/get/likes`);
@@ -41,9 +44,19 @@ export default function Timeline() {
       console.log(error);
       alert("Deu algum erro...");
     });
-  }, []);
 
-  const token = user.token;
+    const promiseUser = axios.get(`${URL}/users?id=${id}`)
+
+    promiseUser.then((res) => {
+        console.log(res.data[0]);
+        setUserPage(res.data[0]);
+    });
+
+    promiseUser.catch((err) => {
+        console.log(err);
+        alert("Erro ao buscar dados do usuário selecionado");
+    })
+  }, []);
 
   return (
     <>
@@ -51,17 +64,16 @@ export default function Timeline() {
       <PageContainer>
         <Center>
           <FeedContainer>
-            <h2>timeline</h2>
-            <PostForm user={user} token={token} setAllPosts={setAllPosts} />
+            <UserInfo>
+                <img src={userPage.image} />
+                <h2>{userPage.name}</h2>
+            </UserInfo>
             <PostsContainer>
-              {loading ? (
-                <Loading />
-              ) : allPosts.length !== 0 ? (
+              {loading? <Loading /> : allPosts.length !== 0 ? (
                 allPosts.map((post) => {
                   let likesFiltered = selected.find(
                     (element) =>
-                      element.postId === post.postid &&
-                      element.userId === user.userId
+                      element.postId === post.postid && element.userId === user.userId
                   );
                   return (
                     <Post
@@ -86,44 +98,26 @@ export default function Timeline() {
 }
 
 const PageContainer = styled.div`
-  min-width: 900px;
-  width: 100%;
+  width: 100vw;
   display: flex;
   justify-content: center;
   overflow-x: hidden;
   background-color: #333333;
-  position: relative;
-  min-height: 100vh;
-  @media (max-width: 900px) {
-    min-width: auto;
-  }
 `;
 
 const PostsContainer = styled.div`
-  width: 75%;
-  display: flex;
-  flex-direction: column;
-  margin-top: 50px;
-  justify-content: flex-start;
-  position: relative;
-  @media (max-width: 900px) {
-    width: 100vw;
-    min-width: auto;
-  }
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        margin-top: 50px;
+        justify-content: flex-start;
 `;
 
 const Center = styled.div`
-  width: 63%;
-  min-width: 900px;
-  margin: auto;
+  width: 50%;
   height: auto;
   display: flex;
   justify-content: space-between;
-  position: relative;
-  @media (max-width: 900px) {
-    width: 100vw;
-    min-width: auto;
-  }
 `;
 
 const FeedContainer = styled.div`
@@ -147,9 +141,23 @@ const FeedContainer = styled.div`
     font-size: 43px;
     line-height: 64px;
     color: #ffffff;
-    position: absolute;
-    @media (max-width: 900px) {
-    padding-left: 17px;
-  } 
   }
 `;
+
+const UserInfo = styled.section`
+    width:auto;
+    height: 60px;
+  display: flex; 
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  img{
+    width: 53px;
+    height: 53px;
+    border-radius: 50%;
+  }
+
+  h2{
+    margin: 10px;
+  }
+`
