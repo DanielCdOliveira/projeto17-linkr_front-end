@@ -379,7 +379,6 @@ const PostContainer = styled.div`
 
 const Right = styled.div`
   width: 85%;
-  min-width: ;
   display: flex;
   flex-direction: column;
 
