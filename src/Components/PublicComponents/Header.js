@@ -50,6 +50,7 @@ const MainHeader = styled.header`
     font-weight: 700;
     font-size: 49px;
     color: #ffffff;
+    cursor: pointer;
   }
   .profile {
     display: flex;

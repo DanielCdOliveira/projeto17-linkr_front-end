@@ -58,9 +58,6 @@ export default function UsersPage() {
     })
   }, []);
 
-  const token = user.token;
-  console.log(user)
-
   return (
     <>
       <Header />
@@ -76,7 +73,7 @@ export default function UsersPage() {
                 allPosts.map((post) => {
                   let likesFiltered = selected.find(
                     (element) =>
-                      element.postId === post.postid && element.name === user.name
+                      element.postId === post.postid && element.userId === user.userId
                   );
                   return (
                     <Post

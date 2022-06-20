@@ -44,8 +44,6 @@ export default function Timeline() {
   }, []);
 
   const token = user.token;
-  console.log(user);
-  console.log(selected);
 
   return (
     <>
@@ -88,8 +86,8 @@ export default function Timeline() {
 }
 
 const PageContainer = styled.div`
-  width: 100vw;
   min-width: 900px;
+  width: 100%;
   display: flex;
   justify-content: center;
   overflow-x: hidden;

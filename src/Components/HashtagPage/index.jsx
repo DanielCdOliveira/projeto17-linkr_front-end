@@ -42,9 +42,7 @@ export default function HashtagPage() {
       console.log(error);
       alert("Deu algum erro...");
     });
-  }, [hashtag]);
-
-  console.log(allPosts)
+  }, [allPosts]);
 
   return (
     <>
@@ -58,7 +56,7 @@ export default function HashtagPage() {
                 allPosts.map((post) => {
                   let likesFiltered = selected.find(
                     (element) =>
-                      element.postId === post.postid && element.name === user.name
+                      element.postId === post.postid && element.userId === user.userId
                   );
                   return (
                     <Post
