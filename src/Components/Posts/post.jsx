@@ -13,7 +13,7 @@ Modal.setAppElement(".root");
 
 export default function Post(props){
     const { info, setAllPosts, like} = props;
-    const { URL, deleteHashtag } = useContext(AuthContext);
+    const { URL, deleteHashtag, setTrendingUpdate, trendingUpdate, updateHashtags, hashtagsUpdated } = useContext(AuthContext);
 
     const { id } = useParams();
 
@@ -64,20 +64,26 @@ export default function Post(props){
       };
 
       const obj = { postId: info.postid, message: message}
-      const promise = axios.post(`${URL}/edit/post`, obj , config);
-      setPromiseReturned(true)
-  
-      promise.then((response) => {
-        setMessage(response.data);
-        setEdit(false);
-        setPromiseReturned(false);
-      });
-      promise.catch(error => {
-          console.log(error);
-          alert("Deu algum erro, não foi possivel salvar as alterações...");
-          setEdit(true);
-      });
+
+      updateHashtags(obj, config)
+
+      if(hashtagsUpdated){
+        const promise = axios.post(`${URL}/edit/post`, obj , config);
+        setPromiseReturned(true)
+    
+        promise.then((response) => {
+          setMessage(response.data);
+          setEdit(false);
+          setPromiseReturned(false);
+        });
+        promise.catch(error => {
+            console.log(error);
+            alert("Deu algum erro, não foi possivel salvar as alterações...");
+            setEdit(true);
+        });
+        setTrendingUpdate(!trendingUpdate)
       }
+    }
 
     function postLike(){
       const id = info.postid;
@@ -132,6 +138,7 @@ export default function Post(props){
     }
 
     function deletePost(){ 
+
       const id = info.postid
   
       const config = {
@@ -240,6 +247,8 @@ export default function Post(props){
         }
     }, [namesRefresh])
 
+    console.log(info)
+
     return (
       promiseReturned === false?
       <PostContainer>
@@ -275,7 +284,7 @@ export default function Post(props){
               name="message" 
               ref={nameRef}
               type="text" 
-              value={message} 
+              value={info.message} 
               onKeyDown={submit}
               onChange={e => setMessage(e.target.value)}
               disabled={promiseReturned? true:false}

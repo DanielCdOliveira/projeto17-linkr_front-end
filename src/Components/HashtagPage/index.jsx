@@ -44,41 +44,39 @@ export default function HashtagPage() {
     });
   }, [hashtag]);
 
-  console.log(allPosts)
-
-  return (
-    <>
-      <Header />
-      <PageContainer>
-        <Center>
-          <FeedContainer>
-            <h2># {hashtag}</h2>
-            <PostsContainer>
-              {loading? <Loading /> : allPosts.length !== 0 ? (
-                allPosts.map((post) => {
-                  let likesFiltered = selected.find(
-                    (element) =>
-                      element.postId === post.postid && element.name === user.name
-                  );
-                  return (
-                    <Post
-                      info={post}
-                      setAllPosts={setAllPosts}
-                      selected={selected}
-                      like={likesFiltered ? true : false}
-                    />
-                  );
-                })
-              ) : (
-                <span className="noPosts">there are no posts yet</span>
-              )}
-            </PostsContainer>
-          </FeedContainer>
-          <HashtagsTrending />
-        </Center>
-      </PageContainer>
-    </>
-  );
+    return (
+      <>
+        <Header />
+        <PageContainer>
+          <Center>
+            <FeedContainer>
+              <h2># {hashtag}</h2>
+              <PostsContainer>
+                {loading? <Loading /> : allPosts.length !== 0 ? (
+                  allPosts.map((post) => {
+                    let likesFiltered = selected.find(
+                      (element) =>
+                        element.postId === post.postid && element.name === user.name
+                    );
+                    return (
+                      <Post
+                        info={post}
+                        setAllPosts={setAllPosts}
+                        selected={selected}
+                        like={likesFiltered ? true : false}
+                      />
+                    );
+                  })
+                ) : (
+                  <span className="noPosts">there are no posts yet</span>
+                )}
+              </PostsContainer>
+            </FeedContainer>
+            <HashtagsTrending />
+          </Center>
+        </PageContainer>
+      </>
+    );
 }
 
 const PageContainer = styled.div`
