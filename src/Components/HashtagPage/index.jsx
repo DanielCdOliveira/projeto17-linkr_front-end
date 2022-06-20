@@ -41,7 +41,7 @@ export default function HashtagPage() {
     promiseLikes.catch((error) => {
       alert("Deu algum erro...");
     });
-  }, [allPosts]);
+  }, [hashtag]);
 
   return (
     <>

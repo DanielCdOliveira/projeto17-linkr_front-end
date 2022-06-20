@@ -11,6 +11,7 @@ function AuthProvider({ children }) {
   const [user, setUser] = useState({});
   const [hashtags, setHashtags] = useState()
   const [ trendingUpdate, setTrendingUpdate] = useState(false)
+  const [ hashtagsUpdated, setHashtagsUpdated ] = useState(false)
 
   const navigate = useNavigate();
 
@@ -56,6 +57,12 @@ function AuthProvider({ children }) {
     .catch((e) => window.confirm(e.response.data));
   }
 
+  const updateHashtags = (obj, config) => {
+    axios.post(URL + `/update/hashtag`, obj, config)
+    .then(() => setHashtagsUpdated(true))
+    .catch((e) => window.confirm(e.response.data))
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -67,7 +74,9 @@ function AuthProvider({ children }) {
         invalidToken,
         deleteHashtag,
         trendingUpdate,
-        setTrendingUpdate
+        setTrendingUpdate,
+        updateHashtags,
+        hashtagsUpdated
       }}
     >
       {children}
