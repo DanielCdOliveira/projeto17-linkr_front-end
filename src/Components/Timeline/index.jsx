@@ -126,7 +126,7 @@ const Center = styled.div`
 
 const FeedContainer = styled.div`
   width: 100%;
-  margin-top: 100px;
+  margin-top: 150px;
   margin-bottom: 150px;
   display: flex;
   flex-direction: column;

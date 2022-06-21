@@ -152,6 +152,21 @@ const SearchInput = styled.div`
     border: 0 none;
     outline: 0;
   }
+  @media (max-width: 500px) {
+   position: fixed;
+   width: 100%;
+   height: 70px;
+   left: 0px;
+   top:70px;
+   background-color: #333333;
+   padding-top: 10px;
+   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+   input{
+  width: 90%;
+  margin-left: 5%;
+  height: 45px;
+   }
+  }
 `;
 const Result = styled.section`
 width:100%;
