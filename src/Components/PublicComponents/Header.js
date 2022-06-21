@@ -1,11 +1,14 @@
 import styled from "styled-components";
 import { IoIosArrowDown } from "react-icons/io";
-import { useState } from "react";
+//import { FiSearch } from "react-icons/fi";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {DebounceInput} from 'react-debounce-input';
+import { AuthContext } from "../../Context/Auth";
 import axios from "axios"
 
 export default function Header() {
+  const { URL } = useContext(AuthContext);
   const user = JSON.parse(localStorage.getItem("user"));
   const [showLogout, setShowLogout] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
@@ -21,9 +24,6 @@ export default function Header() {
   }
 
   async function search(input){
-    const URL = "http://localhost:5000";
-
-
     if(!input){
       setSearchResult(null);
       setShowResults(false)
@@ -31,7 +31,7 @@ export default function Header() {
     }
 
     try{
-      const result = await axios.get(URL+`/users/${input}`);
+      const result = await axios.get(URL+`/users?name=${input}`);
 
       setSearchResult(result.data)
       setShowResults(true)
@@ -42,14 +42,14 @@ export default function Header() {
 
   return (
     <MainHeader showLogout={showLogout} image={user.image}>
-      <h1>linkr</h1>
+      <h1 onClick={()=>goToTimeline()}>linkr</h1>
       <SearchInput>
         <DebounceInput showResults={showResults} placeholder={"Search for people"} minLength={3} debounceTimeout={300} onChange={event => {search(event.target.value)}} />
         <div>
           {searchResult === null ? <div></div> : searchResult.map(element => {return <Result><img src={element.image}/> <p>{element.name}</p></Result>})}
         </div>
+        {/* <FiSearch/> */}
       </SearchInput>
-      <h1 onClick={()=>goToTimeline()}>linkr</h1>
       <nav className="profile" onClick={() => setShowLogout(!showLogout)}>
         <IoIosArrowDown />
         <img src={user.image} alt="profile picture" />
@@ -131,6 +131,7 @@ input{
   width: 100%;
   height: 100%;
   border-radius: 10px;
+  padding-left: 10px;
 }
 div{
   transition: all 0.5s;

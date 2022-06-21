@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 
 export function updateMessage(
   info,
@@ -13,7 +13,6 @@ export function updateMessage(
   trendingUpdate,
   URL
 ) {
-        console.log(URL)
   const config = {
     headers: {
       Authorization: `Bearer ${tokenStorage}`,
@@ -21,9 +20,9 @@ export function updateMessage(
   };
 
   const obj = { postId: info.postid, message: message };
-//   updateHashtags(obj, config);
+  updateHashtags(obj, config);
 
-//   if (hashtagsUpdated) {
+  if (hashtagsUpdated) {
     const promise = axios.post(`${URL}/edit/post`, obj, config);
     setPromiseReturned(true);
 
@@ -33,15 +32,14 @@ export function updateMessage(
       setPromiseReturned(false);
     });
     promise.catch((error) => {
-      console.log(error);
       alert("Deu algum erro, não foi possivel salvar as alterações...");
       setEdit(true);
     });
     setTrendingUpdate(!trendingUpdate);
-//   }
+  }
 }
 
-export function postLike(info,tokenStorage, setLikes,URL) {
+export function postLike(info, tokenStorage, setLikes, URL) {
   const id = info.postid;
   const config = {
     headers: {
@@ -58,7 +56,7 @@ export function postLike(info,tokenStorage, setLikes,URL) {
   });
 }
 
-export function deleteLike(info,tokenStorage,setLikes,URL) {
+export function deleteLike(info, tokenStorage, setLikes, URL) {
   const id = info.postid;
   const config = {
     headers: {
@@ -95,6 +93,8 @@ export function deletePost(
     },
   };
 
+  deleteHashtag(id, config);
+
   const promise = axios.delete(`${URL}/delete/post/${id}`, config);
 
   promise.then((response) => {
@@ -111,6 +111,4 @@ export function deletePost(
     alert("an error has ocurred, unable to delete the post...");
     toggleModal(setIsOpen, isOpen);
   });
-
-  deleteHashtag(id, config);
 }

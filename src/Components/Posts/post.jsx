@@ -20,7 +20,6 @@ Modal.setAppElement(".root");
 export default function Post(props){
     const { info, setAllPosts, like} = props;
     const { URL, deleteHashtag, setTrendingUpdate, trendingUpdate, updateHashtags, hashtagsUpdated } = useContext(AuthContext);
-    const { id } = useParams();
 
     const navigate = useNavigate()
 
@@ -53,7 +52,6 @@ export default function Post(props){
     }
 
     function submit(e){
-      console.log(e)
       if (e.keyCode === 13) {
         updateMessage(
           info,
@@ -274,6 +272,7 @@ export default function Post(props){
               fontFamily: "Lato",
               fontSize: "18px",
               fontWeight: "700",
+              cursor: 'pointer'
             }}
           >
             No, go back
@@ -302,6 +301,7 @@ export default function Post(props){
               fontFamily: "Lato",
               fontSize: "18px",
               fontWeight: "700",
+              cursor: 'pointer'
             }}
           >
             Yes, delete it
