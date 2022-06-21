@@ -9,6 +9,7 @@ export default function UserInSearch(props){
         console.log(props.infos)
         function handleClick(){
                 navigate(`/user/${id}`)
+                window.location.reload();
         }
         return(
                 <UserInSearchContainer onClick={() => handleClick()}>

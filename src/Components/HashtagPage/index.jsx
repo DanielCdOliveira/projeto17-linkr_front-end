@@ -81,6 +81,7 @@ export default function HashtagPage() {
 const PageContainer = styled.div`
   width: 100vw;
   display: flex;
+  min-height: 100vh;
   justify-content: center;
   overflow-x: hidden;
   background-color: #333333;

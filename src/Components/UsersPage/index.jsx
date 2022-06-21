@@ -21,7 +21,7 @@ export default function UsersPage() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     setUser(user);
-    const promise = axios.get(`${URL}/get/posts?userId=${id}`);
+    const promise = axios.get(`${URL}/get/posts/${id}`);
 
     promise.then((response) => {
       setAllPosts(response.data);
@@ -112,6 +112,7 @@ const PostsContainer = styled.div`
 const Center = styled.div`
   width: 50%;
   height: auto;
+  min-height: 100vh;
   display: flex;
   justify-content: space-between;
 `;
