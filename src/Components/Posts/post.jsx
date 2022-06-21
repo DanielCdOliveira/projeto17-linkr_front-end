@@ -394,7 +394,7 @@ const MessageUser = styled.div`
   line-height: 25px;
 
   textarea {
-    width: 100%;
+    width: 111%;
     height: 44px;
     padding-left: 10px;
     padding-top: 4px;
