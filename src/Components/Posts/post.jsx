@@ -8,13 +8,18 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from "../../Context/Auth";
 import Loading  from "../PublicComponents/Loading"
 import ReactHashtag from "@mdnm/react-hashtag";
-
+import {
+  postLike,
+  updateMessage,
+  deleteLike,
+  toggleModal,
+  deletePost
+} from "./postRepository";
 Modal.setAppElement(".root");
 
 export default function Post(props){
     const { info, setAllPosts, like} = props;
     const { URL, deleteHashtag, setTrendingUpdate, trendingUpdate, updateHashtags, hashtagsUpdated } = useContext(AuthContext);
-
     const { id } = useParams();
 
     const navigate = useNavigate()
@@ -48,75 +53,25 @@ export default function Post(props){
     }
 
     function submit(e){
+      console.log(e)
       if (e.keyCode === 13) {
-        updateMessage();   
+        updateMessage(
+          info,
+          tokenStorage,
+          setPromiseReturned,
+          setMessage,
+          setEdit,
+          updateHashtags,
+          hashtagsUpdated,
+          setTrendingUpdate,
+          message,
+          trendingUpdate,
+          URL
+        );   
       } else if (e.keyCode === 27){
         setMessage(oldMessage)
         setEdit(false);
       }
-    }
-
-    function updateMessage(){
-      const config = {
-        headers: {
-            Authorization: `Bearer ${tokenStorage}`,
-        },
-      };
-
-      const obj = { postId: info.postid, message: message}
-      updateHashtags(obj, config)
-
-      if(hashtagsUpdated){
-        const promise = axios.post(`${URL}/edit/post`, obj , config);
-        setPromiseReturned(true)
-    
-        promise.then((response) => {
-          setMessage(response.data);
-          setEdit(false);
-          setPromiseReturned(false);
-        });
-        promise.catch(error => {
-            console.log(error);
-            alert("Deu algum erro, não foi possivel salvar as alterações...");
-            setEdit(true);
-        });
-        setTrendingUpdate(!trendingUpdate)
-
-      }
-    }
-
-    function postLike(){
-      const id = info.postid;
-      const config = {
-        headers: {
-            Authorization: `Bearer ${tokenStorage}`,
-        },
-      };
-      const promise = axios.post(`${URL}/like/post/${id}`, id, config);
-  
-      promise.then((response) => {
-        setLikes(true)
-      });
-      promise.catch(error => {
-          alert("an error has ocurred, unable to like the post...");
-      });
-    }
-
-    function deleteLike(){
-      const id = info.postid;
-      const config = {
-        headers: {
-            Authorization: `Bearer ${tokenStorage}`,
-        },
-      };
-      const promise = axios.delete(`${URL}/deslike/post/${id}`, config);
-  
-      promise.then((response) => {
-        setLikes(false)
-      });
-      promise.catch(error => {
-          alert("an error has ocurred, unable to dislike the post...");
-      });
     }
 
     useEffect(() => {
@@ -130,40 +85,6 @@ export default function Post(props){
       });
     }, [likes])
 
-    function toggleModal() {
-      setIsOpen(!isOpen);
-    }
-
-    function deletePost(){ 
-
-      const id = info.postid
-  
-      const config = {
-        headers: {
-            Authorization: `Bearer ${tokenStorage}`,
-        }
-      };
-  
-      const promise = axios.delete(`${URL}/delete/post/${id}`, config);
-  
-      promise.then((response) => {
-        toggleModal();
-        const promise2 = axios.get(`${URL}/get/posts`);
-        promise2.then((response) => {
-          setAllPosts(response.data)
-        })
-        promise2.catch(error => {
-          alert("an error has ocurred, unable to delete the post...");
-        })
-      });
-      promise.catch(error => {
-          alert("an error has ocurred, unable to delete the post...");
-          toggleModal(); 
-      });
-      
-      deleteHashtag(id, config)
-
-    }
   
       const customStyles = {
           overlay: {
@@ -192,7 +113,7 @@ export default function Post(props){
             paddingRight: '100px',
             fontSize: '34px',
           }
-        };
+      };
 
       useEffect(() => {
         const id = info.postid
@@ -240,135 +161,154 @@ export default function Post(props){
         }
     }, [namesRefresh])
 
-    console.log(info)
-
-    return (
-      promiseReturned === false?
+    return promiseReturned === false ? (
       <PostContainer>
-
         <PerfilLikeContainer>
-          <img src={info.userImage} alt='perfil'></img>
-          
+          <img src={info.userImage} alt="perfil"></img>
+
           <div>
-            <TiHeartFullOutline style={{color: likes ? "red" : "white"}} fontSize="30px" onClick={() => {
-              if(likes === false){
-                postLike();
-              } else if( likes === true){
-                deleteLike();
-              }
-            }}/>
+            <TiHeartFullOutline
+              style={{ color: likes ? "red" : "white" }}
+              fontSize="30px"
+              onClick={() => {
+                if (likes === false) {
+                  postLike(info, tokenStorage, setLikes,URL);
+                } else if (likes === true) {
+                  deleteLike(info, tokenStorage, setLikes,URL);
+                }
+              }}
+            />
           </div>
           <ContainerCountLikes data-tip data-for="countLikes">
-            <a data-tip={countLikes? `${result}`: null}>{countLikes} Likes</a>
-            <ReactTooltip place="bottom" type="light" effect="solid"/>
+            <a data-tip={countLikes ? `${result}` : null}>{countLikes} Likes</a>
+            <ReactTooltip place="bottom" type="light" effect="solid" />
           </ContainerCountLikes>
-
         </PerfilLikeContainer>
 
         <Right>
-
           <UserContainer>
-
             <MessageUser>
               <p>{info.userName}</p>
-              { 
-              edit ?
-              <textarea 
-              name="message" 
-              ref={nameRef}
-              type="text" 
-              value={info.message} 
-              onKeyDown={submit}
-              onChange={e => setMessage(e.target.value)}
-              disabled={promiseReturned? true:false}
-              /> 
-              :
-              <ReactHashtag
-                renderHashtag={(hashtag) => (
-                  <HashtagStyle
-                    onClick={() => {
-                      navigate(`/hashtag/${hashtag.replace('#',"")}`)
-                    }}
-                  >
-                    {hashtag}
-                  </HashtagStyle>
-                )}
-              >
-                {message}
-              </ReactHashtag>
-              }
+              {edit ? (
+                <textarea
+                  name="message"
+                  ref={nameRef}
+                  type="text"
+                  value={message}
+                  onKeyDown={submit}
+                  onChange={(e) => setMessage(e.target.value)}
+                  disabled={promiseReturned ? true : false}
+                />
+              ) : (
+                <ReactHashtag
+                  renderHashtag={(hashtag) => (
+                    <HashtagStyle
+                      onClick={() => {
+                        navigate(`/hashtag/${hashtag.replace("#", "")}`);
+                      }}
+                    >
+                      {hashtag}
+                    </HashtagStyle>
+                  )}
+                >
+                  {message}
+                </ReactHashtag>
+              )}
             </MessageUser>
 
-            {
-              user.userId === info.userId ?
+            {user.userId === info.userId ? (
               <EditDeleteContainer>
-                <TiPencil color='white' fontSize="25px" onClick={() => { 
-                  if(edit === false){
-                    setEdit(!edit);
-                    setTimeout(focus, 100);
-                  } else {
-                    setEdit(false);
-                    setMessage(oldMessage)
-                  }
-                }}/>
-              <TiTrash color='white' fontSize="25px" onClick={toggleModal}/>
-            </EditDeleteContainer>
-            :
-            <></>
-            }
-
+                <TiPencil
+                  color="white"
+                  fontSize="25px"
+                  onClick={() => {
+                    if (edit === false) {
+                      setEdit(!edit);
+                      setTimeout(focus, 100);
+                    } else {
+                      setEdit(false);
+                      setMessage(oldMessage);
+                    }
+                  }}
+                />
+                <TiTrash
+                  color="white"
+                  fontSize="25px"
+                  onClick={() => toggleModal(setIsOpen, isOpen)}
+                />
+              </EditDeleteContainer>
+            ) : (
+              <></>
+            )}
           </UserContainer>
-          
-          <LinkContainer href={info.url} target="_blank">
-              <div href={info.url} target="_blank">
-                <p>{info.title}</p>
-                <p>{info.description}</p>
-                <p>{info.url}</p>
-              </div>
-              <img src={info.image} alt="infoimage"></img>
-          </LinkContainer>
 
+          <LinkContainer href={info.url} target="_blank">
+            <div href={info.url} target="_blank">
+              <p>{info.title}</p>
+              <p>{info.description}</p>
+              <p>{info.url}</p>
+            </div>
+            <img src={info.image} alt="infoimage"></img>
+          </LinkContainer>
         </Right>
-        
+
         <Modal
           isOpen={isOpen}
-          onRequestClose={toggleModal}
-          style={customStyles}>
-          <div style={{marginTop: "40px"}}>Are you sure you want to delete this post?</div>
-          <button 
-          onClick={toggleModal} 
-          style={{
-          width: "134px", 
-          height: "37px", 
-          marginTop: "40px", 
-          marginRight: "25px", 
-          borderRadius: "5px", 
-          background: '#ffffff', 
-          color: '#1877F2', 
-          textDecoration: 'none',
-          fontFamily: 'Lato',
-          fontSize: '18px',
-          fontWeight: '700'
-          }}>No, go back</button>
+          onRequestClose={() => toggleModal(setIsOpen, isOpen)}
+          style={customStyles}
+        >
+          <div style={{ marginTop: "40px" }}>
+            Are you sure you want to delete this post?
+          </div>
+          <button
+            onClick={() => toggleModal(setIsOpen, isOpen)}
+            style={{
+              width: "134px",
+              height: "37px",
+              marginTop: "40px",
+              marginRight: "25px",
+              borderRadius: "5px",
+              background: "#ffffff",
+              color: "#1877F2",
+              textDecoration: "none",
+              fontFamily: "Lato",
+              fontSize: "18px",
+              fontWeight: "700",
+            }}
+          >
+            No, go back
+          </button>
 
-          <button 
-          onClick={deletePost} 
-          style={{
-          width: "134px", 
-          height: "37px", 
-          marginTop: "40px", 
-          borderRadius: "5px", 
-          background: '#1877F2', 
-          color: '#ffffff',  
-          textDecoration: 'none',
-          fontFamily: 'Lato',
-          fontSize: '18px',
-          fontWeight: '700'
-          }}>Yes, delete it</button>
-          </Modal>
-
+          <button
+            onClick={() =>
+              deletePost(
+                info,
+                tokenStorage,
+                setAllPosts,
+                deleteHashtag,
+                URL,
+                setIsOpen,
+                isOpen
+              )
+            }
+            style={{
+              width: "134px",
+              height: "37px",
+              marginTop: "40px",
+              borderRadius: "5px",
+              background: "#1877F2",
+              color: "#ffffff",
+              textDecoration: "none",
+              fontFamily: "Lato",
+              fontSize: "18px",
+              fontWeight: "700",
+            }}
+          >
+            Yes, delete it
+          </button>
+        </Modal>
       </PostContainer>
-      :
+    ) : (
       <Loading />
     );
 }
