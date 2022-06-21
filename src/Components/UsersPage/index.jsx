@@ -21,7 +21,7 @@ export default function UsersPage() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     setUser(user);
-    const promise = axios.get(`${URL}/get/posts/${id}`);
+    const promise = axios.get(`${URL}/get/posts?userId=${id}`);
 
     promise.then((response) => {
       setAllPosts(response.data);
