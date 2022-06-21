@@ -5,6 +5,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {DebounceInput} from 'react-debounce-input';
 import { AuthContext } from "../../Context/Auth";
+import UserInSearch from "./UserInSearch";
 import axios from "axios"
 
 export default function Header() {
@@ -42,11 +43,23 @@ export default function Header() {
 
   return (
     <MainHeader showLogout={showLogout} image={user.image}>
-      <h1 onClick={()=>goToTimeline()}>linkr</h1>
+      <h1 onClick={() => goToTimeline()}>linkr</h1>
       <SearchInput>
-        <DebounceInput showResults={showResults} placeholder={"Search for people"} minLength={3} debounceTimeout={300} onChange={event => {search(event.target.value)}} />
+        <DebounceInput
+          showResults={showResults}
+          placeholder={"Search for people"}
+          minLength={3}
+          debounceTimeout={300}
+          onChange={(event) => {
+            search(event.target.value);
+          }}
+        />
         <div>
-          {searchResult === null ? <div></div> : searchResult.map(element => {return <Result><img src={element.image}/> <p>{element.name}</p></Result>})}
+          {searchResult === null ? (
+            <div></div>
+          ) : (
+            searchResult.map((user) => <UserInSearch infos={user}/>)
+          )}
         </div>
         {/* <FiSearch/> */}
       </SearchInput>
@@ -125,20 +138,21 @@ const MainHeader = styled.header`
 `;
 
 const SearchInput = styled.div`
-width: 40%;
-height: 50%;
-input{
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  padding-left: 10px;
-}
-div{
-  transition: all 0.5s;
-  ${(props) => (props.showResults ? "height:200px;" : "height:0;")}
-  background-color: #ffffff;
-}
-`
+  width: 40%;
+  height: 50%;
+  input {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    padding-left: 10px;
+    border: none;
+  }
+  input:focus{
+    box-shadow: 0 0 0 0;
+    border: 0 none;
+    outline: 0;
+  }
+`;
 const Result = styled.section`
 width:100%;
 height: 30%;
