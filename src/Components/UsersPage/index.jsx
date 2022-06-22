@@ -7,7 +7,7 @@ import HashtagsTrending from "../SideBar/sideBar.jsx";
 import Header from "../PublicComponents/Header.js";
 import Loading from "../PublicComponents/Loading.js";
 import { useParams } from "react-router-dom";
-
+import FollowButton from "./FollowButton.jsx"
 
 export default function UsersPage() {
   const [selected, setSelected] = useState([]);
@@ -15,13 +15,21 @@ export default function UsersPage() {
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userPage, setUserPage] = useState({});
+  const [following, setFollowing] = useState("loading");
+
   const { URL } = useContext(AuthContext);
   const {id} = useParams();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     setUser(user);
-    const promise = axios.get(`${URL}/get/posts/${id}`);
+    const token = user.token
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.get(`${URL}/get/posts?userId${id}`, config);
 
     promise.then((response) => {
       setAllPosts(response.data);
@@ -43,17 +51,18 @@ export default function UsersPage() {
       alert("Deu algum erro...");
     });
 
-    const promiseUser = axios.get(`${URL}/users?id=${id}`)
+    const promiseUser = axios.get(`${URL}/users?followedId=${id}`, config);
 
     promiseUser.then((res) => {
-        setUserPage(res.data[0]);
+      setFollowing(res.data.following)
+      setUserPage(res.data.user[0]);
     });
 
     promiseUser.catch((err) => {
         alert("Erro ao buscar dados do usuário selecionado");
     })
   }, []);
-
+const token = user.token;
   return (
     <>
       <Header />
@@ -61,15 +70,19 @@ export default function UsersPage() {
         <Center>
           <FeedContainer>
             <UserInfo>
-                <img src={userPage.image} />
-                <h2>{userPage.name}</h2>
+              <img src={userPage.image} />
+              <h2>{userPage.name}</h2>
+              {/* <button>{following? "unfollow" : "follow"}</button> */}
             </UserInfo>
             <PostsContainer>
-              {loading? <Loading /> : allPosts.length !== 0 ? (
+              {loading ? (
+                <Loading />
+              ) : allPosts.length !== 0 ? (
                 allPosts.map((post) => {
                   let likesFiltered = selected.find(
                     (element) =>
-                      element.postId === post.postid && element.userId === user.userId
+                      element.postId === post.postid &&
+                      element.userId === user.userId
                   );
                   return (
                     <Post
@@ -87,6 +100,7 @@ export default function UsersPage() {
             </PostsContainer>
           </FeedContainer>
           <HashtagsTrending />
+          <FollowButton following={following} setFollowing={setFollowing} URL={URL} user={userPage} token={token} />
         </Center>
       </PageContainer>
     </>
@@ -95,6 +109,7 @@ export default function UsersPage() {
 
 const PageContainer = styled.div`
   width: 100vw;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   overflow-x: hidden;
@@ -112,7 +127,6 @@ const PostsContainer = styled.div`
 const Center = styled.div`
   width: 50%;
   height: auto;
-  min-height: 100vh;
   display: flex;
   justify-content: space-between;
 `;

@@ -22,7 +22,6 @@ export function updateMessage(
   const obj = { postId: info.postid, message: message };
   updateHashtags(obj, config);
 
-  if (hashtagsUpdated) {
     const promise = axios.post(`${URL}/edit/post`, obj, config);
     setPromiseReturned(true);
 
@@ -36,7 +35,6 @@ export function updateMessage(
       setEdit(true);
     });
     setTrendingUpdate(!trendingUpdate);
-  }
 }
 
 export function postLike(info, tokenStorage, setLikes, URL) {
