@@ -195,7 +195,7 @@ export default function Post(props) {
           <MessageUser>
             <p>{info.userName}</p>
             {edit ? (
-              <textarea
+              <input
                 name="message"
                 ref={nameRef}
                 type="text"
@@ -325,7 +325,7 @@ const PostContainer = styled.div`
   margin-top: 10px;
   border-radius: 15px;
   width: 100%;
-  height: 276px;
+  height: fit-content;
   display: flex;  
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   @media (max-width: 900px) {

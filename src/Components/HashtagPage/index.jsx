@@ -79,33 +79,50 @@ export default function HashtagPage() {
 }
 
 const PageContainer = styled.div`
-  width: 100vw;
+  min-width: 900px;
+  width: 100%;
   display: flex;
-  min-height: 100vh;
   justify-content: center;
   overflow-x: hidden;
   background-color: #333333;
+  position: relative;
+  min-height: 100vh;
+  @media (max-width: 900px) {
+    min-width: auto;
+  }
 `;
 
 const PostsContainer = styled.div`
-        width: 70%;
-        display: flex;
-        padding-top: 20px;
-        flex-direction: column;
-        margin-top: 50px;
-        justify-content: flex-start;
+  width: 68%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  justify-content: flex-start;
+  position: relative;
+  margin-top: 80px;
+  @media (max-width: 900px) {
+    width: 100vw;
+    min-width: auto;
+  }
 `;
 
 const Center = styled.div`
-  width: 50%;
+  width: 63%;
+  min-width: 900px;
+  margin: auto;
   height: auto;
   display: flex;
   justify-content: space-between;
+  position: relative;
+  @media (max-width: 900px) {
+    width: 100vw;
+    min-width: auto;
+  }
 `;
 
 const FeedContainer = styled.div`
   width: 100%;
-  margin-top: 100px;
+  margin-top: 150px;
   margin-bottom: 150px;
   display: flex;
   flex-direction: column;
@@ -125,5 +142,8 @@ const FeedContainer = styled.div`
     line-height: 64px;
     color: #ffffff;
     position: absolute;
+    @media (max-width: 900px) {
+    padding-left: 17px;
+  } 
   }
 `;

@@ -80,7 +80,7 @@ export default function PostForm(props) {
 
 const PostFormContainer = styled.div`
   display: flex;
-  width: 75%;
+  width: 68%;
   height: 209px;
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);

@@ -98,7 +98,7 @@ const PageContainer = styled.div`
 `;
 
 const PostsContainer = styled.div`
-  width: 75%;
+  width: 68%;
   display: flex;
   flex-direction: column;
   margin-top: 50px;
