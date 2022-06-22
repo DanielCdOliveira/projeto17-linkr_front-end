@@ -30,11 +30,15 @@ export default function Header() {
       setShowResults(false)
       return
     }
-
+    const token = user.token
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
     try{
-      const result = await axios.get(URL+`/users?name=${input}`);
-
-      setSearchResult(result.data)
+      const result = await axios.get(URL+`/users?name=${input}`, config);
+      setSearchResult(result.data.user)
       setShowResults(true)
     }
     catch(err){

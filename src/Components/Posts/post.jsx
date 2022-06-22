@@ -159,10 +159,19 @@ export default function Post(props){
         }
     }, [namesRefresh])
 
+    function handleClick() {
+      console.log(info)
+      navigate(`/user/${info.userId}`);
+      window.location.reload();
+    }
     return promiseReturned === false ? (
       <PostContainer>
         <PerfilLikeContainer>
-          <img src={info.userImage} alt="perfil"></img>
+          <img
+            src={info.userImage}
+            alt="perfil"
+            onClick={() => handleClick()}
+          ></img>
 
           <div>
             <TiHeartFullOutline
@@ -170,9 +179,9 @@ export default function Post(props){
               fontSize="30px"
               onClick={() => {
                 if (likes === false) {
-                  postLike(info, tokenStorage, setLikes,URL);
+                  postLike(info, tokenStorage, setLikes, URL);
                 } else if (likes === true) {
-                  deleteLike(info, tokenStorage, setLikes,URL);
+                  deleteLike(info, tokenStorage, setLikes, URL);
                 }
               }}
             />
@@ -186,7 +195,7 @@ export default function Post(props){
         <Right>
           <UserContainer>
             <MessageUser>
-              <p>{info.userName}</p>
+              <p onClick={() => handleClick()}>{info.userName}</p>
               {edit ? (
                 <textarea
                   name="message"
@@ -272,7 +281,7 @@ export default function Post(props){
               fontFamily: "Lato",
               fontSize: "18px",
               fontWeight: "700",
-              cursor: 'pointer'
+              cursor: "pointer",
             }}
           >
             No, go back
@@ -301,7 +310,7 @@ export default function Post(props){
               fontFamily: "Lato",
               fontSize: "18px",
               fontWeight: "700",
-              cursor: 'pointer'
+              cursor: "pointer",
             }}
           >
             Yes, delete it
@@ -350,6 +359,7 @@ const PerfilLikeContainer = styled.div`
       height: 50px;
       border-radius: 50%;
       margin-bottom: 10px;
+      cursor: pointer;
     }
 `;
 
@@ -427,7 +437,7 @@ const UserContainer = styled.div`
 `
 
 const MessageUser = styled.div`
-  width: 90%;
+  max-width: 90%;
   height: auto;
   padding: 10px 0px 10px 0px;
   line-height: 25px;
@@ -458,6 +468,9 @@ const MessageUser = styled.div`
     font-weight: 400;
     font-size: 19px;
     line-height: 23px;
+    display: flex;
+    width: auto;
+    cursor: pointer;
   }
 
   p:last-child {
