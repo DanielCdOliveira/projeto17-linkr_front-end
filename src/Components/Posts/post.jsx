@@ -108,7 +108,7 @@ export default function Post(props){
       promise.catch((error) => {
         alert("an error has ocurred...");
       });
-  }, [likes]);  
+  }, []);  
   
 const customStyles = {
           overlay: {
@@ -214,225 +214,241 @@ const customStyles = {
     }
     
 
-    return promiseReturned === false ? (!info.userIdRepost?
-      <MainContainer>
-        <PostContainer>
-          <PerfilLikeContainer>
-          <img
-          src={info.userImage}
-          alt="perfil"
-          onClick={() => handleClick()}
-          ></img>
-            <div>
-              <TiHeartFullOutline
-                style={{ color: likes ? "red" : "white" }}
-                fontSize="30px"
-                onClick={() => {
-                  if (likes === false) {
-                    postLike(info, tokenStorage, setLikes,URL);
-                  } else if (likes === true) {
-                    deleteLike(info, tokenStorage, setLikes,URL);
-                  }
-                }}
-              />
-            </div>
-            <ContainerCountLikes data-tip data-for="countLikes">
-              <a data-tip={countLikes ? `${result}` : null}>{countLikes} Likes</a>
-              <ReactTooltip place="bottom" type="light" effect="solid" />
-            </ContainerCountLikes>
-            <div>
-              <BiRepost
-                style={{ color:"white" }}
-                fontSize="30px"
-                onClick={() => {
-                  postShare(info, tokenStorage, URL)
-                }}
-              />
-          </div>
-        
-            <ContainerIconComments>
-              <AiOutlineComment onClick={() => { 
-                if(openComments === true){
-                  setOpenComments(false);
-                } else if(openComments === false){
-                  setOpenComments(true);
-                  getComments(URL, tokenStorage, setComments, info)
-                }
-              }}/>
-              {
-              countComments ? 
-                <ContainerCountComments>
-                  <p>{countComments} comments</p>
-                </ContainerCountComments>
-                :
-                <ContainerCountComments>
-                  <p>0 comments</p>
-                </ContainerCountComments>
-              }
-            </ContainerIconComments>
-          </PerfilLikeContainer>
-          <Right>
-            <UserContainer>
-              <MessageUser>
-              <p onClick={() => handleClick()}>{info.userName}</p>
-                {edit ? (
-                  <textarea
-                    name="message"
-                    ref={nameRef}
-                    type="text"
-                    value={message}
-                    onKeyDown={submit}
-                    onChange={(e) => setMessage(e.target.value)}
-                    disabled={promiseReturned ? true : false}
-                  />
+    return promiseReturned === false ? (
+      !info.userIdRepost ? (
+        <MainContainer>
+          <PostContainer>
+            <PerfilLikeContainer>
+              <img
+                src={info.userImage}
+                alt="perfil"
+                onClick={() => handleClick()}
+              ></img>
+              <div>
+                <TiHeartFullOutline
+                  style={{ color: likes ? "red" : "white" }}
+                  fontSize="30px"
+                  onClick={() => {
+                    if (likes === false) {
+                      postLike(info, tokenStorage, setLikes, URL);
+                    } else if (likes === true) {
+                      deleteLike(info, tokenStorage, setLikes, URL);
+                    }
+                  }}
+                />
+              </div>
+              <ContainerCountLikes data-tip data-for="countLikes">
+                <a data-tip={countLikes ? `${result}` : null}>
+                  {countLikes} Likes
+                </a>
+                <ReactTooltip place="bottom" type="light" effect="solid" />
+              </ContainerCountLikes>
+              <div>
+                <BiRepost
+                  style={{ color: "white" }}
+                  fontSize="30px"
+                  onClick={() => {
+                    postShare(info, tokenStorage, URL);
+                  }}
+                />
+              </div>
+              <ContainerCountLikes>
+                <a>{countShares} re-post</a>
+              </ContainerCountLikes>
+
+              <ContainerIconComments>
+                <AiOutlineComment
+                  onClick={() => {
+                    if (openComments === true) {
+                      setOpenComments(false);
+                    } else if (openComments === false) {
+                      setOpenComments(true);
+                      getComments(URL, tokenStorage, setComments, info);
+                    }
+                  }}
+                />
+                {countComments ? (
+                  <ContainerCountComments>
+                    <p>{countComments} comments</p>
+                  </ContainerCountComments>
                 ) : (
-                  <ReactHashtag
-                    renderHashtag={(hashtag) => (
-                      <HashtagStyle
-                        onClick={() => {
-                          navigate(`/hashtag/${hashtag.replace("#", "")}`);
-                        }}
-                      >
-                        {hashtag}
-                      </HashtagStyle>
-                    )}
-                  >
-                    {message}
-                  </ReactHashtag>
+                  <ContainerCountComments>
+                    <p>0 comments</p>
+                  </ContainerCountComments>
                 )}
-              </MessageUser>
-              {user.userId === info.userId ? (
-                <EditDeleteContainer>
-                  <TiPencil
-                    color="white"
-                    fontSize="25px"
-                    onClick={() => {
-                      if (edit === false) {
-                        setEdit(!edit);
-                        setTimeout(focus, 100);
-                      } else {
-                        setEdit(false);
-                        setMessage(oldMessage);
-                      }
-                    }}
+              </ContainerIconComments>
+            </PerfilLikeContainer>
+            <Right>
+              <UserContainer>
+                <MessageUser>
+                  <p onClick={() => handleClick()}>{info.userName}</p>
+                  {edit ? (
+                    <textarea
+                      name="message"
+                      ref={nameRef}
+                      type="text"
+                      value={message}
+                      onKeyDown={submit}
+                      onChange={(e) => setMessage(e.target.value)}
+                      disabled={promiseReturned ? true : false}
+                    />
+                  ) : (
+                    <ReactHashtag
+                      renderHashtag={(hashtag) => (
+                        <HashtagStyle
+                          onClick={() => {
+                            navigate(`/hashtag/${hashtag.replace("#", "")}`);
+                          }}
+                        >
+                          {hashtag}
+                        </HashtagStyle>
+                      )}
+                    >
+                      {message}
+                    </ReactHashtag>
+                  )}
+                </MessageUser>
+                {user.userId === info.userId ? (
+                  <EditDeleteContainer>
+                    <TiPencil
+                      color="white"
+                      fontSize="25px"
+                      onClick={() => {
+                        if (edit === false) {
+                          setEdit(!edit);
+                          setTimeout(focus, 100);
+                        } else {
+                          setEdit(false);
+                          setMessage(oldMessage);
+                        }
+                      }}
+                    />
+                    <TiTrash
+                      color="white"
+                      fontSize="25px"
+                      onClick={() => toggleModal(setIsOpen, isOpen)}
+                    />
+                  </EditDeleteContainer>
+                ) : (
+                  <></>
+                )}
+              </UserContainer>
+              <LinkContainer href={info.url} target="_blank">
+                <div href={info.url} target="_blank">
+                  <p>{info.title}</p>
+                  <p>{info.description}</p>
+                  <p>{info.url}</p>
+                </div>
+                <img src={info.image} alt="infoimage"></img>
+              </LinkContainer>
+            </Right>
+            <Modal
+              isOpen={isOpen}
+              onRequestClose={() => toggleModal(setIsOpen, isOpen)}
+              style={customStyles}
+            >
+              <div style={{ marginTop: "40px" }}>
+                Are you sure you want to delete this post?
+              </div>
+              <button
+                onClick={() => toggleModal(setIsOpen, isOpen)}
+                style={{
+                  width: "134px",
+                  height: "37px",
+                  marginTop: "40px",
+                  marginRight: "25px",
+                  borderRadius: "5px",
+                  background: "#ffffff",
+                  color: "#1877F2",
+                  textDecoration: "none",
+                  fontFamily: "Lato",
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                }}
+              >
+                No, go back
+              </button>
+              <button
+                onClick={() =>
+                  deletePost(
+                    info,
+                    tokenStorage,
+                    setAllPosts,
+                    deleteHashtag,
+                    URL,
+                    setIsOpen,
+                    isOpen
+                  )
+                }
+                style={{
+                  width: "134px",
+                  height: "37px",
+                  marginTop: "40px",
+                  borderRadius: "5px",
+                  background: "#1877F2",
+                  color: "#ffffff",
+                  textDecoration: "none",
+                  fontFamily: "Lato",
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                }}
+              >
+                Yes, delete it
+              </button>
+            </Modal>
+          </PostContainer>
+          <ContainerComments>
+            <div>
+              {comments && openComments === true ? (
+                comments.map((comment) => (
+                  <MappingComments
+                    info={info}
+                    comment={comment}
+                    user={user}
+                    commentsFollows={commentsFollows}
                   />
-                  <TiTrash
-                    color="white"
-                    fontSize="25px"
-                    onClick={() => toggleModal(setIsOpen, isOpen)}
-                  />
-                </EditDeleteContainer>
+                ))
               ) : (
                 <></>
               )}
-            </UserContainer>
-            <LinkContainer href={info.url} target="_blank">
-              <div href={info.url} target="_blank">
-                <p>{info.title}</p>
-                <p>{info.description}</p>
-                <p>{info.url}</p>
-              </div>
-              <img src={info.image} alt="infoimage"></img>
-            </LinkContainer>
-          </Right>
-          <Modal
-            isOpen={isOpen}
-            onRequestClose={() => toggleModal(setIsOpen, isOpen)}
-            style={customStyles}
-            >
-            <div style={{ marginTop: "40px" }}>
-              Are you sure you want to delete this post?
             </div>
-            <button
-              onClick={() => toggleModal(setIsOpen, isOpen)}
-              style={{
-                width: "134px",
-                height: "37px",
-                marginTop: "40px",
-                marginRight: "25px",
-                borderRadius: "5px",
-                background: "#ffffff",
-                color: "#1877F2",
-                textDecoration: "none",
-                fontFamily: "Lato",
-                fontSize: "18px",
-                fontWeight: "700",
-                cursor: 'pointer'
-              }}
-            >
-              No, go back
-            </button>
-            <button
-              onClick={() =>
-                deletePost(
-                  info,
-                  tokenStorage,
-                  setAllPosts,
-                  deleteHashtag,
-                  URL,
-                  setIsOpen,
-                  isOpen
-                )
-              }
-              style={{
-                width: "134px",
-                height: "37px",
-                marginTop: "40px",
-                borderRadius: "5px",
-                background: "#1877F2",
-                color: "#ffffff",
-                textDecoration: "none",
-                fontFamily: "Lato",
-                fontSize: "18px",
-                fontWeight: "700",
-                cursor: 'pointer'
-              }}
-              >
-              Yes, delete it
-            </button>
-          </Modal>
-        </PostContainer>
-        <ContainerComments>
-        <div>
-          {
-            comments && openComments === true ? 
-            comments.map(comment => <MappingComments info={info} comment={comment} user={user} commentsFollows={commentsFollows}/>)    
-            : 
-            <></>
-          )}
-        </UserContainer>
 
-        <LinkContainer href={info.url} target="_blank">
-          <div href={info.url} target="_blank">
-            <p>{info.title}</p>
-            <p>{info.description}</p>
-            <p>{info.url}</p>
-          </div>
-          <img src={info.image} alt="infoimage"></img>
-        </LinkContainer>
-      </Right>
-  
-       
-          {
-            openComments === true?
-            <ContainerInputComments>
-              <img src={user.image} alt="perfil"></img>
-              <input
-                type="text"
-                maxLength={100}
-                value={addComment}
-                placeholder="write a comment..."
-                onChange={(e) => setAddComment(e.target.value)}/>
-            <FiSend onClick={() => postComments(info, URL, tokenStorage, setAddComment, addComment, setComments)}/>
-            </ContainerInputComments>
-            :
-            <></>
-          }
-        </ContainerComments>
-      </MainContainer>
-    ):(<Repost info={info} like={like} setAllPosts={setAllPosts}/>)) : (
-    <Loading />
-  );
+            {openComments === true ? (
+              <ContainerInputComments>
+                <img src={user.image} alt="perfil"></img>
+                <input
+                  type="text"
+                  maxLength={100}
+                  value={addComment}
+                  placeholder="write a comment..."
+                  onChange={(e) => setAddComment(e.target.value)}
+                />
+                <FiSend
+                  onClick={() =>
+                    postComments(
+                      info,
+                      URL,
+                      tokenStorage,
+                      setAddComment,
+                      addComment,
+                      setComments
+                    )
+                  }
+                />
+              </ContainerInputComments>
+            ) : (
+              <></>
+            )}
+          </ContainerComments>
+        </MainContainer>
+      ) : (
+        <Repost info={info} like={like} setAllPosts={setAllPosts} />
+      )
+    ) : (
+      <Loading />
+    );
 }
 
 const MainContainer = styled.div`

@@ -33,7 +33,7 @@ export default function Repost(props) {
 
   useEffect(() => {
     const { originalPostId } = info;
-    const promise = axios.get(`${URL}/coutlikes/post/${originalPostId}`);
+    const promise = axios.get(`${URL}/countlikes/post/${originalPostId}`);
     promise.then((response) => {
       setCountLikes(response.data);
     });
