@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { IoIosArrowDown } from "react-icons/io";
-//import { FiSearch } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {DebounceInput} from 'react-debounce-input';
 import { AuthContext } from "../../Context/Auth";
+import UserInSearch from "./UserInSearch";
 import axios from "axios"
 
 export default function Header() {
@@ -29,11 +30,15 @@ export default function Header() {
       setShowResults(false)
       return
     }
-
+    const token = user.token
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
     try{
-      const result = await axios.get(URL+`/users?name=${input}`);
-
-      setSearchResult(result.data)
+      const result = await axios.get(URL+`/users?name=${input}`, config);
+      setSearchResult(result.data.user)
       setShowResults(true)
     }
     catch(err){
@@ -41,14 +46,26 @@ export default function Header() {
   }
 
   return (
-    <MainHeader showLogout={showLogout} image={user.image}>
-      <h1 onClick={()=>goToTimeline()}>linkr</h1>
+    <MainHeader showLogout={showLogout} image={user.image} searchResult={searchResult}>
+      <h1 onClick={() => goToTimeline()}>linkr</h1>
       <SearchInput>
-        <DebounceInput showResults={showResults} placeholder={"Search for people"} minLength={3} debounceTimeout={300} onChange={event => {search(event.target.value)}} />
-        <div>
-          {searchResult === null ? <div></div> : searchResult.map(element => {return <Result><img src={element.image}/> <p>{element.name}</p></Result>})}
+        <DebounceInput
+          showResults={showResults}
+          placeholder={"Search for people"}
+          minLength={3}
+          debounceTimeout={300}
+          onChange={(event) => {
+            search(event.target.value);
+          }}
+        />
+        <div className="result">
+          {searchResult === null ? (
+            <div></div>
+          ) : (
+            searchResult.map((user) => <UserInSearch infos={user}/>)
+          )}
         </div>
-        {/* <FiSearch/> */}
+        <FiSearch/>
       </SearchInput>
       <nav className="profile" onClick={() => setShowLogout(!showLogout)}>
         <IoIosArrowDown />
@@ -121,24 +138,66 @@ const MainHeader = styled.header`
       font-size: 17px;
       color: #ffffff;
     }
+  } 
+  .result{
+    width: calc(40% - 18px);
+    border-radius: 8px;
+    height: fit-content;
+    background-color: #E6E6E6;
+    ${(props) => (props.searchResult === null ? "display: none;" : "")}
+    border-radius: 8px;
+    position: absolute;
+    top: 40px;
+    z-index: -1;
+    padding-top: 23px;
+    padding-bottom: 10px;
   }
 `;
 
 const SearchInput = styled.div`
-width: 40%;
-height: 50%;
-input{
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  padding-left: 10px;
-}
-div{
-  transition: all 0.5s;
-  ${(props) => (props.showResults ? "height:200px;" : "height:0;")}
-  background-color: #ffffff;
-}
-`
+  width: 40%;
+  height: 50%;
+  position: relative;
+  input {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    padding-left: 10px;
+    border: none;
+    font-family: 'Lato', sans-serif;
+    z-index: 5;
+  }
+  input:focus{
+    box-shadow: 0 0 0 0;
+    border: 0 none;
+    outline: 0;
+  }
+  input::placeholder{
+    color: #c6c6c6;
+  }
+  svg{
+    color: #C6C6C6;
+    position: absolute;
+    right: -5px;
+    top: 8px;
+    font-size: 21px;
+  }
+  @media (max-width: 500px) {
+   position: fixed;
+   width: 100%;
+   height: 70px;
+   left: 0px;
+   top:70px;
+   background-color: #333333;
+   padding-top: 10px;
+   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+   input{
+  width: 90%;
+  margin-left: 5%;
+  height: 45px;
+   }
+  }
+`;
 const Result = styled.section`
 width:100%;
 height: 30%;

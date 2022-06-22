@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import axios from 'axios';
+import styled from "styled-components";
+import axios from "axios";
 import ReactTooltip from "react-tooltip";
 import Modal from "react-modal";
 import { TiPencil, TiHeartFullOutline, TiTrash } from "react-icons/ti";
@@ -8,14 +8,14 @@ import { AiOutlineComment } from "react-icons/ai";
 import { useRef, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../../Context/Auth";
-import Loading  from "../PublicComponents/Loading"
+import Loading from "../PublicComponents/Loading";
 import ReactHashtag from "@mdnm/react-hashtag";
 import {
   postLike,
   updateMessage,
   deleteLike,
   toggleModal,
-  deletePost
+  deletePost,
 } from "./postRepository";
 import { postComments, getComments } from "./commentsRepository";
 import { MappingComments } from "./comments.jsx";
@@ -55,11 +55,13 @@ export default function Post(props){
       }
     }, [like])
 
-    function focus() {
-      setOldMessage(message)
-      nameRef.current.focus();
-      setMessage(message)
-    }
+
+
+  function focus() {
+    setOldMessage(message);
+    nameRef.current.focus();
+    setMessage(message);
+  }
 
     function submit(e){
       if (e.keyCode === 13) {
@@ -191,11 +193,21 @@ export default function Post(props){
       });
     }, [comments])
 
+    function handleClick() {
+      console.log(info)
+      navigate(`/user/${info.userId}`);
+      window.location.reload();
+    }
+
     return promiseReturned === false ? (
       <MainContainer>
         <PostContainer>
           <PerfilLikeContainer>
-            <img src={info.userImage} alt="perfil"></img>
+          <img
+          src={info.userImage}
+          alt="perfil"
+          onClick={() => handleClick()}
+          ></img>
             <div>
               <TiHeartFullOutline
                 style={{ color: likes ? "red" : "white" }}
@@ -238,7 +250,7 @@ export default function Post(props){
           <Right>
             <UserContainer>
               <MessageUser>
-                <p>{info.userName}</p>
+              <p onClick={() => handleClick()}>{info.userName}</p>
                 {edit ? (
                   <textarea
                     name="message"
@@ -386,7 +398,6 @@ export default function Post(props){
     ) : (
       <Loading />
     );
-
 }
 
 const MainContainer = styled.div`
@@ -398,123 +409,76 @@ const PostContainer = styled.div`
   margin-top: 10px;
   border-radius: 15px;
   width: 100%;
-  height: 276px;
-  display: flex;
-  z-index: 1;
+  height: fit-content;
+  display: flex;  
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   @media (max-width: 900px) {
     width: 100vw;
     border-radius: 0;
-    height: 232px;
+    height: fit-content;
   }
 `;
-
 const Right = styled.div`
-  width: 85%;
+  width: calc(100% - 91px);
   display: flex;
   flex-direction: column;
-
   justify-content: space-between;
 `
 
+
 const PerfilLikeContainer = styled.div`
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-
-    div {
-      cursor: pointer;
-    }
-
-    img{
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin-bottom: 10px;
-    }
-`;
-
-const LinkContainer = styled.a`
-      height: auto;
-      bottom: 20px;
-      margin-bottom: 20px;
-      border: 1px solid #4D4D4D;
-      border-radius: 11px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-decoration: none;
-
-    div {
-      display: flex;
-      width: 80%;
-      margin: 10px;
-      height: 155px;
-      flex-direction: column;
-      justify-content: space-around;
-      border-radius: 11px;
-      text-decoration: none;
-      font-family: 'Lato';
-      font-style: normal;
-      font-weight: 400;
-      font-size: 16px;
-      line-height: 19px;
-      color: #CECECE;
-      overflow-x: hidden;
-    }
-
-    p:nth-child(2) {
-      font-family: 'Lato';
-      font-style: normal;
-      font-weight: 400;
-      font-size: 12px;
-      line-height: 13px;
-      color: #9B9595;
-    }
-
-    p:last-child {
-      font-family: 'Lato';
-      font-style: normal;
-      font-weight: 400;
-      font-size: 11px;
-      line-height: 13px;
-      color: #CECECE;
-    }
-
-    img{
-      border-radius: 0px 11px 11px 0px; 
-      width: 30%;
-      height: 175px;
-    }
-`;
-
-const EditDeleteContainer = styled.div`
-  padding-top: 10px;
+  padding: 10px;
   display: flex;
-  width: 8%;
-  justify-content: space-between;
-  cursor: pointer;
+  align-items: center;
+  flex-direction: column;
+
+  div {
+    cursor: pointer;
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  @media (max-width: 900px) {
+    img {
+      width: 40px;
+      height: 40px;
+    }
+    svg {
+      font-size: 24px;
+    }
+  }
+`;
+const ContainerCountLikes = styled.div`
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  color: white;
 `;
 
 const UserContainer = styled.div`
   display: flex;
   justify-content: space-between;
   color: white;
-
-    .message{
-      color: white;
-    }
-
-`
-
+  .message {
+    color: white;
+  }
+`;
 const MessageUser = styled.div`
-  width: 90%;
+  max-width: 90%;
   height: auto;
   padding: 10px 0px 10px 0px;
   line-height: 25px;
 
   textarea {
-    width: 100%;
+    width: 111%;
     height: 44px;
     padding-left: 10px;
     padding-top: 4px;
@@ -522,43 +486,48 @@ const MessageUser = styled.div`
     padding-right: 10px;
     display: flex;
     flex-wrap: wrap;
-    font-family: 'Lato';
+    font-family: "Lato";
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
     line-height: 17px;
-    color: #4C4C4C;
+    color: #4c4c4c;
     border-radius: 7px;
     resize: none;
   }
 
   p:first-child {
     margin-bottom: 7px;
-    font-family: 'Lato';
+    font-family: "Lato";
     font-style: normal;
     font-weight: 400;
     font-size: 19px;
     line-height: 23px;
+    display: flex;
+    width: auto;
+    cursor: pointer;
   }
 
   p:last-child {
-    font-family: 'Lato';
+    font-family: "Lato";
     font-style: normal;
     font-weight: 400;
     font-size: 17px;
     line-height: 20px;
-    color: #B7B7B7;
+    color: #b7b7b7;
   }
 `;
-
-const ContainerCountLikes = styled.div `
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 11px;
-  line-height: 13px;
-  text-align: center;
-  color: white;
+const EditDeleteContainer = styled.div`
+  padding-top: 10px;
+  display: flex;
+  width: 8%;
+  justify-content: space-between;
+  cursor: pointer;
+  @media (max-width: 900px) {
+    position: absolute;
+    right: 10px;
+    width: 40px;
+  }
 `;
 
 const ContainerCountComments = styled.div `
@@ -629,5 +598,84 @@ const ContainerInputComments = styled.div`
     font-size: 15px;
     right: 9%;
     position: absolute;
+  }
+`;
+
+const LinkContainer = styled.a`
+  height: auto;
+  bottom: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #4d4d4d;
+  border-radius: 11px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+
+  div {
+    display: flex;
+    width: 80%;
+    margin: 10px;
+    height: 155px;
+    flex-direction: column;
+    justify-content: space-around;
+    text-decoration: none;
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #cecece;
+    overflow-x: hidden;
+  }
+
+  p:nth-child(2) {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 13px;
+    color: #9b9595;
+  }
+
+  p:last-child {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    color: #cecece;
+  }
+
+  img {
+    border-radius: 0px 11px 11px 0px;
+    width: 30%;
+    height: 175px;
+  }
+  @media (max-width: 500px) {
+    div {
+      font-size: 11px;
+      line-height: 13.2px;
+      height: fit-content;
+    }
+    p:nth-child(2) {
+      font-size: 9px;
+      line-height: 11px;
+    }
+    p:last-child {
+      font-size: 9px;
+      line-height: 11px;
+    }
+    img {
+      height: 115px;
+    }
+  }
+  @media (max-width: 341px) {
+    div{
+      width:100%;
+    }
+    img {
+      display: none;
+    }
   }
 `;
