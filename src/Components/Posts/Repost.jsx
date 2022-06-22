@@ -2,107 +2,57 @@ import styled from "styled-components";
 import axios from "axios";
 import ReactTooltip from "react-tooltip";
 import Modal from "react-modal";
-import { TiPencil, TiHeartFullOutline, TiTrash } from "react-icons/ti";
-import { useRef, useState, useContext, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import {  TiHeartFullOutline, TiTrash } from "react-icons/ti";
+import {  useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/Auth";
-import Loading from "../PublicComponents/Loading";
 import ReactHashtag from "@mdnm/react-hashtag";
-import {BiRepost} from "react-icons/bi"
+import { BiRepost } from "react-icons/bi";
 import {
   postLike,
-  updateMessage,
   deleteLike,
   toggleModal,
   deletePost,
-  postShare
+  postShare,
 } from "./postRepository";
-import Repost from "./Repost.jsx"
+
 Modal.setAppElement(".root");
 
-export default function Post(props) {
+export default function Repost(props) {
   const { info, setAllPosts, like } = props;
   const {
     URL,
     deleteHashtag,
-    setTrendingUpdate,
-    trendingUpdate,
-    updateHashtags,
-    hashtagsUpdated,
   } = useContext(AuthContext);
-
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
   const tokenStorage = user.token;
   const [countLikes, setCountLikes] = useState([]);
   const [countShares, setCountShares] = useState([]);
-  const [edit, setEdit] = useState(false);
   const [message, setMessage] = useState(info.message);
-  const [oldMessage, setOldMessage] = useState();
-  const [promiseReturned, setPromiseReturned] = useState(false);
   const [likes, setLikes] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [result, setResult] = useState("");
-  const [namesRefresh, setNamesRefresh] = useState([]);
 
-  const nameRef = useRef(null);
+
 
   useEffect(() => {
-    if (like) {
-      setLikes(true);
-    } else {
-      setLikes(false);
-    }
-  }, [like]);
-
-  function focus() {
-    setOldMessage(message);
-    nameRef.current.focus();
-    setMessage(message);
-  }
-
-  function submit(e) {
-    if (e.keyCode === 13) {
-      updateMessage(
-        info,
-        tokenStorage,
-        setPromiseReturned,
-        setMessage,
-        setEdit,
-        updateHashtags,
-        hashtagsUpdated,
-        setTrendingUpdate,
-        message,
-        trendingUpdate,
-        URL
-      );
-    } else if (e.keyCode === 27) {
-      setMessage(oldMessage);
-      setEdit(false);
-    }
-  }
-
-  useEffect(() => {
-    const id = info.postid;
-    const promise = axios.get(`${URL}/coutlikes/post/${id}`);
+    const { originalPostId } = info;
+    const promise = axios.get(`${URL}/coutlikes/post/${originalPostId}`);
     promise.then((response) => {
       setCountLikes(response.data);
     });
     promise.catch((error) => {
       alert("an error has ocurred...");
     });
-  }, [likes]);
-  useEffect(() => {
-    const id = info.postid;
-    const promise = axios.get(`${URL}/countShares/post/${id}`);
-    promise.then((response) => {
+    const promise2 = axios.get(`${URL}/countShares/post/${originalPostId}`);
+    promise2.then((response) => {
       setCountShares(response.data);
     });
-    promise.catch((error) => {
+    promise2.catch((error) => {
       alert("an error has ocurred...");
     });
-  }, [likes]);
+  }, []);
 
   const customStyles = {
     overlay: {
@@ -133,62 +83,18 @@ export default function Post(props) {
     },
   };
 
-  useEffect(() => {
-    const id = info.postid;
-    const promiseLikes = axios.get(`${URL}/get/likes/${id}`);
+  return (
+    <PostContainer>
+<UserRespost>
 
-    promiseLikes.then((response) => {
-      setNamesRefresh(response.data);
-    });
-    promiseLikes.catch((error) => {
-      alert("an error has ocurred...");
-    });
-  }, [countLikes]);
-
-  useEffect(() => {
-    let newLikesNames = [];
-    for (let i = 0; i < namesRefresh.length; i++) {
-      if (namesRefresh[i].name != user.name) {
-        newLikesNames.push(namesRefresh[i].name);
-      }
-    }
-
-    let res = "";
-
-    if (namesRefresh.length === 0) {
-      res = null;
-      setResult(res);
-    } else if (namesRefresh.length === 1 && likes) {
-      res = "You liked";
-      setResult(res);
-    } else if (newLikesNames.length === 1 && !likes) {
-      res = `Liked by ${newLikesNames[0]}`;
-      setResult(res);
-    } else if (namesRefresh.length === 2 && likes) {
-      res = `You and ${newLikesNames[0]} liked`;
-      setResult(res);
-    } else if (newLikesNames.length === 2 && !likes) {
-      res = `${newLikesNames[0]} e ${newLikesNames[1]} liked`;
-      setResult(res);
-    } else if (namesRefresh.length >= 3 && likes) {
-      res = `You, ${newLikesNames[0]} and other ${countLikes - 2} people liked`;
-      setResult(res);
-    } else if (newLikesNames.length >= 3 && !likes) {
-      res = `${newLikesNames[0]}, ${newLikesNames[1]} and other ${
-        countLikes - 2
-      } people liked`;
-      setResult(res);
-    }
-  }, [namesRefresh]);
-
-  return promiseReturned === false ? (!info.userIdRepost?
-   ( <PostContainer>
+  
+</UserRespost>
       <PerfilLikeContainer>
         <img src={info.userImage} alt="perfil"></img>
 
         <div>
           <TiHeartFullOutline
-            style={{ color: likes ? "red" : "white" }}
+            style={{ color:  "white" }}
             fontSize="30px"
             onClick={() => {
               if (likes === false) {
@@ -199,40 +105,25 @@ export default function Post(props) {
             }}
           />
         </div>
-        <ContainerCountLikes data-tip data-for="countLikes">
-          <a data-tip={countLikes ? `${result}` : null}>{countLikes} Likes</a>
+        <ContainerCountLikes>
+          <a>{countLikes} Likes</a>
           <ReactTooltip place="bottom" type="light" effect="solid" />
-          
-        </ContainerCountLikes> 
+        </ContainerCountLikes>
         <div>
           <BiRepost
-            style={{ color:"white" }}
+            style={{ color: "white" }}
             fontSize="30px"
-            onClick={() => {
-              postShare(info, tokenStorage, URL)
-            }}
           />
         </div>
-        <ContainerCountLikes >
-          <a >{countShares} re-post</a>
+        <ContainerCountLikes>
+          <a>{countShares} re-post</a>
         </ContainerCountLikes>
-        
       </PerfilLikeContainer>
       <Right>
         <UserContainer>
           <MessageUser>
             <p>{info.userName}</p>
-            {edit ? (
-              <input
-                name="message"
-                ref={nameRef}
-                type="text"
-                value={message}
-                onKeyDown={submit}
-                onChange={(e) => setMessage(e.target.value)}
-                disabled={promiseReturned ? true : false}
-              />
-            ) : (
+            {
               <ReactHashtag
                 renderHashtag={(hashtag) => (
                   <HashtagStyle
@@ -246,24 +137,11 @@ export default function Post(props) {
               >
                 {message}
               </ReactHashtag>
-            )}
+            }
           </MessageUser>
 
           {user.userId === info.userId ? (
             <EditDeleteContainer>
-              <TiPencil
-                color="white"
-                fontSize="25px"
-                onClick={() => {
-                  if (edit === false) {
-                    setEdit(!edit);
-                    setTimeout(focus, 100);
-                  } else {
-                    setEdit(false);
-                    setMessage(oldMessage);
-                  }
-                }}
-              />
               <TiTrash
                 color="white"
                 fontSize="25px"
@@ -290,7 +168,6 @@ export default function Post(props) {
         onRequestClose={() => toggleModal(setIsOpen, isOpen)}
         style={customStyles}
       >
-        
         <div style={{ marginTop: "40px" }}>
           Are you sure you want to delete this post?
         </div>
@@ -344,18 +221,16 @@ export default function Post(props) {
         </button>
       </Modal>
     </PostContainer>
-  ):(<Repost info={info} like={like} setAllPosts={setAllPosts}/>)) : (
-    <Loading />
   );
 }
 
 const PostContainer = styled.div`
-  background-color: #171717;
+  background-color: blue;
   margin-top: 10px;
   border-radius: 15px;
   width: 100%;
   height: fit-content;
-  display: flex;  
+  display: flex;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   @media (max-width: 900px) {
     width: 100vw;
@@ -378,9 +253,7 @@ const PerfilLikeContainer = styled.div`
   align-items: center;
   flex-direction: column;
 
-  div {
-    cursor: pointer;
-  }
+  
 
   img {
     width: 50px;
@@ -546,11 +419,16 @@ const LinkContainer = styled.a`
     }
   }
   @media (max-width: 341px) {
-    div{
-      width:100%;
+    div {
+      width: 100%;
     }
     img {
       display: none;
     }
   }
 `;
+const UserRespost = styled.div`
+  
+
+
+`
