@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { IoIosArrowDown } from "react-icons/io";
-//import { FiSearch } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {DebounceInput} from 'react-debounce-input';
@@ -46,7 +46,7 @@ export default function Header() {
   }
 
   return (
-    <MainHeader showLogout={showLogout} image={user.image}>
+    <MainHeader showLogout={showLogout} image={user.image} searchResult={searchResult}>
       <h1 onClick={() => goToTimeline()}>linkr</h1>
       <SearchInput>
         <DebounceInput
@@ -58,14 +58,14 @@ export default function Header() {
             search(event.target.value);
           }}
         />
-        <div>
+        <div className="result">
           {searchResult === null ? (
             <div></div>
           ) : (
             searchResult.map((user) => <UserInSearch infos={user}/>)
           )}
         </div>
-        {/* <FiSearch/> */}
+        <FiSearch/>
       </SearchInput>
       <nav className="profile" onClick={() => setShowLogout(!showLogout)}>
         <IoIosArrowDown />
@@ -138,23 +138,64 @@ const MainHeader = styled.header`
       font-size: 17px;
       color: #ffffff;
     }
+  } 
+  .result{
+    width: calc(40% - 18px);
+    border-radius: 8px;
+    height: fit-content;
+    background-color: #E6E6E6;
+    ${(props) => (props.searchResult === null ? "display: none;" : "")}
+    border-radius: 8px;
+    position: absolute;
+    top: 40px;
+    z-index: -1;
+    padding-top: 23px;
+    padding-bottom: 10px;
   }
 `;
 
 const SearchInput = styled.div`
   width: 40%;
   height: 50%;
+  position: relative;
   input {
     width: 100%;
     height: 100%;
     border-radius: 10px;
     padding-left: 10px;
     border: none;
+    font-family: 'Lato', sans-serif;
+    z-index: 5;
   }
   input:focus{
     box-shadow: 0 0 0 0;
     border: 0 none;
     outline: 0;
+  }
+  input::placeholder{
+    color: #c6c6c6;
+  }
+  svg{
+    color: #C6C6C6;
+    position: absolute;
+    right: -5px;
+    top: 8px;
+    font-size: 21px;
+  }
+  @media (max-width: 500px) {
+   position: fixed;
+   width: 100%;
+   height: 70px;
+   left: 0px;
+   top:70px;
+   background-color: #333333;
+   padding-top: 10px;
+   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+   input{
+  width: 90%;
+  margin-left: 5%;
+  height: 45px;
+   }
   }
 `;
 const Result = styled.section`

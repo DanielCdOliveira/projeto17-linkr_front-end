@@ -46,9 +46,10 @@ const SideBar = styled.div`
   height: 430px;
   margin-top: 180px;
   z-index: 1;
-  left: 70%;
+  left: 70vw;
   position: fixed;
-  @media (max-width: 1200px) {
+  top: 60px;
+  @media (max-width: 1000px) {
     left: auto;
     right: 0;
   }
