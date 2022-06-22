@@ -167,10 +167,20 @@ export default function Post(props) {
     }
   }, [namesRefresh]);
 
+  function handleClick() {
+      console.log(info)
+      navigate(`/user/${info.userId}`);
+      window.location.reload();
+    }
+
   return promiseReturned === false ? (
     <PostContainer>
       <PerfilLikeContainer>
-        <img src={info.userImage} alt="perfil"></img>
+        <img
+          src={info.userImage}
+          alt="perfil"
+          onClick={() => handleClick()}
+        ></img>
 
         <div>
           <TiHeartFullOutline
@@ -193,7 +203,7 @@ export default function Post(props) {
       <Right>
         <UserContainer>
           <MessageUser>
-            <p>{info.userName}</p>
+            <p onClick={() => handleClick()}>{info.userName}</p>
             {edit ? (
               <input
                 name="message"
@@ -338,11 +348,11 @@ const Right = styled.div`
   width: calc(100% - 91px);
   display: flex;
   flex-direction: column;
-  @media (max-width: 900px) {
-    width: calc(100% - 78px);
-  }
-`;
-//
+
+  justify-content: space-between;
+`
+
+
 const PerfilLikeContainer = styled.div`
   padding: 10px;
   display: flex;
@@ -358,6 +368,7 @@ const PerfilLikeContainer = styled.div`
     height: 50px;
     border-radius: 50%;
     margin-bottom: 10px;
+    cursor: pointer;
   }
   @media (max-width: 900px) {
     img {
@@ -388,7 +399,7 @@ const UserContainer = styled.div`
   }
 `;
 const MessageUser = styled.div`
-  width: 90%;
+  max-width: 90%;
   height: auto;
   padding: 10px 0px 10px 0px;
   line-height: 25px;
@@ -419,6 +430,9 @@ const MessageUser = styled.div`
     font-weight: 400;
     font-size: 19px;
     line-height: 23px;
+    display: flex;
+    width: auto;
+    cursor: pointer;
   }
 
   p:last-child {
