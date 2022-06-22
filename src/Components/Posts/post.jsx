@@ -8,12 +8,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/Auth";
 import Loading from "../PublicComponents/Loading";
 import ReactHashtag from "@mdnm/react-hashtag";
+import {BiRepost} from "react-icons/bi"
 import {
   postLike,
   updateMessage,
   deleteLike,
   toggleModal,
   deletePost,
+  postShare
 } from "./postRepository";
 Modal.setAppElement(".root");
 
@@ -33,6 +35,7 @@ export default function Post(props) {
   const user = JSON.parse(localStorage.getItem("user"));
   const tokenStorage = user.token;
   const [countLikes, setCountLikes] = useState([]);
+  const [countShares, setCountShares] = useState([]);
   const [edit, setEdit] = useState(false);
   const [message, setMessage] = useState(info.message);
   const [oldMessage, setOldMessage] = useState();
@@ -84,6 +87,16 @@ export default function Post(props) {
     const promise = axios.get(`${URL}/coutlikes/post/${id}`);
     promise.then((response) => {
       setCountLikes(response.data);
+    });
+    promise.catch((error) => {
+      alert("an error has ocurred...");
+    });
+  }, [likes]);
+  useEffect(() => {
+    const id = info.postid;
+    const promise = axios.get(`${URL}/countShares/post/${id}`);
+    promise.then((response) => {
+      setCountShares(response.data);
     });
     promise.catch((error) => {
       alert("an error has ocurred...");
@@ -188,7 +201,21 @@ export default function Post(props) {
         <ContainerCountLikes data-tip data-for="countLikes">
           <a data-tip={countLikes ? `${result}` : null}>{countLikes} Likes</a>
           <ReactTooltip place="bottom" type="light" effect="solid" />
+          
+        </ContainerCountLikes> 
+        <div>
+          <BiRepost
+            style={{ color:"white" }}
+            fontSize="30px"
+            onClick={() => {
+              postShare(info, tokenStorage, URL)
+            }}
+          />
+        </div>
+        <ContainerCountLikes >
+          <a >{countShares} re-post</a>
         </ContainerCountLikes>
+        
       </PerfilLikeContainer>
       <Right>
         <UserContainer>
@@ -262,6 +289,7 @@ export default function Post(props) {
         onRequestClose={() => toggleModal(setIsOpen, isOpen)}
         style={customStyles}
       >
+        
         <div style={{ marginTop: "40px" }}>
           Are you sure you want to delete this post?
         </div>

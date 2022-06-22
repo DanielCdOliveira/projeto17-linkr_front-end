@@ -112,3 +112,24 @@ export function deletePost(
     toggleModal(setIsOpen, isOpen);
   });
 }
+
+export function postShare (info, tokenStorage, URL){
+  const id = info.postid;
+  const config = {
+    headers: {
+      Authorization: `Bearer ${tokenStorage}`,
+    },
+  };
+  const promise = axios.post(`${URL}/share/post/${id}`, id, config);
+
+  promise.then((response) => {
+    console.log(response)
+  });
+  promise.catch((error) => {
+    console.log(error);
+    alert("an error has ocurred, unable to share the post...");
+  });
+
+
+
+}
