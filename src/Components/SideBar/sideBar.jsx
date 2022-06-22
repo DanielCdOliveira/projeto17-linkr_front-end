@@ -39,7 +39,7 @@ export default function HashtagsTrending() {
 }
 
 const SideBar = styled.div`
-  width: 21%;
+  width: 300px;
   max-width: 320px;
   min-width: 200px;
   height: 350px;
@@ -48,10 +48,13 @@ const SideBar = styled.div`
   z-index: 1;
   left: 70vw;
   position: fixed;
-  top: 60px;
-  @media (max-width: 1000px) {
+  top: 50px;
+  @media (max-width: 1050px) {
     left: auto;
     right: 0;
+  }
+  @media (max-width: 950px) {
+    width: 31%;
   }
   @media (max-width: 900px) {
     display: none;
