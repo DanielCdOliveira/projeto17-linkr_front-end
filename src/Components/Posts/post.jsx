@@ -10,16 +10,19 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../../Context/Auth";
 import Loading from "../PublicComponents/Loading";
 import ReactHashtag from "@mdnm/react-hashtag";
+import {BiRepost} from "react-icons/bi"
 import {
   postLike,
   updateMessage,
   deleteLike,
   toggleModal,
   deletePost,
+  postShare
 } from "./postRepository";
+
 import { postComments, getComments } from "./commentsRepository";
 import { MappingComments } from "./comments.jsx";
-
+import Repost from "./Repost.jsx"
 Modal.setAppElement(".root");
 
 export default function Post(props){
@@ -31,6 +34,7 @@ export default function Post(props){
     const user = JSON.parse(localStorage.getItem('user'));
     const tokenStorage = user.token;
     const [countLikes, setCountLikes] = useState([]);
+    const [countShares, setCountShares] = useState([]);
     const [countComments, setCountComments] = useState([]);
     const [edit, setEdit] = useState(false);
     const [message, setMessage] = useState(info.message)
@@ -55,13 +59,12 @@ export default function Post(props){
       }
     }, [like])
 
-
-
   function focus() {
     setOldMessage(message);
     nameRef.current.focus();
     setMessage(message);
   }
+
 
     function submit(e){
       if (e.keyCode === 13) {
@@ -95,8 +98,19 @@ export default function Post(props){
         alert("an error has ocurred...");
       });
     }, [likes])
-
-      const customStyles = {
+        
+    useEffect(() => {
+      const id = info.postid;
+      const promise = axios.get(`${URL}/countShares/post/${id}`);
+      promise.then((response) => {
+        setCountShares(response.data);
+      });
+      promise.catch((error) => {
+        alert("an error has ocurred...");
+      });
+  }, [likes]);  
+  
+const customStyles = {
           overlay: {
             position: 'fixed',
             top: 0,
@@ -198,8 +212,9 @@ export default function Post(props){
       navigate(`/user/${info.userId}`);
       window.location.reload();
     }
+    
 
-    return promiseReturned === false ? (
+    return promiseReturned === false ? (!info.userIdRepost?
       <MainContainer>
         <PostContainer>
           <PerfilLikeContainer>
@@ -225,6 +240,15 @@ export default function Post(props){
               <a data-tip={countLikes ? `${result}` : null}>{countLikes} Likes</a>
               <ReactTooltip place="bottom" type="light" effect="solid" />
             </ContainerCountLikes>
+            <div>
+              <BiRepost
+                style={{ color:"white" }}
+                fontSize="30px"
+                onClick={() => {
+                  postShare(info, tokenStorage, URL)
+                }}
+              />
+          </div>
         
             <ContainerIconComments>
               <AiOutlineComment onClick={() => { 
@@ -375,8 +399,20 @@ export default function Post(props){
             comments.map(comment => <MappingComments info={info} comment={comment} user={user} commentsFollows={commentsFollows}/>)    
             : 
             <></>
-          }
-        </div>
+          )}
+        </UserContainer>
+
+        <LinkContainer href={info.url} target="_blank">
+          <div href={info.url} target="_blank">
+            <p>{info.title}</p>
+            <p>{info.description}</p>
+            <p>{info.url}</p>
+          </div>
+          <img src={info.image} alt="infoimage"></img>
+        </LinkContainer>
+      </Right>
+  
+       
           {
             openComments === true?
             <ContainerInputComments>
@@ -394,10 +430,9 @@ export default function Post(props){
           }
         </ContainerComments>
       </MainContainer>
-
-    ) : (
-      <Loading />
-    );
+    ):(<Repost info={info} like={like} setAllPosts={setAllPosts}/>)) : (
+    <Loading />
+  );
 }
 
 const MainContainer = styled.div`
