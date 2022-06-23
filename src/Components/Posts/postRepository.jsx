@@ -7,7 +7,6 @@ export function updateMessage(
   setMessage,
   setEdit,
   updateHashtags,
-  hashtagsUpdated,
   setTrendingUpdate,
   message,
   trendingUpdate,
@@ -71,8 +70,13 @@ export function deleteLike(info, tokenStorage, setLikes, URL) {
   });
 }
 
-export function toggleModal(setIsOpen, isOpen) {
-  setIsOpen(!isOpen);
+export function toggleModalDelete(setIsOpenDelete, isOpenDelete) {
+  setIsOpenDelete(!isOpenDelete);
+}
+
+export function toggleModalRepost(setIsOpenRepost, isOpenRepost) {
+  console.log("aquisera?")
+  setIsOpenRepost(!isOpenRepost);
 }
 
 export function deletePost(
@@ -81,8 +85,8 @@ export function deletePost(
   setAllPosts,
   deleteHashtag,
   URL,
-  setIsOpen,
-  isOpen
+  setIsOpenDelete,
+  isOpenDelete
 ) {
   const id = info.postid;
   const config = {
@@ -94,12 +98,10 @@ export function deletePost(
   deleteHashtag(id, config);
 
   const promise = axios.delete(`${URL}/delete/post/${id}`, config);
-
   promise.then((response) => {
-    toggleModal(setIsOpen, isOpen);
+    toggleModalDelete(setIsOpenDelete, isOpenDelete);
     const promise2 = axios.get(`${URL}/get/posts?userId=${info.userId}`,config);
     promise2.then((response) => {
-      console.log(response.data)
       setAllPosts(response.data);
     });
     promise2.catch((error) => {
@@ -108,11 +110,11 @@ export function deletePost(
   });
   promise.catch((error) => {
     alert("an error has ocurred, unable to delete the post...");
-    toggleModal(setIsOpen, isOpen);
+    toggleModalDelete(setIsOpenDelete, isOpenDelete);
   });
 }
 
-export function postShare (info, tokenStorage, URL){
+export function postShare (info, tokenStorage, URL, setAllPosts, setIsOpenRepost, isOpenRepost){
   const id = info.postid;
   const config = {
     headers: {
@@ -120,15 +122,18 @@ export function postShare (info, tokenStorage, URL){
     },
   };
   const promise = axios.post(`${URL}/share/post/${id}`, id, config);
-
   promise.then((response) => {
-    console.log(response)
+    const promise2 = axios.get(`${URL}/get/posts?userId=${info.userId}`,config);
+    promise2.then((response) => {
+      toggleModalRepost(setIsOpenRepost, isOpenRepost);
+      setAllPosts(response.data)
+    });
+    promise2.catch((error) => {
+      alert("an error has ocurred, unable to delete the post...");
+    });
   });
   promise.catch((error) => {
-    console.log(error);
     alert("an error has ocurred, unable to share the post...");
+    toggleModalRepost(setIsOpenRepost, isOpenRepost);
   });
-
-
-
 }

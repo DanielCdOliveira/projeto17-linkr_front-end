@@ -47,6 +47,7 @@ const CommentsContainer = styled.div`
   padding-top: 22px;
 
   img {
+    cursor: pointer;
     width: 39px;
     height: 39px;
     border-radius: 26.5px;
