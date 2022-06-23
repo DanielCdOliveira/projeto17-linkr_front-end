@@ -215,7 +215,7 @@ const customStyles = {
     
 
     return promiseReturned === false ? (
-      !info.userIdRepost ? (
+      !info.originalUserId ? (
         <MainContainer>
           <PostContainer>
             <PerfilLikeContainer>
