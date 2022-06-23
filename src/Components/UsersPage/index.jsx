@@ -62,8 +62,6 @@ export default function UsersPage() {
         alert("Erro ao buscar dados do usuário selecionado");
     })
   }, []);
-  console.log(userPage)
-  console.log(user)
 const token = user.token;
   return (
     <>

@@ -26,18 +26,11 @@ export default function PostForm(props) {
     const promise = axios.post(`${URL}/publish/post`, data,config);
     setLoading(true)
     promise.then(response => {
-      const getPromise = axios.get(`${URL}/get/posts`,config)
-      .then(response => {
-        setAllPosts(response.data)
         setLoading(false);
         setLink("");
         setMessage("")
         setTrendingUpdate(!trendingUpdate)
-      })
-      .catch(error => {
-        setLoading(false);
-        alert("Something went wrong with your post! Try again");
-      })
+        alert("posted!")
     })
     promise.catch(error => {
       setLoading(false);
