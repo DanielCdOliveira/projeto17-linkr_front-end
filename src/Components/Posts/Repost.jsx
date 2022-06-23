@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/Auth";
 import ReactHashtag from "@mdnm/react-hashtag";
 import { BiRepost } from "react-icons/bi";
+import { AiOutlineComment } from "react-icons/ai";
 import {
   postLike,
   deleteLike,
@@ -22,7 +23,7 @@ export default function Repost(props) {
   const { info, setAllPosts, like } = props;
   const { URL, deleteHashtag } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  console.log(info);
   const user = JSON.parse(localStorage.getItem("user"));
   const tokenStorage = user.token;
   const [countLikes, setCountLikes] = useState([]);
@@ -30,21 +31,56 @@ export default function Repost(props) {
   const [message, setMessage] = useState(info.message);
   const [likes, setLikes] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
+  const [countComments, setCountComments] = useState([]);
+  const [repostName, setRepostName] = useState("")
+  const [originalUser, setOriginalUser] = useState("")
   useEffect(() => {
-    const { originalPostId } = info;
-    const promise = axios.get(`${URL}/countlikes/post/${originalPostId}`);
+    const id = info.postid;
+    const promise = axios.get(`${URL}/countcomments/${id}`);
     promise.then((response) => {
-      setCountLikes(response.data);
+      setCountComments(response.data);
     });
     promise.catch((error) => {
       alert("an error has ocurred...");
     });
-    const promise2 = axios.get(`${URL}/countShares/post/${originalPostId}`);
-    promise2.then((response) => {
+  }, []);
+
+  useEffect(() => {
+    const { originalPostId, userId,originalUserId } = info;
+    const promiseLikes = axios.get(`${URL}/countlikes/post/${originalPostId}`);
+    promiseLikes.then((response) => {
+      setCountLikes(response.data);
+    });
+    promiseLikes.catch((error) => {
+      alert("an error has ocurred...");
+    });
+    const promiseShares = axios.get(`${URL}/countShares/post/${originalPostId}`);
+    promiseShares.then((response) => {
       setCountShares(response.data);
     });
-    promise2.catch((error) => {
+    promiseShares.catch((error) => {
+      alert("an error has ocurred...");
+    });
+    const promiseComments = axios.get(`${URL}/countcomments/${originalPostId}`);
+    promiseComments.then((response) => {
+      setCountComments(response.data);
+    });
+    promiseComments.catch((error) => {
+      alert("an error has ocurred...");
+    });
+    const promiseName = axios.get(`${URL}/reposts/${userId}`);
+    promiseName.then((response) => {
+      setRepostName(response.data);
+    });
+    promiseName.catch((error) => {
+      console.log(error);
+      alert("an error has ocurred...");
+    });
+    const promiseOriginalUser = axios.get(`${URL}/reposts-users/${originalUserId}`);
+    promiseOriginalUser.then((response) => {
+      setOriginalUser(response.data);
+    });
+    promiseOriginalUser.catch((error) => {
       alert("an error has ocurred...");
     });
   }, []);
@@ -77,16 +113,16 @@ export default function Repost(props) {
       fontSize: "34px",
     },
   };
-
+  console.log(info);
   return (
     <RepostContainer>
       <RepostTitle>
         <BiRepost />
-        <p>Reposted by </p>
+        <p>Re-posted by <span>{repostName}</span> </p>
       </RepostTitle>
       <PostContainer>
         <PerfilLikeContainer>
-          <img src={info.userImage} alt="perfil"></img>
+          <img src={originalUser.image} alt="perfil"></img>
 
           <div>
             <TiHeartFullOutline
@@ -105,17 +141,28 @@ export default function Repost(props) {
             <a>{countLikes} Likes</a>
             <ReactTooltip place="bottom" type="light" effect="solid" />
           </ContainerCountLikes>
+          <ContainerIconComments>
+            <AiOutlineComment />
+            <ContainerCountComments>
+              {countComments ? (
+                <p>{countComments} comments</p>
+              ) : (
+                <p>0 comments</p>
+              )}
+            </ContainerCountComments>
+          </ContainerIconComments>
+          <ContainerIconComments></ContainerIconComments>
           <div>
             <BiRepost style={{ color: "white" }} fontSize="30px" />
           </div>
-          <ContainerCountLikes>
-            <a>{countShares} re-post</a>
-          </ContainerCountLikes>
+          <ContainerCountShares>
+            <p>{countShares} re-post</p>
+          </ContainerCountShares>
         </PerfilLikeContainer>
         <Right>
           <UserContainer>
             <MessageUser>
-              <p>{info.userName}</p>
+              <p>{originalUser.name}</p>
               {
                 <ReactHashtag
                   renderHashtag={(hashtag) => (
@@ -218,16 +265,51 @@ export default function Repost(props) {
   );
 }
 
+const RepostContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+`;
+const RepostTitle = styled.div`
+  background-color: #1e1e1e;
+  display: flex;
+  width: 100%;
+  height: 70px;
+  top: 20px;
+  position: absolute;
+  top: 6px;
+  border-radius: 16px;
+  padding-top: 10px;
+  padding-left: 13px;
+  color: #fff;
+  display: flex;
+  svg {
+    font-size: 24px;
+  }
+  p {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 13px;
+    line-height: 24px;
+    padding-left: 2px;
+  }
+  span{
+    font-weight: 700;
+  }
+`;
+
 const PostContainer = styled.div`
-  background-color: blue;
-  margin-top: 10px;
+  background-color: #171717;
+  margin-top: 40px;
   border-radius: 15px;
   width: 100%;
   height: fit-content;
   display: flex;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  margin-top: 33px;
-  z-index: 5;
+  z-index: 2;
 
   @media (max-width: 900px) {
     width: 100vw;
@@ -422,13 +504,79 @@ const LinkContainer = styled.a`
     }
   }
 `;
-const RepostTitle = styled.div`
-  display: flex;
-  width: 100%;
-  height: 50px;
-  background-color: aqua;
-  top: 20px;
+
+const ContainerIconComments = styled.div`
+  margin-top: 12px;
+  text-align: center;
+  margin-top: 18px;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  border-radius: 16px;
 `;
-const RepostContainer = styled.div`
+
+const ContainerComments = styled.div`
+  margin-top: -10px;
+  padding-top: 10px;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  background: #1e1e1e;
+  border-radius: 0px 0px 16px 16px;
+`;
+const ContainerCountShares = styled.div`
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  color: white;
+`;
+const ContainerInputComments = styled.div`
+  margin-left: 16px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   position: relative;
+
+  img {
+    width: 39px;
+    height: 39px;
+    border-radius: 26.5px;
+  }
+
+  input {
+    width: 85%;
+    height: 39px;
+    margin-right: 5%;
+    background: #252525;
+    border-radius: 8px;
+    border: none;
+    padding-left: 15px;
+    color: white;
+  }
+
+  input:focus {
+    box-shadow: 0 0 0 0;
+    border: 0 none;
+    outline: 0;
+  }
+
+  svg {
+    font-size: 15px;
+    right: 9%;
+    position: absolute;
+  }
+`;
+const ContainerCountComments = styled.div`
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  color: white;
 `;

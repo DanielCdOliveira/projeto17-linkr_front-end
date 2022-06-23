@@ -104,14 +104,20 @@ const MainHeader = styled.header`
     display: flex;
     align-items: center;
     cursor: pointer;
-  }
-  svg {
+    svg {
     font-size: 40px;
     color: #ffffff;
     margin-right: 15px;
     transition: all 0.5s;
     ${(props) => (props.showLogout ? "transform: rotateX(-180deg);" : "")}
   }
+  svg {
+    font-size: 40px;
+    color: #ffffff;
+    margin-right: 15px;
+    transition: all 0.5s;
+  }
+}
   img {
     width: 53px;
     height: 53px;
@@ -153,7 +159,7 @@ const MainHeader = styled.header`
     padding-top: 23px;
     padding-bottom: 10px;
   }
-`;
+`
 
 const SearchInput = styled.div`
   width: 40%;
@@ -179,7 +185,7 @@ const SearchInput = styled.div`
   svg{
     color: #C6C6C6;
     position: absolute;
-    right: -5px;
+    right: 5px;
     top: 8px;
     font-size: 21px;
   }
