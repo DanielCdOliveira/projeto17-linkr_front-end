@@ -4,7 +4,7 @@ import Loading from "../PublicComponents/Loading.js";
 import axios from "axios";
 export default function FollowButton(props) {
   const { following, setFollowing, URL, user, token } = props;
-
+  const [loading, setLoading] = useState(false)
   function unfollow() {
     const config = {
       headers: {
@@ -12,10 +12,13 @@ export default function FollowButton(props) {
       },
     };
     const promise = axios.delete(`${URL}/unfollow/${user.id}`, config);
+    setLoading(true);
     promise.then((r) => {
+      setLoading(false);
       setFollowing(0);
     });
     promise.catch((err) => {
+      setLoading(false);
       alert(err);
     });
   }
@@ -27,10 +30,13 @@ export default function FollowButton(props) {
       },
     };
     const promise = axios.post(`${URL}/follow/${user.id}`, null, config)
+    setLoading(true)
     promise.then((r) => {
+      setLoading(false);
       setFollowing(1);
     });
     promise.catch((err) => {
+      setLoading(false);
       alert(err);
     });
   }
@@ -40,9 +46,13 @@ export default function FollowButton(props) {
       {following === "loading" ? (
         <Loading />
       ) : following ? (
-        <p onClick={() => unfollow()}>unfollow</p>
+        <button onClick={() => unfollow()} disabled={loading ? true : false}>
+          {loading ? <Loading /> : <p>unfollow</p>}
+        </button>
       ) : (
-        <p onClick={() => follow()}>follow</p>
+        <button onClick={() => follow()} disabled={loading ? true : false}>
+          {loading ? <Loading /> : <p>follow</p>}
+        </button>
       )}
     </FollowButtonContainer>
   );
@@ -61,7 +71,14 @@ const FollowButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  p {
+  button {
     cursor: pointer;
+    background: #1877f2;
+    border-radius: 5px;
+    border: none;
+    max-height: 31px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;

@@ -6,7 +6,7 @@ import {AuthContext } from "../../Context/Auth.js"
 export default function PostForm(props) {
   const {user,token, setAllPosts} = props;
   const [link, setLink] = useState("");
-  const [message, setMessage] = useState([]);
+  const [message, setMessage] = useState("");
   const { URL, trendingUpdate, setTrendingUpdate } = useContext(AuthContext);
   const [loading, setLoading ] = useState(false)
 
@@ -16,7 +16,7 @@ export default function PostForm(props) {
     e.preventDefault()
     const data = {
       link,
-      message
+      message: message || ""
     }
     const config = {
         headers: {

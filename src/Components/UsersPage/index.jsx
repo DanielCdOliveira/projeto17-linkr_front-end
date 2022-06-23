@@ -29,7 +29,7 @@ export default function UsersPage() {
         Authorization: `Bearer ${token}`,
       },
     };
-    const promise = axios.get(`${URL}/get/posts?userId${id}`, config);
+    const promise = axios.get(`${URL}/get/posts?userId=${id}`, config);
 
     promise.then((response) => {
       setAllPosts(response.data);
@@ -62,6 +62,8 @@ export default function UsersPage() {
         alert("Erro ao buscar dados do usuário selecionado");
     })
   }, []);
+  console.log(userPage)
+  console.log(user)
 const token = user.token;
   return (
     <>
@@ -72,7 +74,6 @@ const token = user.token;
             <UserInfo>
               <img src={userPage.image} />
               <h2>{userPage.name}</h2>
-              {/* <button>{following? "unfollow" : "follow"}</button> */}
             </UserInfo>
             <PostsContainer>
               {loading ? (
@@ -100,7 +101,7 @@ const token = user.token;
             </PostsContainer>
           </FeedContainer>
           <HashtagsTrending />
-          <FollowButton following={following} setFollowing={setFollowing} URL={URL} user={userPage} token={token} />
+          {userPage.id === user.userId ? <></> : <FollowButton following={following} setFollowing={setFollowing} URL={URL} user={userPage} token={token} />}
         </Center>
       </PageContainer>
     </>

@@ -13,15 +13,21 @@ export default function Timeline() {
   const [allPosts, setAllPosts] = useState([]);
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [following, setFollowing] = useState(true)
   const { URL } = useContext(AuthContext);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     setUser(user);
-    const promise = axios.get(`${URL}/get/posts`);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+    const promise = axios.get(`${URL}/get/posts`,config);
 
     promise.then((response) => {
-      setAllPosts(response.data);
+      response.data ? setAllPosts(response.data) : setFollowing(false)
       setLoading(false);
     });
     promise.catch((error) => {
@@ -71,8 +77,14 @@ export default function Timeline() {
                     />
                   );
                 })
+              ) : following ? (
+                <WarningSpan className="noPosts">
+                  No posts found from your friends
+                </WarningSpan>
               ) : (
-                <span className="noPosts">there are no posts yet</span>
+                <WarningSpan>
+                  "You don't follow anyone yet. Search for new friends!"
+                </WarningSpan>
               )}
             </PostsContainer>
           </FeedContainer>
@@ -150,4 +162,14 @@ const FeedContainer = styled.div`
     padding-left: 17px;
   } 
   }
+`;
+
+const WarningSpan = styled.span`
+  font-family: "Oswald";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30.9px;
+  line-height: 64px;
+  color: #ffffff;
+  position: absolute;
 `;
