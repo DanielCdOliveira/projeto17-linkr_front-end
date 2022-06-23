@@ -97,8 +97,9 @@ export function deletePost(
 
   promise.then((response) => {
     toggleModal(setIsOpen, isOpen);
-    const promise2 = axios.get(`${URL}/get/posts`);
+    const promise2 = axios.get(`${URL}/get/posts?userId=${info.userId}`,config);
     promise2.then((response) => {
+      console.log(response.data)
       setAllPosts(response.data);
     });
     promise2.catch((error) => {

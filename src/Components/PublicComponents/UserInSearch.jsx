@@ -4,9 +4,7 @@ import styled from "styled-components";
 export default function UserInSearch(props){
         const [following, setFollowing] = useState(false)
         const {image, name, id} = props.infos
-        console.log(id)
         const navigate = useNavigate()
-        console.log(props.infos)
         function handleClick(){
                 navigate(`/user/${id}`)
                 window.location.reload();
