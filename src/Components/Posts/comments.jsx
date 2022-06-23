@@ -1,12 +1,16 @@
 import styled from "styled-components";
-
+import { useNavigate } from "react-router-dom";
 export function MappingComments(props) {
   const { info, comment, user, commentsFollows } = props;
-
+  const navigate = useNavigate()
+function handleClick() {
+  navigate(`/user/${comment.userId}`);
+  window.location.reload();
+}
   return (
     <CommentsContainer>
       <div>
-        <img src={comment.image} alt="perfil"></img>
+        <img src={comment.image} alt="perfil" onClick={() => handleClick()}></img>
       </div>
       <ContainerNameComment>
         <div>
