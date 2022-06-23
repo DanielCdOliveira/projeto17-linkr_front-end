@@ -210,7 +210,7 @@ const customStyles = {
     function handleClick() {
       console.log(info)
       navigate(`/user/${info.userId}`);
-      // window.location.reload();
+      window.location.reload();
     }
     
 
