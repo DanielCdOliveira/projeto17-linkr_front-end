@@ -140,12 +140,13 @@ const MainHeader = styled.header`
     }
   } 
   .result{
-    width: calc(40% - 18px);
+    width: 100%;
+    margin-top: -12px;
     border-radius: 8px;
     height: fit-content;
     background-color: #E6E6E6;
     ${(props) => (props.searchResult === null ? "display: none;" : "")}
-    border-radius: 8px;
+    border-radius: 0px 0px 8px 8px;
     position: absolute;
     top: 40px;
     z-index: -1;

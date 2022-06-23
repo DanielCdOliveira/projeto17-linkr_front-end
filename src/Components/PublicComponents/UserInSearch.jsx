@@ -33,7 +33,6 @@ const UserInSearchContainer = styled.div`
   align-items: center;
   cursor: pointer;
         
-
   p {
     font-family: "Lato";
     font-style: normal;

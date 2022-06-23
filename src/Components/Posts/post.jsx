@@ -154,7 +154,7 @@ const customStyles = {
       useEffect(() => {
         let newLikesNames = []
         for(let i=0; i<namesRefresh.length; i++){
-          if(namesRefresh[i].name != user.name){
+          if(namesRefresh[i].name !== user.name){
             newLikesNames.push(namesRefresh[i].name);
           }
         }
@@ -243,19 +243,6 @@ const customStyles = {
                 </a>
                 <ReactTooltip place="bottom" type="light" effect="solid" />
               </ContainerCountLikes>
-              <div>
-                <BiRepost
-                  style={{ color: "white" }}
-                  fontSize="30px"
-                  onClick={() => {
-                    postShare(info, tokenStorage, URL);
-                  }}
-                />
-              </div>
-              <ContainerCountLikes>
-                <a>{countShares} re-post</a>
-              </ContainerCountLikes>
-
               <ContainerIconComments>
                 <AiOutlineComment
                   onClick={() => {
@@ -267,15 +254,20 @@ const customStyles = {
                     }
                   }}
                 />
-                {countComments ? (
-                  <ContainerCountComments>
-                    <p>{countComments} comments</p>
-                  </ContainerCountComments>
-                ) : (
-                  <ContainerCountComments>
-                    <p>0 comments</p>
-                  </ContainerCountComments>
-                )}
+                <ContainerCountComments>
+                {countComments ? <p>{countComments} comments</p>: <p>0 comments</p>}
+                </ContainerCountComments>
+              </ContainerIconComments>
+              <ContainerIconComments>
+                <BiRepost
+                  style={{ color: "white" }}
+                  fontSize="30px"
+                  onClick={() => {
+                    postShare(info, tokenStorage, URL);
+                  }}/>
+              <ContainerCountLikes>
+                <p>{countShares} re-post</p>
+              </ContainerCountLikes>
               </ContainerIconComments>
             </PerfilLikeContainer>
             <Right>
@@ -453,6 +445,7 @@ const customStyles = {
 
 const MainContainer = styled.div`
   width: 100%;
+  margin-bottom: 16px;
 `;
 
 const PostContainer = styled.div`
@@ -463,6 +456,7 @@ const PostContainer = styled.div`
   height: fit-content;
   display: flex;  
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  position: relative;
   @media (max-width: 900px) {
     width: 100vw;
     border-radius: 0;
@@ -523,7 +517,7 @@ const UserContainer = styled.div`
   }
 `;
 const MessageUser = styled.div`
-  max-width: 90%;
+  width: 90%;
   height: auto;
   padding: 10px 0px 10px 0px;
   line-height: 25px;
@@ -548,6 +542,7 @@ const MessageUser = styled.div`
   }
 
   p:first-child {
+    max-width: fit-content;
     margin-bottom: 7px;
     font-family: "Lato";
     font-style: normal;
@@ -597,6 +592,7 @@ const HashtagStyle = styled.span`
 `;
 
 const ContainerIconComments = styled.div`
+  margin-top: 12px;
   text-align: center;
   margin-top: 18px;
   font-size: 24px;
@@ -606,6 +602,8 @@ const ContainerIconComments = styled.div`
 `;
 
 const ContainerComments = styled.div`
+  margin-top: -10px;
+  padding-top: 10px;
   font-size: 24px;
   color: white;
   cursor: pointer;
@@ -614,6 +612,7 @@ const ContainerComments = styled.div`
 `;
 
 const ContainerInputComments = styled.div`
+  margin-left: 16px;
   padding-top: 25px;
   padding-bottom: 25px;
   display: flex;
@@ -625,7 +624,6 @@ const ContainerInputComments = styled.div`
     width: 39px;
     height: 39px;
     border-radius: 26.5px;
-    margin-left: 6px;
   }
 
   input {

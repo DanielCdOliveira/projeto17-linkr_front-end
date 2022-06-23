@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export function MappingComments(props) {
-  const { info, comment, user, commentsFollows } = props;
+  const { info, comment, commentsFollows } = props;
+  const follow = commentsFollows.find(follow => follow.followedId === comment.userId);
 
   return (
     <CommentsContainer>
@@ -11,10 +12,9 @@ export function MappingComments(props) {
       <ContainerNameComment>
         <div>
           <p>{comment.name}</p>
-
           {info.userId === comment.userId ? (
             <p>• post’s author</p>
-          ) : comment.userId === commentsFollows.followedId ? (
+          ) : follow ? (
             <p>• following</p>
           ) : (
             <></>
@@ -38,13 +38,14 @@ const CommentsContainer = styled.div`
     width: 39px;
     height: 39px;
     border-radius: 26.5px;
-    margin-left: 15px;
+    margin-left: 22px;
   }
 `;
 
 const ContainerNameComment = styled.div`
   flex-direction: column;
   margin-left: 20px;
+  width: 83%;
 
   div:first-child {
     display: flex;
@@ -71,8 +72,8 @@ const ContainerNameComment = styled.div`
 `;
 
 const SeparadorHorizonal = styled.div`
+  margin-left: -8%;
   margin-top: 22px;
-  width: 571px;
   border: 1px solid #353535;
   transform: rotate(-0.1deg);
 `;
