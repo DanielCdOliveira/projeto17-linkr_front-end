@@ -20,13 +20,14 @@ export default function HashtagsTrending() {
           <List>
             {hashtags.map((hashtag) => {
               return (
-                <p
+                <div
                   onClick={() => {
                     navigate(`/hashtag/${hashtag.name}`);
                   }}
                 >
-                  # {hashtag.name}
-                </p>
+                  <p>#</p> 
+                  <p>{hashtag.name}</p> 
+                </div>
               );
             })}
           </List>
@@ -49,7 +50,7 @@ const SideBar = styled.div`
   left: 70vw;
   position: fixed;
   top: 50px;
-  overflow-x:hidden ;
+
   @media (max-width: 1050px) {
     left: auto;
     right: 0;
@@ -91,8 +92,16 @@ const List = styled.div`
   line-height: 23px;
   letter-spacing: 0.05em;
   text-align: left;
-
+  div{
+    cursor: pointer;
+    width: 100%;
+    margin: 2px 0 ;
+    display: flex;
+    overflow-x:hidden;
+  }
   p {
     cursor: pointer;
+    height: 23px;
+    display: flex;
   }
 `;

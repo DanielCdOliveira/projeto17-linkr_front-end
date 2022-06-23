@@ -64,8 +64,7 @@ const FollowButtonContainer = styled.div`
   width: 112px;
   height: 31px;
   left: 82%;
-  top: 141px;
-
+  top: 150px;
   background: #1877f2;
   border-radius: 5px;
   display: flex;
@@ -81,4 +80,9 @@ const FollowButtonContainer = styled.div`
     align-items: center;
     justify-content: center;
   }
+  @media (max-width: 650px) {
+    right: 0;
+    left: auto;
+    top: 170px;
+  } 
 `;
