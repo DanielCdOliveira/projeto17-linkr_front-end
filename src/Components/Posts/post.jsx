@@ -357,6 +357,7 @@ const customStyles = {
                   fontSize: "18px",
                   fontWeight: "700",
                   cursor: "pointer",
+                  border:"none",
                 }}
               >
                 No, go back
@@ -385,6 +386,7 @@ const customStyles = {
                   fontSize: "18px",
                   fontWeight: "700",
                   cursor: "pointer",
+                  border:"none",
                 }}
               >
                 Yes, delete it
