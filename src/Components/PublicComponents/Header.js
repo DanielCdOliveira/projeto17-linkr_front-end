@@ -44,9 +44,16 @@ export default function Header() {
     catch(err){
     }
   }
+  function goToProfile(){
+    navigate(`/user/${user.userId}`)
+  }
 
   return (
-    <MainHeader showLogout={showLogout} image={user.image} searchResult={searchResult}>
+    <MainHeader
+      showLogout={showLogout}
+      image={user.image}
+      searchResult={searchResult}
+    >
       <h1 onClick={() => goToTimeline()}>linkr</h1>
       <SearchInput>
         <DebounceInput
@@ -62,17 +69,18 @@ export default function Header() {
           {searchResult === null ? (
             <div></div>
           ) : (
-            searchResult.map((user) => <UserInSearch infos={user}/>)
+            searchResult.map((user) => <UserInSearch infos={user} />)
           )}
         </div>
-        <FiSearch/>
+        <FiSearch />
       </SearchInput>
       <nav className="profile" onClick={() => setShowLogout(!showLogout)}>
         <IoIosArrowDown />
         <img src={user.image} alt="profile picture" />
       </nav>
-      <div className="logout" onClick={logout}>
-        <p>Logout</p>
+      <div className="logout">
+        <p onClick={logout}>Logout</p>
+        <p onClick={goToProfile}>Profile</p>
       </div>
     </MainHeader>
   );
@@ -124,6 +132,8 @@ const MainHeader = styled.header`
     border-radius: 50%;
   }
   .logout {
+    display: flex;
+    flex-direction: column;
     width: 147px;
     background-color: #171717;
     border-radius: 0 0 0 20px;
@@ -131,10 +141,10 @@ const MainHeader = styled.header`
     right: 0;
     top: 72px;
     overflow-y: hidden;
-    ${(props) => (props.showLogout ? "height:47px;" : "height:0;")}
+    ${(props) => (props.showLogout ? "height:75px;" : "height:0;")}
     transition: all 0.5s;
     display: flex;
-    justify-content: center;
+    /* justify-content: space-ar; */
     align-items: center;
     cursor: pointer;
     box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
@@ -143,6 +153,8 @@ const MainHeader = styled.header`
       font-weight: 700;
       font-size: 17px;
       color: #ffffff;
+      padding-top: 10px;
+      padding-bottom: 7px;
     }
   } 
   .result{
