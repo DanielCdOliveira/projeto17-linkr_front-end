@@ -15,9 +15,10 @@ import {
   postLike,
   updateMessage,
   deleteLike,
-  toggleModal,
+  toggleModalDelete,
+  toggleModalRepost,
   deletePost,
-  postShare
+  postShare,
 } from "./postRepository";
 
 import { postComments, getComments } from "./commentsRepository";
@@ -41,7 +42,8 @@ export default function Post(props){
     const [oldMessage, setOldMessage] = useState()
     const [promiseReturned, setPromiseReturned] = useState(false);
     const [likes, setLikes] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpenDelete, setIsOpenDelete] = useState(false);
+    const [isOpenRepost, setIsOpenRepost] = useState(false);
     const [result, setResult] = useState('');
     const [namesRefresh, setNamesRefresh] = useState([]);
     const [addComment, setAddComment] = useState(null);
@@ -64,7 +66,6 @@ export default function Post(props){
     nameRef.current.focus();
     setMessage(message);
   }
-
 
     function submit(e){
       if (e.keyCode === 13) {
@@ -263,8 +264,55 @@ const customStyles = {
                   style={{ color: "white" }}
                   fontSize="30px"
                   onClick={() => {
-                    postShare(info, tokenStorage, URL);
+                    toggleModalRepost(setIsOpenRepost, isOpenRepost)
                   }}/>
+                <Modal
+                  isOpen={isOpenRepost}
+                  onRequestClose={() => toggleModalRepost(setIsOpenRepost, isOpenRepost)}
+                  style={customStyles}>
+                  <div style={{ marginTop: "40px" }}>
+                  Do you want to re-post this link?
+                  </div>
+                  <button
+                    onClick={() => toggleModalRepost(setIsOpenRepost, isOpenRepost)}
+                    style={{
+                      width: "134px",
+                      height: "37px",
+                      marginTop: "40px",
+                      marginRight: "25px",
+                      borderRadius: "5px",
+                      background: "#ffffff",
+                      color: "#1877F2",
+                      textDecoration: "none",
+                      fontFamily: "Lato",
+                      fontSize: "18px",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                    }}
+                  >
+                    No, cancel
+                  </button>
+                  <button
+                    onClick={() =>
+                      postShare(info, tokenStorage, URL, setAllPosts, setIsOpenRepost, isOpenRepost)
+                    }
+                    style={{
+                      width: "134px",
+                      height: "37px",
+                      marginTop: "40px",
+                      borderRadius: "5px",
+                      background: "#1877F2",
+                      color: "#ffffff",
+                      textDecoration: "none",
+                      fontFamily: "Lato",
+                      fontSize: "18px",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Yes, share!
+                  </button>
+                </Modal>
               <ContainerCountLikes>
                 <p>{countShares} re-post</p>
               </ContainerCountLikes>
@@ -318,7 +366,7 @@ const customStyles = {
                     <TiTrash
                       color="white"
                       fontSize="25px"
-                      onClick={() => toggleModal(setIsOpen, isOpen)}
+                      onClick={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
                     />
                   </EditDeleteContainer>
                 ) : (
@@ -335,15 +383,15 @@ const customStyles = {
               </LinkContainer>
             </Right>
             <Modal
-              isOpen={isOpen}
-              onRequestClose={() => toggleModal(setIsOpen, isOpen)}
+              isOpen={isOpenDelete}
+              onRequestClose={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
               style={customStyles}
             >
               <div style={{ marginTop: "40px" }}>
                 Are you sure you want to delete this post?
               </div>
               <button
-                onClick={() => toggleModal(setIsOpen, isOpen)}
+                onClick={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
                 style={{
                   width: "134px",
                   height: "37px",
@@ -369,8 +417,8 @@ const customStyles = {
                     setAllPosts,
                     deleteHashtag,
                     URL,
-                    setIsOpen,
-                    isOpen
+                    setIsOpenDelete,
+                    isOpenDelete
                   )
                 }
                 style={{
@@ -606,7 +654,6 @@ const ContainerComments = styled.div`
   padding-top: 10px;
   font-size: 24px;
   color: white;
-  cursor: pointer;
   background: #1E1E1E;
   border-radius: 0px 0px 16px 16px;
 `;
@@ -647,6 +694,7 @@ const ContainerInputComments = styled.div`
     font-size: 15px;
     right: 9%;
     position: absolute;
+    cursor: pointer;
   }
 `;
 

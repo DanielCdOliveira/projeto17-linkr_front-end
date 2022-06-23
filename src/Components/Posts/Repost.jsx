@@ -12,7 +12,7 @@ import { AiOutlineComment } from "react-icons/ai";
 import {
   postLike,
   deleteLike,
-  toggleModal,
+  toggleModalDelete,
   deletePost,
   postShare,
 } from "./postRepository";
@@ -23,14 +23,13 @@ export default function Repost(props) {
   const { info, setAllPosts, like } = props;
   const { URL, deleteHashtag } = useContext(AuthContext);
   const navigate = useNavigate();
-  console.log(info);
   const user = JSON.parse(localStorage.getItem("user"));
   const tokenStorage = user.token;
   const [countLikes, setCountLikes] = useState([]);
   const [countShares, setCountShares] = useState([]);
   const [message, setMessage] = useState(info.message);
   const [likes, setLikes] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [countComments, setCountComments] = useState([]);
   const [repostName, setRepostName] = useState("")
   const [originalUser, setOriginalUser] = useState("")
@@ -113,7 +112,7 @@ export default function Repost(props) {
       fontSize: "34px",
     },
   };
-  console.log(info);
+  
   return (
     <RepostContainer>
       <RepostTitle>
@@ -185,7 +184,7 @@ export default function Repost(props) {
                 <TiTrash
                   color="white"
                   fontSize="25px"
-                  onClick={() => toggleModal(setIsOpen, isOpen)}
+                  onClick={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
                 />
               </EditDeleteContainer>
             ) : (
@@ -204,15 +203,15 @@ export default function Repost(props) {
         </Right>
 
         <Modal
-          isOpen={isOpen}
-          onRequestClose={() => toggleModal(setIsOpen, isOpen)}
+          isOpen={isOpenDelete}
+          onRequestClose={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
           style={customStyles}
         >
           <div style={{ marginTop: "40px" }}>
             Are you sure you want to delete this post?
           </div>
           <button
-            onClick={() => toggleModal(setIsOpen, isOpen)}
+            onClick={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
             style={{
               width: "134px",
               height: "37px",
@@ -239,8 +238,8 @@ export default function Repost(props) {
                 setAllPosts,
                 deleteHashtag,
                 URL,
-                setIsOpen,
-                isOpen
+                setIsOpenDelete,
+                isOpenDelete
               )
             }
             style={{
