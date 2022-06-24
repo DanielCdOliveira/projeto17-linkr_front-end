@@ -27,7 +27,8 @@ import Repost from "./Repost.jsx"
 Modal.setAppElement(".root");
 
 export default function Post(props){
-    const { info, setAllPosts, like} = props;
+    const { info, setAllPosts, like, } = props;
+    const hashtagPage = props.hashtagPage || "false"
     const { URL, deleteHashtag, setTrendingUpdate, trendingUpdate, updateHashtags, hashtagsUpdated } = useContext(AuthContext);
 
     const navigate = useNavigate()
@@ -349,7 +350,7 @@ const customStyles = {
                   )}
                 </MessageUser>
                 {user.userId === info.userId ? (
-                  <EditDeleteContainer>
+                  hashtagPage === "false" ?<EditDeleteContainer>
                     <TiPencil
                       color="white"
                       fontSize="25px"
@@ -367,8 +368,8 @@ const customStyles = {
                       color="white"
                       fontSize="25px"
                       onClick={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
-                    />
-                  </EditDeleteContainer>
+                    /> 
+                  </EditDeleteContainer> : <></>
                 ) : (
                   <></>
                 )}

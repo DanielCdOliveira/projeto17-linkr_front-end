@@ -65,7 +65,7 @@ export default function Timeline() {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    const promise = axios.get(`${URL}/get/posts?offset=${currentPage*5}`, config);
+    const promise = axios.get(`${URL}/get/posts?offset=${currentPage*10}`, config);
     promise.then((response) => {
       response.data ? setAllPosts([...allPosts,...response.data]) : setFollowing(false);
       setLoading(false);
@@ -86,7 +86,7 @@ export default function Timeline() {
         Authorization: `Bearer ${token}`,
       },
     };
-    const promise = axios.get(`${URL}/check/posts?offset=${(currentPage+1)*5}`,config)
+    const promise = axios.get(`${URL}/check/pages?offset=${(currentPage+1)*5}`,config)
 
     promise.then((response) => {
       setHasMore(response.data)

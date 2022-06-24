@@ -201,7 +201,6 @@ const MainHeader = styled.header`
   div {
     display: flex;
     align-items: center;
-    justify-content: center;
   }
 
   svg {
@@ -255,15 +254,3 @@ const SearchInput = styled.div`
    }
   }
 `;
-const Result = styled.section`
-width:100%;
-height: 30%;
-display: flex;
-align-items:center;
-justify-content: flex-start;
-padding: 5%;
-
-p{
-  margin: 0 10px;
-}
-`

@@ -65,6 +65,7 @@ export default function HashtagPage() {
                       setAllPosts={setAllPosts}
                       selected={selected}
                       like={likesFiltered ? true : false}
+                      hashtagPage="true"
                     />
                   );
                 })
