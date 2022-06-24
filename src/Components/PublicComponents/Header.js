@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { IoIosArrowDown } from "react-icons/io";
+import { CgProfile } from "react-icons/cg";
 import { FiSearch } from "react-icons/fi";
+import { BiLogIn } from "react-icons/bi";
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {DebounceInput} from 'react-debounce-input';
@@ -39,14 +41,16 @@ export default function Header() {
     };
     try{
       const result = await axios.get(URL+`/users?name=${input}`, config);
-      setSearchResult(result.data.user[0])
+      setSearchResult(result.data.user)
       setShowResults(true)
     }
     catch(err){
     }
   }
+
   function goToProfile(){
     navigate(`/user/${user.userId}`)
+    window.location.reload()
   }
 
   useEffect(() => {
@@ -96,8 +100,14 @@ export default function Header() {
         <img src={user.image} alt="profile picture" />
       </nav>
       <div className="logout">
-        <p onClick={logout}>Logout</p>
-        <p onClick={goToProfile}>Profile</p>
+        <div onClick={goToProfile}>
+          <CgProfile/>
+          <p>Profile</p>
+        </div>
+        <div onClick={logout}>
+          <BiLogIn/>
+          <p>Logout</p>
+        </div>
       </div>
     </MainHeader>
   );
@@ -187,6 +197,17 @@ const MainHeader = styled.header`
     z-index: -1;
     padding-top: 23px;
     padding-bottom: 10px;
+  }
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  svg {
+    color: white;
+    margin-right: 14px;
+    font-size: 22px;
   }
 `
 
