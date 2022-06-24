@@ -572,7 +572,6 @@ const MessageUser = styled.div`
   height: auto;
   padding: 10px 0px 10px 0px;
   line-height: 25px;
-  overflow-x: hidden;
   word-break: break-all;
   textarea {
     width: 111%;
@@ -580,7 +579,6 @@ const MessageUser = styled.div`
     padding-left: 10px;
     padding-top: 4px;
     padding-bottom: 4px;
-    padding-right: 10px;
     display: flex;
     flex-wrap: wrap;
     font-family: "Lato";

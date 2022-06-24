@@ -7,6 +7,7 @@ export function updateMessage(
   setMessage,
   setEdit,
   updateHashtags,
+  hashtagsUpdated,
   setTrendingUpdate,
   message,
   trendingUpdate,
@@ -19,7 +20,7 @@ export function updateMessage(
   };
 
   const obj = { postId: info.postid, message: message };
-  updateHashtags(obj, config);
+  //updateHashtags(obj, config);
 
     const promise = axios.post(`${URL}/edit/post`, obj, config);
     setPromiseReturned(true);
