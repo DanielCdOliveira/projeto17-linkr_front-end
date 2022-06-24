@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Post from "../Posts/post";
@@ -7,6 +7,7 @@ import HashtagsTrending from "../SideBar/sideBar.jsx";
 import Header from "../PublicComponents/Header.js";
 import PostForm from "./PostForm.jsx";
 import Loading from "../PublicComponents/Loading.js";
+import InfiniteScroll from "react-infinite-scroller";
 
 export default function Timeline() {
   const [selected, setSelected] = useState([]);
@@ -14,9 +15,12 @@ export default function Timeline() {
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
   const [following, setFollowing] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [hasMore, setHasMore] = useState(false)
+  const [firstTime, setFirstTime] = useState(true)
   const { URL } = useContext(AuthContext);
 
-  useEffect(() => {
+  const getPosts = useCallback(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     setUser(user);
     const config = {
@@ -24,19 +28,27 @@ export default function Timeline() {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    const promise = axios.get(`${URL}/get/posts`,config);
-
+    
+    const promise = axios.get(`${URL}/get/posts`, config);
     promise.then((response) => {
-      response.data ? setAllPosts(response.data) : setFollowing(false)
+      response.data ? setAllPosts(response.data) : setFollowing(false);
       setLoading(false);
+      hasMorePage(user.token);
     });
     promise.catch((error) => {
+      console.log("errorrrrrrrrrrrr");
       setLoading(false);
       alert(
         "An error occured while trying to fetch the posts, please refresh the page"
       );
     });
+  }, [URL]);
+  useEffect(() => {
+    getPosts();
+  }, [getPosts]);
 
+
+  useEffect(() => {
     const promiseLikes = axios.get(`${URL}/get/likes`);
 
     promiseLikes.then((response) => {
@@ -48,7 +60,47 @@ export default function Timeline() {
   }, []);
 
   const token = user.token;
-  console.log(allPosts);
+
+  function loadPosts(){
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+    const promise = axios.get(`${URL}/get/posts?offset=${currentPage*5}`, config);
+    promise.then((response) => {
+      response.data ? setAllPosts([...allPosts,...response.data]) : setFollowing(false);
+      setLoading(false);
+      hasMorePage(user.token);
+      setCurrentPage(currentPage + 1)
+    });
+    promise.catch((error) => {
+      setLoading(false);
+      alert(
+        "An error occured while trying to fetch the posts, please refresh the page"
+      );
+    });
+  }
+
+  function hasMorePage(token){
+    console.log("has")
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    console.log("tok",token)
+    const promise = axios.get(`${URL}/check/posts?offset=${(currentPage+1)*5}`,config)
+
+    promise.then((response) => {
+      console.log(response.data)
+      setHasMore(response.data)
+    })
+    promise.catch(err => {
+      alert(err)
+    })
+  }
+  
   return (
     <>
       <Header />
@@ -58,34 +110,39 @@ export default function Timeline() {
             <h2>timeline</h2>
             <PostForm user={user} token={token} setAllPosts={setAllPosts} />
             <PostsContainer>
-              {loading ? (
-                <Loading />
-              ) : allPosts.length !== 0 ? (
-                allPosts.map((post) => {
-                  let likesFiltered = selected.find(
-                    (element) =>
-                      element.postId === post.postid &&
-                      element.userId === user.userId
-                  );
-                  return (
-                    <Post
-                      info={post}
-                      key={post.postid}
-                      setAllPosts={setAllPosts}
-                      selected={selected}
-                      like={likesFiltered ? true : false}
-                    />
-                  );
-                })
-              ) : following ? (
-                <WarningSpan className="noPosts">
-                  No posts found from your friends
-                </WarningSpan>
-              ) : (
-                <WarningSpan>
-                  "You don't follow anyone yet. Search for new friends!"
-                </WarningSpan>
-              )}
+              <InfiniteScroll
+                pageStart={0}
+                loadMore={() => loadPosts()}
+                hasMore={hasMore}
+                loader={<Loading />}
+              >
+                {allPosts.length !== 0 ? (
+                  allPosts.map((post) => {
+                    let likesFiltered = selected.find(
+                      (element) =>
+                        element.postId === post.postid &&
+                        element.userId === user.userId
+                    );
+                    return (
+                      <Post
+                        info={post}
+                        key={post.postid}
+                        setAllPosts={setAllPosts}
+                        selected={selected}
+                        like={likesFiltered ? true : false}
+                      />
+                    );
+                  })
+                ) : following ? (
+                  <WarningSpan className="noPosts">
+                    No posts found from your friends
+                  </WarningSpan>
+                ) : (
+                  <WarningSpan>
+                    "You don't follow anyone yet. Search for new friends!"
+                  </WarningSpan>
+                )}
+              </InfiniteScroll>
             </PostsContainer>
           </FeedContainer>
           <HashtagsTrending />
