@@ -405,6 +405,7 @@ const customStyles = {
                   fontSize: "18px",
                   fontWeight: "700",
                   cursor: "pointer",
+                  border:"none",
                 }}
               >
                 No, go back
@@ -433,6 +434,7 @@ const customStyles = {
                   fontSize: "18px",
                   fontWeight: "700",
                   cursor: "pointer",
+                  border:"none",
                 }}
               >
                 Yes, delete it
@@ -569,7 +571,8 @@ const MessageUser = styled.div`
   height: auto;
   padding: 10px 0px 10px 0px;
   line-height: 25px;
-
+  overflow-x: hidden;
+  word-break: break-all;
   textarea {
     width: 111%;
     height: 44px;
@@ -587,6 +590,7 @@ const MessageUser = styled.div`
     color: #4c4c4c;
     border-radius: 7px;
     resize: none;
+    overflow: hidden;
   }
 
   p:first-child {
