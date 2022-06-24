@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { IoIosArrowDown } from "react-icons/io";
+import { CgProfile } from "react-icons/cg";
 import { FiSearch } from "react-icons/fi";
-import { useState, useContext } from "react";
+import { BiLogIn } from "react-icons/bi";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {DebounceInput} from 'react-debounce-input';
 import { AuthContext } from "../../Context/Auth";
@@ -14,6 +16,7 @@ export default function Header() {
   const [showLogout, setShowLogout] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
   const [showResults, setShowResults] = useState(false);
+  const [following, setFollowing] = useState([]);
   const navigate = useNavigate();
 
   function logout() {
@@ -44,9 +47,27 @@ export default function Header() {
     catch(err){
     }
   }
+
   function goToProfile(){
     navigate(`/user/${user.userId}`)
+    window.location.reload()
   }
+
+  useEffect(() => {
+    const token = user.token
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.get(`${URL}/users/follow`, config);
+    promise.then((response) => {
+        setFollowing(response.data);
+    });
+    promise.catch((error) => {
+      alert("an error has ocurred...");
+    });
+  }, []);
 
   return (
     <MainHeader
@@ -69,7 +90,7 @@ export default function Header() {
           {searchResult === null ? (
             <div></div>
           ) : (
-            searchResult.map((user) => <UserInSearch infos={user} />)
+            searchResult.map((user) => <UserInSearch infos={user} following={following} />)
           )}
         </div>
         <FiSearch />
@@ -79,8 +100,14 @@ export default function Header() {
         <img src={user.image} alt="profile picture" />
       </nav>
       <div className="logout">
-        <p onClick={logout}>Logout</p>
-        <p onClick={goToProfile}>Profile</p>
+        <div onClick={goToProfile}>
+          <CgProfile/>
+          <p>Profile</p>
+        </div>
+        <div onClick={logout}>
+          <BiLogIn/>
+          <p>Logout</p>
+        </div>
       </div>
     </MainHeader>
   );
@@ -170,6 +197,17 @@ const MainHeader = styled.header`
     z-index: -1;
     padding-top: 23px;
     padding-bottom: 10px;
+  }
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  svg {
+    color: white;
+    margin-right: 14px;
+    font-size: 22px;
   }
 `
 

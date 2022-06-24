@@ -43,7 +43,6 @@ export default function Timeline() {
       hasMorePage(user.token);
     });
     promise.catch((error) => {
-      console.log("errorrrrrrrrrrrr");
       setLoading(false);
       alert(
         "An error occured while trying to fetch the posts, please refresh the page"
@@ -107,14 +106,14 @@ export default function Timeline() {
     })
   }
 
-  function hasMorePage(token) {
+  function hasMorePage(token){
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
     const promise = axios.get(
-      `${URL}/check/pages?offset=${(currentPage + 1) * 5}`,
+      `${URL}/check/pages?offset=${(currentPage + 1) * 10}`,
       config
     );
 
@@ -124,6 +123,7 @@ export default function Timeline() {
     promise.catch((err) => {
       alert(err);
     });
+
   }
 
   return (

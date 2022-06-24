@@ -10,11 +10,8 @@ import ReactHashtag from "@mdnm/react-hashtag";
 import { BiRepost } from "react-icons/bi";
 import { AiOutlineComment } from "react-icons/ai";
 import {
-  postLike,
-  deleteLike,
   toggleModalDelete,
   deletePost,
-  postShare,
 } from "./postRepository";
 
 Modal.setAppElement(".root");
@@ -28,7 +25,6 @@ export default function Repost(props) {
   const [countLikes, setCountLikes] = useState([]);
   const [countShares, setCountShares] = useState([]);
   const [message, setMessage] = useState(info.message);
-  const [likes, setLikes] = useState(false);
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [countComments, setCountComments] = useState([]);
   const [repostName, setRepostName] = useState("")
@@ -72,7 +68,6 @@ export default function Repost(props) {
       setRepostName(response.data);
     });
     promiseName.catch((error) => {
-      console.log(error);
       alert("an error has ocurred...");
     });
     const promiseOriginalUser = axios.get(`${URL}/reposts-users/${originalUserId}`);
