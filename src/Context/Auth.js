@@ -6,7 +6,7 @@ import axios from "axios";
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
-  const URL = "http://localhost:5000";
+  const URL = "https://project17-linkr.herokuapp.com/";
 
   const [user, setUser] = useState({});
   const [hashtags, setHashtags] = useState()
