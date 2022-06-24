@@ -8,15 +8,23 @@ import Header from "../PublicComponents/Header.js";
 import PostForm from "./PostForm.jsx";
 import Loading from "../PublicComponents/Loading.js";
 import InfiniteScroll from "react-infinite-scroller";
+import useInterval from "use-interval";
+import {TiBell} from "react-icons/ti"
 
 export default function Timeline() {
   const [selected, setSelected] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [following, setFollowing] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [hasMore, setHasMore] = useState(false)
+  const [following, setFollowing] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [newPosts, setNewPosts] = useState(0);
+
+  useInterval(() => {
+    hasMorePosts()
+  }, 15000); 
+  
   const { URL } = useContext(AuthContext);
 
   const getPosts = useCallback(() => {
@@ -27,7 +35,7 @@ export default function Timeline() {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    
+
     const promise = axios.get(`${URL}/get/posts`, config);
     promise.then((response) => {
       response.data ? setAllPosts(response.data) : setFollowing(false);
@@ -41,10 +49,10 @@ export default function Timeline() {
       );
     });
   }, [URL]);
+
   useEffect(() => {
     getPosts();
   }, [getPosts]);
-
 
   useEffect(() => {
     const promiseLikes = axios.get(`${URL}/get/likes`);
@@ -59,18 +67,23 @@ export default function Timeline() {
 
   const token = user.token;
 
-  function loadPosts(){
+  function loadPosts() {
     const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    const promise = axios.get(`${URL}/get/posts?offset=${currentPage*5}`, config);
+    const promise = axios.get(
+      `${URL}/get/posts?offset=${currentPage * 10}`,
+      config
+    );
     promise.then((response) => {
-      response.data ? setAllPosts([...allPosts,...response.data]) : setFollowing(false);
+      response.data
+        ? setAllPosts([...allPosts, ...response.data])
+        : setFollowing(false);
       setLoading(false);
       hasMorePage(user.token);
-      setCurrentPage(currentPage + 1)
+      setCurrentPage(currentPage + 1);
     });
     promise.catch((error) => {
       setLoading(false);
@@ -79,6 +92,19 @@ export default function Timeline() {
       );
     });
   }
+  function hasMorePosts() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+    const lastPost = allPosts[0].postid;
+    const promise = axios.get(`${URL}/check/posts/${lastPost}`, config);
+    promise.then(r =>{
+      setNewPosts(r.data)
+      setNewPosts(0)
+    })
+  }
 
   function hasMorePage(token){
     const config = {
@@ -86,20 +112,33 @@ export default function Timeline() {
         Authorization: `Bearer ${token}`,
       },
     };
-    const promise = axios.get(`${URL}/check/posts?offset=${(currentPage+1)*5}`,config)
+    const promise = axios.get(
+      `${URL}/check/pages?offset=${(currentPage + 1) * 10}`,
+      config
+    );
 
     promise.then((response) => {
-      setHasMore(response.data)
-    })
-    promise.catch(err => {
-      alert(err)
-    })
+      setHasMore(response.data);
+    });
+    promise.catch((err) => {
+      alert(err);
+    });
+
   }
-  
+
   return (
     <>
       <Header />
       <PageContainer>
+        {newPosts ? (
+          <PostAlert data-tip data-for="postAlert" onClick={() => getPosts()}>
+            <a data-tip={newPosts}>
+              <TiBell size="50px" color="white" />
+            </a>
+          </PostAlert>
+        ) : (
+          <></>
+        )}
         <Center>
           <FeedContainer>
             <h2>timeline</h2>
@@ -158,6 +197,11 @@ const PageContainer = styled.div`
   min-height: 100vh;
   @media (max-width: 900px) {
     min-width: auto;
+  }
+  .postAlert {
+    position: absolute;
+    left: 50px;
+    top: 100px;
   }
 `;
 
@@ -225,3 +269,10 @@ const WarningSpan = styled.span`
   color: #ffffff;
   position: absolute;
 `;
+
+const PostAlert = styled.div`
+  position: fixed;
+  left: 50px;
+  top: 100px;
+  cursor: pointer;
+`
