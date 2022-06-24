@@ -42,47 +42,86 @@ export default function FollowButton(props) {
   }
 
   return (
-    <FollowButtonContainer>
+    <>
       {following === "loading" ? (
         <Loading />
       ) : following ? (
+        <UnfollowButtonContainer>
         <button onClick={() => unfollow()} disabled={loading ? true : false}>
-          {loading ? <Loading /> : <p>unfollow</p>}
+          {loading ? <Loading /> : <p>Unfollow</p>}
         </button>
+        </UnfollowButtonContainer>
       ) : (
+        <FollowButtonContainer>
         <button onClick={() => follow()} disabled={loading ? true : false}>
-          {loading ? <Loading /> : <p>follow</p>}
+          {loading ? <Loading /> : <p>Follow</p>}
         </button>
+        </FollowButtonContainer>
       )}
-    </FollowButtonContainer>
+    </>
   );
 }
 
 const FollowButtonContainer = styled.div`
-  background-color: white;
+  background: #1877F2;
   position: absolute;
   width: 112px;
   height: 31px;
   left: 82%;
-  top: 150px;
+  top: 141px;
+
   background: #1877f2;
   border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
+
   button {
     cursor: pointer;
-    background: #1877f2;
+    background: #1877F2;
+    color: white;
     border-radius: 5px;
     border: none;
     max-height: 31px;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
   }
-  @media (max-width: 650px) {
-    right: 0;
-    left: auto;
-    top: 170px;
-  } 
+`;
+
+const UnfollowButtonContainer = styled.div`
+  background-color: white;
+  position: absolute;
+  width: 112px;
+  height: 31px;
+  left: 82%;
+  top: 141px;
+
+  background: white;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  button {
+    cursor: pointer;
+    background: white;
+    color: #1877F2;
+    border-radius: 5px;
+    border: none;
+    max-height: 31px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+  }
 `;

@@ -48,7 +48,7 @@ export default function Timeline() {
   }, []);
 
   const token = user.token;
-  console.log(allPosts);
+  
   return (
     <>
       <Header />
