@@ -99,40 +99,57 @@ const token = user.token;
             </PostsContainer>
           </FeedContainer>
           <HashtagsTrending />
-          {userPage.id === user.userId ? <></> : <FollowButton following={following} setFollowing={setFollowing} URL={URL} user={userPage} token={token} />}
         </Center>
       </PageContainer>
+          {userPage.id === user.userId ? <></> : <FollowButton following={following} setFollowing={setFollowing} URL={URL} user={userPage} token={token} />}
     </>
   );
 }
 
 const PageContainer = styled.div`
-  width: 100vw;
-  min-height: 100vh;
+  min-width: 900px;
+  width: 100%;
   display: flex;
   justify-content: center;
   overflow-x: hidden;
   background-color: #333333;
+  position: relative;
+  min-height: 100vh;
+  @media (max-width: 900px) {
+    min-width: auto;
+  }
 `;
 
 const PostsContainer = styled.div`
-        width: 70%;
-        display: flex;
-        flex-direction: column;
-        margin-top: 50px;
-        justify-content: flex-start;
+  width: 68%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  justify-content: flex-start;
+  position: relative;
+  @media (max-width: 900px) {
+    width: 100vw;
+    min-width: auto;
+  }
 `;
 
 const Center = styled.div`
-  width: 50%;
+  width: 63%;
+  min-width: 900px;
+  margin: auto;
   height: auto;
   display: flex;
   justify-content: space-between;
+  position: relative;
+  @media (max-width: 900px) {
+    width: 100vw;
+    min-width: auto;
+  }
 `;
 
 const FeedContainer = styled.div`
   width: 100%;
-  margin-top: 100px;
+  margin-top: 130px;
   margin-bottom: 150px;
   display: flex;
   flex-direction: column;
@@ -151,8 +168,16 @@ const FeedContainer = styled.div`
     font-size: 43px;
     line-height: 64px;
     color: #ffffff;
+    position: absolute;
+    @media (max-width: 900px) {
+    padding-left: 17px;
+  } 
   }
+  @media (max-width: 650px) {
+  margin-top: 150px;
+  } 
 `;
+
 
 const UserInfo = styled.section`
     width:auto;
@@ -168,6 +193,6 @@ const UserInfo = styled.section`
   }
 
   h2{
-    margin: 10px;
+    margin: 80px;
   }
 `

@@ -117,24 +117,16 @@ export default function Repost(props) {
     <RepostContainer>
       <RepostTitle>
         <BiRepost />
-        <p>Re-posted by <span>{repostName}</span> </p>
+        <p>Re-posted by <span onClick={()=>{navigate(`/user/${info.userId}`);}}>{repostName}</span> </p>
       </RepostTitle>
       <PostContainer>
         <PerfilLikeContainer>
-          <img src={originalUser.image} alt="perfil"></img>
+          <img src={originalUser.image} alt="perfil" onClick={()=>{navigate(`/user/${originalUser.id}`);}}></img>
 
           <div>
             <TiHeartFullOutline
               style={{ color: "white" }}
-              fontSize="30px"
-              onClick={() => {
-                if (likes === false) {
-                  postLike(info, tokenStorage, setLikes, URL);
-                } else if (likes === true) {
-                  deleteLike(info, tokenStorage, setLikes, URL);
-                }
-              }}
-            />
+              fontSize="30px"/>
           </div>
           <ContainerCountLikes>
             <a>{countLikes} Likes</a>
@@ -161,7 +153,7 @@ export default function Repost(props) {
         <Right>
           <UserContainer>
             <MessageUser>
-              <p>{originalUser.name}</p>
+              <p onClick={()=>{navigate(`/user/${originalUser.id}`);}}>{originalUser.name}</p>
               {
                 <ReactHashtag
                   renderHashtag={(hashtag) => (
@@ -297,6 +289,7 @@ const RepostTitle = styled.div`
   }
   span{
     font-weight: 700;
+    cursor: pointer;
   }
 `;
 
@@ -336,6 +329,7 @@ const PerfilLikeContainer = styled.div`
     height: 50px;
     border-radius: 50%;
     margin-bottom: 10px;
+    cursor: pointer;
   }
   @media (max-width: 900px) {
     img {
@@ -397,6 +391,7 @@ const MessageUser = styled.div`
     font-weight: 400;
     font-size: 19px;
     line-height: 23px;
+    cursor: pointer;
   }
 
   p:last-child {
@@ -510,7 +505,7 @@ const ContainerIconComments = styled.div`
   margin-top: 18px;
   font-size: 24px;
   color: white;
-  cursor: pointer;
+
   border-radius: 16px;
 `;
 
@@ -519,7 +514,6 @@ const ContainerComments = styled.div`
   padding-top: 10px;
   font-size: 24px;
   color: white;
-  cursor: pointer;
   background: #1e1e1e;
   border-radius: 0px 0px 16px 16px;
 `;

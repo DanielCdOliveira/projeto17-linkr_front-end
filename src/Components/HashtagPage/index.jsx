@@ -49,7 +49,9 @@ export default function HashtagPage() {
       <PageContainer>
         <Center>
           <FeedContainer>
-            <h2># {hashtag}</h2>
+            <div className="name">
+              <h2># <span>{hashtag}</span></h2>
+            </div>
             <PostsContainer>
               {loading? <Loading /> : allPosts.length !== 0 ? (
                 allPosts.map((post) => {
@@ -90,6 +92,16 @@ const PageContainer = styled.div`
   @media (max-width: 900px) {
     min-width: auto;
   }
+  .name{
+    display: flex;
+    overflow-x:hidden;  
+    width:50vw;
+    height: auto;
+    min-width: 600px;
+    h2{
+      display: flex;
+    }
+  }
 `;
 
 const PostsContainer = styled.div`
@@ -127,7 +139,7 @@ const FeedContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-
+ 
   .noPosts {
     margin-top: 100px;
     font-family: "Oswald";
@@ -141,9 +153,11 @@ const FeedContainer = styled.div`
     font-size: 43px;
     line-height: 64px;
     color: #ffffff;
-    position: absolute;
     @media (max-width: 900px) {
     padding-left: 17px;
+    height: 65px;
+    display: flex;
+    overflow-x: hidden;
   } 
   }
 `;
