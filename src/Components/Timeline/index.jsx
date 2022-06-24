@@ -17,7 +17,6 @@ export default function Timeline() {
   const [following, setFollowing] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [hasMore, setHasMore] = useState(false)
-  const [firstTime, setFirstTime] = useState(true)
   const { URL } = useContext(AuthContext);
 
   const getPosts = useCallback(() => {

@@ -50,6 +50,7 @@ export default function Post(props){
     const [comments, setComments] = useState([]);
     const [openComments, setOpenComments] = useState(false);
     const [commentsFollows, setCommentsFollows] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const nameRef = useRef(null);
 
@@ -209,7 +210,6 @@ const customStyles = {
     }, [comments])
 
     function handleClick() {
-      console.log(info)
       navigate(`/user/${info.userId}`);
       window.location.reload();
     }
@@ -226,17 +226,17 @@ const customStyles = {
                 onClick={() => handleClick()}
               ></img>
               <div>
-                <TiHeartFullOutline
-                  style={{ color: likes ? "red" : "white" }}
-                  fontSize="30px"
-                  onClick={() => {
-                    if (likes === false) {
-                      postLike(info, tokenStorage, setLikes, URL);
-                    } else if (likes === true) {
-                      deleteLike(info, tokenStorage, setLikes, URL);
-                    }
-                  }}
-                />
+                  <TiHeartFullOutline
+                    style={{ color: likes ? "red" : "white" }}
+                    fontSize="30px"
+                    onClick={() => {
+                      if (likes === false) {
+                        postLike(info, tokenStorage, setLikes, URL, setLoading, loading);
+                      } else if (likes === true) {
+                        deleteLike(info, tokenStorage, setLikes, URL, setLoading, loading);
+                      }
+                    }}
+                  />
               </div>
               <ContainerCountLikes data-tip data-for="countLikes">
                 <a data-tip={countLikes ? `${result}` : null}>

@@ -36,7 +36,7 @@ export function updateMessage(
     setTrendingUpdate(!trendingUpdate);
 }
 
-export function postLike(info, tokenStorage, setLikes, URL) {
+export function postLike(info, tokenStorage, setLikes, URL, setLoading, loading) {
   const id = info.postid;
   const config = {
     headers: {
@@ -44,16 +44,21 @@ export function postLike(info, tokenStorage, setLikes, URL) {
     },
   };
   const promise = axios.post(`${URL}/like/post/${id}`, id, config);
-
+  if(loading){
+    return;
+  }
+  setLoading(true)
   promise.then((response) => {
     setLikes(true);
+    setLoading(false)
   });
   promise.catch((error) => {
+    setLoading(false)
     alert("an error has ocurred, unable to like the post...");
   });
 }
 
-export function deleteLike(info, tokenStorage, setLikes, URL) {
+export function deleteLike(info, tokenStorage, setLikes, URL, setLoading, loading) {
   const id = info.postid;
   const config = {
     headers: {
@@ -61,11 +66,16 @@ export function deleteLike(info, tokenStorage, setLikes, URL) {
     },
   };
   const promise = axios.delete(`${URL}/deslike/post/${id}`, config);
-
+  if(loading){
+    return;
+  }
+  setLoading(true)
   promise.then((response) => {
     setLikes(false);
+    setLoading(false)
   });
   promise.catch((error) => {
+    setLoading(false)
     alert("an error has ocurred, unable to dislike the post...");
   });
 }
@@ -75,7 +85,6 @@ export function toggleModalDelete(setIsOpenDelete, isOpenDelete) {
 }
 
 export function toggleModalRepost(setIsOpenRepost, isOpenRepost) {
-  console.log("aquisera?")
   setIsOpenRepost(!isOpenRepost);
 }
 

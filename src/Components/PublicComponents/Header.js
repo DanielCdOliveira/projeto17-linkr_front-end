@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { IoIosArrowDown } from "react-icons/io";
 import { FiSearch } from "react-icons/fi";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {DebounceInput} from 'react-debounce-input';
 import { AuthContext } from "../../Context/Auth";
@@ -14,6 +14,7 @@ export default function Header() {
   const [showLogout, setShowLogout] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
   const [showResults, setShowResults] = useState(false);
+  const [following, setFollowing] = useState([]);
   const navigate = useNavigate();
 
   function logout() {
@@ -38,7 +39,7 @@ export default function Header() {
     };
     try{
       const result = await axios.get(URL+`/users?name=${input}`, config);
-      setSearchResult(result.data.user)
+      setSearchResult(result.data.user[0])
       setShowResults(true)
     }
     catch(err){
@@ -47,6 +48,22 @@ export default function Header() {
   function goToProfile(){
     navigate(`/user/${user.userId}`)
   }
+
+  useEffect(() => {
+    const token = user.token
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.get(`${URL}/users/follow`, config);
+    promise.then((response) => {
+        setFollowing(response.data);
+    });
+    promise.catch((error) => {
+      alert("an error has ocurred...");
+    });
+  }, []);
 
   return (
     <MainHeader
@@ -69,7 +86,7 @@ export default function Header() {
           {searchResult === null ? (
             <div></div>
           ) : (
-            searchResult.map((user) => <UserInSearch infos={user} />)
+            searchResult.map((user) => <UserInSearch infos={user} following={following} />)
           )}
         </div>
         <FiSearch />
