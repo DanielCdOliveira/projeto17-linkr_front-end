@@ -171,17 +171,7 @@ export default function Repost(props) {
               }
             </MessageUser>
 
-            {user.userId === info.userId ? (
-              <EditDeleteContainer>
-                <TiTrash
-                  color="white"
-                  fontSize="25px"
-                  onClick={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
-                />
-              </EditDeleteContainer>
-            ) : (
-              <></>
-            )}
+
           </UserContainer>
 
           <LinkContainer href={info.url} target="_blank">
@@ -194,63 +184,7 @@ export default function Repost(props) {
           </LinkContainer>
         </Right>
 
-        <Modal
-          isOpen={isOpenDelete}
-          onRequestClose={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
-          style={customStyles}
-        >
-          <div style={{ marginTop: "40px" }}>
-            Are you sure you want to delete this post?
-          </div>
-          <button
-            onClick={() => toggleModalDelete(setIsOpenDelete, isOpenDelete)}
-            style={{
-              width: "134px",
-              height: "37px",
-              marginTop: "40px",
-              marginRight: "25px",
-              borderRadius: "5px",
-              background: "#ffffff",
-              color: "#1877F2",
-              textDecoration: "none",
-              fontFamily: "Lato",
-              fontSize: "18px",
-              fontWeight: "700",
-              cursor: "pointer",
-            }}
-          >
-            No, go back
-          </button>
-
-          <button
-            onClick={() =>
-              deletePost(
-                info,
-                tokenStorage,
-                setAllPosts,
-                deleteHashtag,
-                URL,
-                setIsOpenDelete,
-                isOpenDelete
-              )
-            }
-            style={{
-              width: "134px",
-              height: "37px",
-              marginTop: "40px",
-              borderRadius: "5px",
-              background: "#1877F2",
-              color: "#ffffff",
-              textDecoration: "none",
-              fontFamily: "Lato",
-              fontSize: "18px",
-              fontWeight: "700",
-              cursor: "pointer",
-            }}
-          >
-            Yes, delete it
-          </button>
-        </Modal>
+        
       </PostContainer>
     </RepostContainer>
   );
