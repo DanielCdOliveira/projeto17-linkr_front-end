@@ -5,7 +5,7 @@
 <hr>
 <h4 align=center>A link-sharing social network</h4>
 <h4 align=center>First project applying agile project management with Scrum</h4>
-<h4 align=center>Check the <a href="https://github.com/DanielCdOliveira/projeto13-mywallet-back">Back-end</a></h4>
+<h4 align=center>Check the <a href="https://github.com/DanielCdOliveira/projeto17-linkr_back-end">Back-end</a></h4>
 
 <br>
 <div align=center style="display:flex; justify-content: center; gap:5%">
